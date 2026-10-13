@@ -19,5 +19,5 @@ The strongest argument against the take, and what you say back. Hires get challe
 ## Where It Shows Up
 The surfaces this take should lead: content opens with it, sales conversations lean on it, the landing page headline breathes it.
 
-## Raw Material From Day 1
+## Raw Material From the Brain Dump
 The brain-dump-your-business skill saves your answer to "what does your industry get completely wrong" here, word for word. The find-your-contrarian-take skill builds the take above FROM this quote, so it stays even after the take is written: the ore stays with the metal.

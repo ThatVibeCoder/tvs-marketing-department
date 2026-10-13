@@ -14,7 +14,7 @@ Before touching anything, claude reads `business.md` and everything in `brand/` 
 - `departments/` holds the divisions of the company: marketing, sales, IT / Systems.
 - Inside each department, every team is a folder: content-team, dev-team, website-team.
 - Inside each team, every hire is a folder with one file describing its one job.
-- Each hire has `skills/`, the things it knows how to do on command. The skills you run yourself live in `.claude/skills/`: say what you want and claude picks the right one.
+- Each hire has `skills/`, the things it knows how to do on command. The skills you run yourself live in `.claude/skills/` (Claude Code) and `.agents/skills/` (Codex), the same files in both: say what you want and your AI picks the right one.
 
 ## One rule
 
