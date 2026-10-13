@@ -10,6 +10,20 @@ The `VERSION` file at the root holds one number: the generation your repo was cl
 
 ---
 
+## Version 2, 2026-10-13
+
+**What's new.** Your department now works in Codex as well as Claude Code.
+
+- `AGENTS.md` at the root holds the rules for this repo. Codex reads it directly. `CLAUDE.md` now just points Claude Code at it, so both tools follow the same rules and there is only one file to keep up to date.
+- `.agents/skills/` holds the same skills as `.claude/skills/`, file for file. Claude Code looks in the first folder and Codex looks in the second. The rules now say: when a skill is added or changed, write it to both.
+- The heading in `brand/contrarian-take.md` that the brain dump writes into is now called "Raw Material From the Brain Dump" (it used to carry a day number).
+
+**Who it's for.** Anyone who uses Codex, or might switch between Codex and Claude Code. If you only ever use Claude Code, nothing changes for you day to day, but taking it keeps your repo ready if you ever switch.
+
+**To take it.** Say to your AI: "Take version 2 from the template changelog: move my CLAUDE.md rules into AGENTS.md and make CLAUDE.md point at it, copy every skill in .claude/skills into .agents/skills, and rename the 'Raw Material From Day 1' heading in brand/contrarian-take.md to 'Raw Material From the Brain Dump'. Keep everything I've already written."
+
+---
+
 ## Version 1, 2026-08-15
 
 **What's new.** This is the starting department, not a drop, there is nothing to compare it to yet. It is what a fresh clone of this template holds as of today:

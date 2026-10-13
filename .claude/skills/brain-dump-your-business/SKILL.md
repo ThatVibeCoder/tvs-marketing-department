@@ -37,7 +37,7 @@ Replace the whole stub with their answers under nine headings, mapped to the que
 - **Still to answer**: thin or skipped answers, filed here, not asked in the moment (see below).
 Their own words, cleaned but never corporate. Kill every trace of the stub text.
 
-Question 9 doesn't go in business.md. It gets saved word for word into `brand/contrarian-take.md` under "## Raw Material From Day 1": the find-your-contrarian-take skill builds the contrarian take from this exact quote, so keep their exact phrasing.
+Question 9 doesn't go in business.md. It gets saved word for word into `brand/contrarian-take.md` under "## Raw Material From the Brain Dump": the find-your-contrarian-take skill builds the contrarian take from this exact quote, so keep their exact phrasing.
 
 Anything about clients or customer details follows the same privacy rules as everywhere else: facts about their business yes, other people's private information no.
 
