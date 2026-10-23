@@ -10,7 +10,7 @@ Interview the owner about their business, out loud, one question at a time, then
 ## Say this first
 Before the first question, tell the owner what this is in plain words, something like: "I'm going to ask you nine questions about your business, one at a time, and you just talk. Messy is good. Everything you say gets written into one file that every team member you ever set up reads first, so they know your business before they do anything. It takes about 30 minutes. If you get stuck on one, we skip it and come back later."
 
-Keep it moving. If they go blank on a question (not if they're rambling, which is good), offer a guess where allowed (see below). If that doesn't land either, file it under Still to Answer and go to the next question.
+Keep it moving. If they go blank on a question (not if they're rambling, which is good), offer a guess where allowed (see below). If that doesn't land either, note it for Still to Answer (you file the list at the end) and go to the next question.
 
 ## How to run the interview
 - ONE question at a time. Ask, then wait. Never dump the list.

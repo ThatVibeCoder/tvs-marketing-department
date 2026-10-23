@@ -42,7 +42,7 @@ Use a different shape for each of the five, so they're really different from eac
 5. **The feeling:** lead with how they'll feel once it's done.
 
 Three worked examples, with a weak headline first so the owner sees the difference:
-- **Local service (Marcus, a two-truck roofing company).** Weak: "Marcus Roofing: Quality Roofing Services Since 2010" (who they are, fails the craft). Strong: "A new roof in two days, with no surprise on the bill." Also good: "Stop putting a bucket under the leak. Fixed this week."
+- **Local service (Marcus, a two-truck roofing company).** Weak: "Marcus Roofing: Quality Roofing Services Since 2010" (who they are, fails the craft). Strong: "Know in 48 hours if your roof needs a repair or a new one, with 40 photos to prove it." Also good: "Stop putting a bucket under the leak."
 - **Coach or consultant (Priya, who coaches therapists opening a private practice).** Weak: "Holistic Practice Development Coaching" (jargon, fails the 12 year old test). Strong: "Leave your agency job with a full private practice in 90 days." Also good: "For therapists who are great with clients and lost with marketing: your first 10 clients, without ads."
 - **Product (Hannah, who sells hand-poured candles online).** Weak: "Luxury Artisan Candles" (a category, not a reason to stay). Strong: "A candle that burns even to the last inch, or we'll replace it." Also good: "Your living room, smelling like a cabin fire in October."
 
@@ -60,7 +60,8 @@ Every time the owner corrects a headline, note what the correction was. The same
 ## The ending, always
 1. Read back the winning headline and where it's saved.
 2. Add one dated line to `## Updates` in `brand/offer.md`.
-3. Save the work with the GitHub Agent's save-work skill and tell the owner in one line what changed.
+3. Run `python3 tools/sync.py`.
+4. Save the work with the GitHub Agent's save-work skill and tell the owner in one line what changed.
 
 ## Done when
 `brand/offer.md` has one headline under The Headline, the tried ones are logged, and the owner said yes.
