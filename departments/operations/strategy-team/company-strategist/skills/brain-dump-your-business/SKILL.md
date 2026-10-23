@@ -50,7 +50,7 @@ Then, in ANY later session that touches the business file, ask ONE open question
 
 ## The ending, always
 1. Read back the three most important things you heard, in one line each. Let them correct you.
-2. Fill in the `## At a Glance` block at the top of `business.md` from what they said (business name first). Then run `python3 tools/sync.py`, open `command-center/index.html`, and tell them: that's your company now, teams waiting to be set up. Have them take a screenshot for the before-and-after later.
+2. Fill in the `## At a Glance` block at the top of `business.md` from what they said (business name first). Then run the sync command (`python3 tools/sync.py`, or `py tools/sync.py` on Windows), open `command-center/index.html`, and tell them: that's your company now, teams waiting to be set up. Have them take a screenshot for the before-and-after later.
 3. Save the work to GitHub: run the github agent's save-work skill at `departments/it-systems/dev-team/github-agent/skills/save-work/`. Their business is now somewhere safer than one laptop.
 
 ## Done when

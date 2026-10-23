@@ -8,6 +8,8 @@ This is your company, built as files instead of headcount. Open Claude Code or C
 2. Say "brain dump my business."
 3. Open `command-center/index.html` in your browser to see your whole company.
 
+Works on Mac, Windows and Linux. On Windows, your AI may ask to install Python once (one command, two minutes), because that's what keeps your skills and your Command Center in sync. On a Mac it's already there.
+
 If you're an AI reading this, read `AGENTS.md` next, then `business.md` and everything in `brand/`, before doing anything else. That's the rule every team follows.
 
 ## The folder map

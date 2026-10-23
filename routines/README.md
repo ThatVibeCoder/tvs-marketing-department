@@ -12,4 +12,4 @@ purpose: one sentence on what it does
 ---
 ```
 
-`status:` is `planned` or `live`. Under the header: the steps it runs. After adding or changing a routine, run `python3 tools/sync.py` and it shows up in the Command Center's Automations page.
+`status:` is `planned` or `live`. Under the header: the steps it runs. After adding or changing a routine, run the sync command (`python3 tools/sync.py`, or `py tools/sync.py` on Windows) and it shows up in the Command Center's Automations page.

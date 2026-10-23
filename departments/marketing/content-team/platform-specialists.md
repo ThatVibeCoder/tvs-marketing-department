@@ -10,6 +10,6 @@ departments/marketing/content-team/<platform>-specialist/
   output/
 ```
 
-Add it to the Members list in `team.md`, then run `python3 tools/sync.py` so it shows up as a command and in the Command Center.
+Add it to the Members list in `team.md`, then run the sync command (`python3 tools/sync.py`, or `py tools/sync.py` on Windows) so it shows up as a command and in the Command Center.
 
 Don't pre-create these. A specialist for a platform you don't post on is a folder lying to you. When a channel is real, tell your AI "stand up my [platform] specialist" and it builds it from this pattern, working under the Social Manager's plan.
