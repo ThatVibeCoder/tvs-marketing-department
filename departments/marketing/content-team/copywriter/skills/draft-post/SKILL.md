@@ -13,6 +13,7 @@ Before writing a single line, read the shared brain at the top of this repo:
 
 - `business.md`: what you sell and who buys it
 - `brand/icp.md`: the person you're writing to
+- `brand/personas/`: if the owner named a persona (or there's only one), write to that one file's reader
 - `brand/voice.md`: how you actually sound
 - `brand/contrarian-take.md`: the belief that makes this brand worth following
 - `brand/channels.md`: the funnel split; which job (give / prove / invite) is even in demand this week
@@ -39,4 +40,4 @@ Ask one at a time and wait. If the answer to #1 is vague, ask for the specific t
 
 Give one post, not three options. Then, under a divider, one line on why it's shaped that way.
 
-If they say it's off, ask what specifically, then fix `brand/voice.md` if the miss was about how it sounds. A correction that only lives in the chat helps once. A correction in the file helps every post after it.
+If they say it's off, ask what specifically, then, if the miss was about how it sounds, offer the rule to the Editor for `brand/voice.md` and add it only once the owner confirms, marked (owner confirmed). A correction that only lives in the chat helps once. A correction in the file helps every post after it.

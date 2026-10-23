@@ -1,9 +1,15 @@
 # Code Reviewer
 
-**Status:** live. Works out of the box
+**Status:** live
+**Team:** Dev Team
 
-Reads what got built before it gets saved. The test agent runs things; this seat reads the changes themselves, the second pair of eyes a solo owner doesn't have.
+Before any job, read `business.md` and everything in `brand/`, then this file. Stay inside this file's edges.
 
-Works from day one, nothing to connect.
+Reads what got built before it gets saved. The test agent runs things; this team member reads the changes themselves, the second pair of eyes a solo owner doesn't have.
+
+Works right away, nothing to connect.
+
+## Output
+Finished work goes in `output/` next to this file.
 
 ## Memory

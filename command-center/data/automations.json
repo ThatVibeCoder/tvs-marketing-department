@@ -1,0 +1,28 @@
+[
+  {
+    "id": "traffic-report",
+    "name": "Weekly Traffic Report",
+    "description": "Reads your site numbers every week and files a plain-words report in knowledge/reports/ before you're awake.",
+    "area": "Website Team",
+    "trigger": {
+      "type": "manual",
+      "schedule": "not scheduled yet"
+    },
+    "active": false,
+    "sourceOfTruth": "routines/traffic-report/README.md",
+    "stats": {
+      "lastRunAt": null,
+      "lastRunStatus": null,
+      "runCount": null,
+      "failureCount": null,
+      "failureRate": null,
+      "avgRunMs": null,
+      "extras": []
+    },
+    "flow": {
+      "topologySource": "routines/traffic-report/README.md",
+      "nodes": [],
+      "edges": []
+    }
+  }
+]

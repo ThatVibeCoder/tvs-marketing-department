@@ -1,7 +1,15 @@
 # Platform Specialists: the growth pattern
 
-Once brand/channels.md is filled, your social manager grows one specialist per platform you actually run, under this team: a folder named after the platform, holding what works there, its formats, its rhythms, its rules.
+Once `brand/channels.md` is filled, the Content Team grows one specialist per platform you actually run. Each one is a normal team member on this team, so it gets the same shape as every other:
 
-Don't pre-create these. A specialist for a platform you don't post on is a folder lying to you. When a channel is real, tell claude "stand up my [platform] specialist" and it builds the folder from this pattern.
+```
+departments/marketing/content-team/<platform>-specialist/
+  <platform>-specialist.md      **Status:** live, **Team:** Content Team, the read-first line,
+                                then what works on that platform: formats, rhythms, rules
+  skills/                       its own skills, when it earns some
+  output/
+```
 
-## Memory
+Add it to the Members list in `team.md`, then run `python3 tools/sync.py` so it shows up as a command and in the Command Center.
+
+Don't pre-create these. A specialist for a platform you don't post on is a folder lying to you. When a channel is real, tell your AI "stand up my [platform] specialist" and it builds it from this pattern, working under the Social Manager's plan.

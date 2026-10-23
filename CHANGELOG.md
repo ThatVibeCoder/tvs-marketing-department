@@ -4,9 +4,33 @@ What is new in this template, and what to do about it.
 
 Your repo does not update on its own. Nothing here changes your files until you ask for it, one piece at a time. This file exists so you can see what you do not have yet and decide, on your own terms, whether you want it.
 
-Newest first. Each entry says what changed, who it is actually for, and the exact line to say to your claude if you want to take it.
+Newest first. Each entry says what changed, who it is actually for, and the exact line to say to your AI if you want to take it.
 
 The `VERSION` file at the root holds one number: the generation your repo was cloned or last checked in at. Any entry below with a higher number than your `VERSION` is something you do not have yet.
+
+---
+
+## Version 3, 2026-10-23
+
+**What's new.** Every piece of your department now has a spot waiting for it, every team can be summoned with one command, and you can see your whole company in the Command Center.
+
+- **Everything has one home.** `AGENTS.md` now has a "Where everything goes" table: your audit, your ICP, your personas, your friction points, your offer, your voice, competitors, reports, the strategist's briefs. Every classroom skill fills its spot instead of making new files.
+- **Brand files come laid out.** `business.md` and every file in `brand/` now have every section a skill fills, a short At a Glance block at the top, a `_Not filled in yet._` line in each empty section (so your AI knows to ask instead of guess), and an Updates log at the bottom that keeps them current. New: `brand/friction-points.md` and `brand/personas/` (with a template).
+- **A knowledge base.** `knowledge/business-audit.md`, `knowledge/competitors/`, `knowledge/swipes/`, `knowledge/outliers.md` and `knowledge/reports/`, each with its shape ready.
+- **An Operations department.** `departments/operations/strategy-team/`: the Company Strategist (with a `briefs/` folder for what comes next), the ICP & Offer Owner, and the Moat Analyst, all waiting for the classroom to set them up. The brain-dump skills now live with the Company Strategist.
+- **Every team is a command.** Each `team.md` now has a header and its workflows written as phases and steps. Type `/content-team`, `/website-team` and so on to summon a team, say a workflow ("build my landing page") to run it, or type any single skill (`/draft-post`).
+- **Skills live with the team member who owns them.** `tools/sync.py` builds the shortcuts in `.claude/skills/` and `.agents/skills/` from the real skills inside `departments/`, so Claude Code and Codex always match. save-work runs it before every save.
+- **The Command Center.** `command-center/index.html` shows every team, its workflow, its team members and skills, and every routine. It opens straight from the folder and refreshes from your repo. It replaces the old org chart (`org-chart.html` now forwards there).
+- **Cleaned up.** Duplicate skills merged (one add-a-key, one way to connect a tool, one report-to-PDF skill). Headlines are written in one place only: the Page Builder's new write-headlines skill. The Editor has an edit-a-draft skill. Team members are `seeded` (waiting) or `live`, nothing else. No day numbers anywhere.
+
+**Who it's for.** Everyone. It's the shape every lesson from now on fills in.
+
+**To take it.** Say to your AI: "Update my department to version 3 from the template changelog." The GitHub Agent's add-from-template skill walks it with you one step at a time:
+1. Fetch `tools/`, `command-center/`, `departments/operations/`, every `departments/*/README.md`, `brand/friction-points.md`, `brand/personas/`, the new `knowledge/` folders and `routines/`.
+2. Add the new empty sections, At a Glance blocks and Updates logs to `business.md` and the files in `brand/`, keeping every word you already wrote.
+3. Fetch the new `AGENTS.md`, every `team.md`, and the new skills (write-headlines, edit-a-draft). Update every team member file's header: `**Status:**` becomes `seeded` or `live` (a `staffed` member is `live`), then a `**Team:**` line, then the read-first line from AGENTS.md. Add an `output/` folder next to each.
+4. Delete the old version-2 copies in BOTH `.claude/skills/` and `.agents/skills/`: add-a-key, audit-my-site, brain-dump-your-business, company-brain-dump, connect-a-tool, make-this-a-pdf, run-my-marketing-checkup, set-up-my-code-base, ship-my-landing-page. They all live inside `departments/` now. Any skill a lesson saved straight into those folders (for example staff-your-writer or web-copywriter) moves into its owner: the classroom's version-3 docs say where, and two skills doing one job become one.
+5. Run `python3 tools/sync.py`, open the Command Center, then save-work.
 
 ---
 

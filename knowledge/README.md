@@ -1,7 +1,14 @@
 # Knowledge
 
-Your marketing brain on disk. Day 13 builds this.
+Your marketing brain on disk: everything your department has learned, filed so any team member can find it. `business.md` and `brand/` say who you are; this folder holds what you've found out.
 
-Packs from the community land in packs/, one folder per team they feed. When a pack arrives: file it here, then tell the team it belongs to that it exists. Hires read their team's packs before big builds, the same way they read the brand folder before writing.
+| What | Where | Filled by |
+|---|---|---|
+| Your business audit: tools, hours, what to cut, what to hand off first | `business-audit.md` | cut-what-you-dont-need (Cut What You Don't Need lesson) |
+| One file per competitor, plus the summary | `competitors/` | the Researcher's competitor-check |
+| Marketing that works, one file per swipe | `swipes/` | the Researcher's collect-swipes |
+| Posts beating their own channel size | `outliers.md` | the Researcher's find-outliers |
+| Every report: site audits, marketing checkups, traffic reads | `reports/` | the team workflows that make them |
+| Packs from the community, one folder per team they feed | `packs/` | you, when a pack arrives |
 
-Research team reports land here too. This folder is why your department gets smarter every week instead of starting over.
+Rules: file new findings in the folder above that fits; never loose files at the top of `knowledge/`. If nothing fits, ask before making a new folder. Team members read their team's packs and the files above before big builds, the same way they read `brand/` before writing.
