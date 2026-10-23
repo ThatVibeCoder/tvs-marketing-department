@@ -18,3 +18,7 @@ credentials.*
 .playwright-cli/
 # Any file ending in .env, whatever it gets named. Keys never leave your machine
 *.env
+
+# Python cache files
+__pycache__/
+*.pyc
