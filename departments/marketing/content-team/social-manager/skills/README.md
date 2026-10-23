@@ -1,0 +1,10 @@
+# Skills
+
+Skills this team member knows live here, one folder per skill. A skill is clean steps, shareable; what the owner prefers stays in the team member's Memory.
+
+
+## What lands here
+- plan-the-week, post-content, read-the-stats (in the template)
+- set-your-content-mix (The Everyone Trap lesson)
+
+A lesson's skill doc saves its skill into this folder, then runs `python3 tools/sync.py` so Claude Code and Codex both find it.

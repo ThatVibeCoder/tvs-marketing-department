@@ -9,7 +9,7 @@ One page, then a yes, then the work.
 
 ## The shape, every time
 1. **What you asked for**, restated in one line so wrong understandings die here.
-2. **What's about to happen**, three to six plain steps, each naming the hire that does it.
+2. **What's about to happen**, three to six plain steps, each naming the team member that does it.
 3. **What it touches**: which files, which accounts, anything that costs money (say the price or say it's free).
 4. **The undo**: how we get back to before this, in one line. If there's no undo, that gets said in bold and waits for an explicit yes.
 

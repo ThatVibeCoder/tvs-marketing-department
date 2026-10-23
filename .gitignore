@@ -1,5 +1,5 @@
 # Files that never leave your machine.
-# Anything listed here gets skipped when claude saves your work to GitHub.
+# Anything listed here gets skipped when your AI saves your work to GitHub.
 
 # Your API keys live here, whatever the file ends up named. Never remove these lines.
 .env

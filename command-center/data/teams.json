@@ -1,0 +1,1205 @@
+[
+  {
+    "id": "dev-team",
+    "name": "Dev Team",
+    "command": "/dev-team",
+    "department": "it-systems",
+    "departmentName": "IT / Systems",
+    "teamType": "IT / Systems",
+    "buildStatus": "active",
+    "purpose": "Keeps the machine under everything running: your repo, your live site, your database, your keys, and the checks that keep them safe.",
+    "sourceOfTruth": "departments/it-systems/dev-team/team.md",
+    "flowAsOf": "2026-10-23",
+    "seats": [
+      {
+        "name": "API Manager",
+        "type": "Live",
+        "detail": "Owns the doors. Every tool the department talks to (connectors, APIs, CLIs) is a door, and this team member knows which doors exist, who uses each, and whether they still open. The keys agent HOLDS the keys; this team member decides which doors get wired and keeps the roster honest."
+      },
+      {
+        "name": "Code Reviewer",
+        "type": "Live",
+        "detail": "Reads what got built before it gets saved. The test agent runs things; this team member reads the changes themselves, the second pair of eyes a solo owner doesn't have."
+      },
+      {
+        "name": "GitHub Agent",
+        "type": "Live",
+        "detail": "Keeps your work saved and your history safe. Every save is a point you can come back to. That's the undo rule: a bad edit to a file here is a step backwards, not a loss. What it does not undo is anything that already left your machine, like a page a stranger already visited or an email that already sent."
+      },
+      {
+        "name": "Keys Agent",
+        "type": "Live",
+        "detail": "Holds the keys. Every key lives in one env file the repo already knows to skip when saving, so your keys don't ride along to GitHub. That covers the GitHub door. It doesn't cover a key pasted somewhere else, so keep that file private and off shared folders."
+      },
+      {
+        "name": "Payments Agent",
+        "type": "Seeded",
+        "detail": "For the day you're ready to take money on your pages. Checkout links, a paid product, a deposit on a call. Arrives as a drop, with its own setup and its own guardrails."
+      },
+      {
+        "name": "Planner",
+        "type": "Live",
+        "detail": "Plans before anything gets built. Turns \"I want X\" into one short plan you can read in a minute: what's about to happen, what it touches, what the undo is. Nothing on this team runs until the plan gets your yes."
+      },
+      {
+        "name": "Security Checker",
+        "type": "Live",
+        "detail": "Sweeps for anything leaking before it can cost you: a key in the wrong place, a form that tells strangers too much, a door left open."
+      },
+      {
+        "name": "Supabase Agent",
+        "type": "Seeded",
+        "detail": "The filing cabinet your tools can reach any time: data that needs to live online, not in a file. Most departments don't need it in week one, and that's fine; it sits connected and ready."
+      },
+      {
+        "name": "Test Agent",
+        "type": "Live",
+        "detail": "Tries to break what the department builds, before anyone else can. A page before it goes live, a key after setup, a routine before it runs on a schedule."
+      },
+      {
+        "name": "Vercel Agent",
+        "type": "Seeded",
+        "detail": "Puts your pages on the live internet. Free plan covers everything this department does for a long time."
+      }
+    ],
+    "skills": [
+      {
+        "name": "connection-check",
+        "command": "/connection-check",
+        "seat": "API Manager",
+        "owns": "Walk every wired tool and confirm its door still opens. Use monthly, after any tool changes its plans or keys, and whenever something that worked stops working."
+      },
+      {
+        "name": "pick-the-door",
+        "command": "/pick-the-door",
+        "seat": "API Manager",
+        "owns": "Choose the right kind of connection for a new tool before wiring anything. Use at the start of wire-a-tool, or when the owner asks \"how should my AI talk to X\"."
+      },
+      {
+        "name": "wire-a-tool",
+        "command": "/wire-a-tool",
+        "seat": "API Manager",
+        "owns": "Connect a new tool or service so your AI can use it, the proper way: pick the right kind of connection, get a key on the free plan if one's needed, store it saf"
+      },
+      {
+        "name": "review-changes",
+        "command": "/review-changes",
+        "seat": "Code Reviewer",
+        "owns": "Read the session's changes before they're saved to GitHub. Use before save-work on any session that built or changed pages, skills, or wiring."
+      },
+      {
+        "name": "add-from-template",
+        "command": "/add-from-template",
+        "seat": "GitHub Agent",
+        "owns": "Fetch one named piece of the public template (a file or a folder) and place it in this repo, without touching business.md or anything in brand/. Use when the ow"
+      },
+      {
+        "name": "save-work",
+        "command": "/save-work",
+        "seat": "GitHub Agent",
+        "owns": "Save the session's work to GitHub with history you can undo to. Use when the owner says \"save my work\", at the end of every session, and after anything worth ke"
+      },
+      {
+        "name": "set-up-repo",
+        "command": "/set-up-repo",
+        "seat": "GitHub Agent",
+        "owns": "First-time setup, get the owner's department repo cloned, connected, and proving it can save. Use during Set Up Your Dev Team, or whenever someone arrives with "
+      },
+      {
+        "name": "add-a-key",
+        "command": "/add-a-key",
+        "seat": "Keys Agent",
+        "owns": "Put a new API key somewhere safe and prove the save skips it, the only way a key gets stored in this department. Use when a tool just handed the owner a key, th"
+      },
+      {
+        "name": "one-plan",
+        "command": "/one-plan",
+        "seat": "Planner",
+        "owns": "Turn any build request into a one-page plan for the owner's yes. Use before every dev-team job of more than one step."
+      },
+      {
+        "name": "harden-the-basics",
+        "command": "/harden-the-basics",
+        "seat": "Security Checker",
+        "owns": "The standing security baseline for everything this department ships. Use once when the first page goes live, and again whenever something new starts talking to "
+      },
+      {
+        "name": "security-sweep",
+        "command": "/security-sweep",
+        "seat": "Security Checker",
+        "owns": "Sweep the repo and anything about to go public for leaks. Use before sharing any live URL, after adding any key, and any time something feels off."
+      },
+      {
+        "name": "set-up-project",
+        "command": "/set-up-project",
+        "seat": "Supabase Agent",
+        "owns": "Stand up the owner's Supabase project the first time something needs online storage. Use when a build actually calls for a database, not before."
+      },
+      {
+        "name": "pre-ship-check",
+        "command": "/pre-ship-check",
+        "seat": "Test Agent",
+        "owns": "Check a thing right before it ships or right after setup, like a stranger would use it. Use before any page goes live, after any key or account setup, before an"
+      },
+      {
+        "name": "ship-a-page",
+        "command": "/ship-a-page",
+        "seat": "Vercel Agent",
+        "owns": "Put a page from this repo onto the live internet and hand back the URL. Use when the owner says \"ship it\", \"put it live\", or the landing page from Build Your La"
+      },
+      {
+        "name": "set-up-my-code-base",
+        "command": "/set-up-my-code-base",
+        "seat": "Workflow",
+        "owns": "Say \"set up my code base\". The one-time setup that connects your repo, hosting, database and tools. Everything else in IT / Systems depends on it."
+      },
+      {
+        "name": "ship-my-landing-page",
+        "command": "/ship-my-landing-page",
+        "seat": "Workflow",
+        "owns": "Say \"ship my landing page\". The Website Team finished a page and it's ready to go live. If \"set up my code base\" never ran, run that first."
+      }
+    ],
+    "flow": {
+      "phases": [
+        {
+          "id": "w0-plan",
+          "label": "set up my code base · Plan",
+          "color": "sky"
+        },
+        {
+          "id": "w0-connect",
+          "label": "set up my code base · Connect",
+          "color": "violet"
+        },
+        {
+          "id": "w0-check",
+          "label": "set up my code base · Check",
+          "color": "amber"
+        },
+        {
+          "id": "w1-plan",
+          "label": "ship my landing page · Plan",
+          "color": "violet"
+        },
+        {
+          "id": "w1-save",
+          "label": "ship my landing page · Save",
+          "color": "amber"
+        },
+        {
+          "id": "w1-ship",
+          "label": "ship my landing page · Ship",
+          "color": "rose"
+        },
+        {
+          "id": "w1-check",
+          "label": "ship my landing page · Check",
+          "color": "teal"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "w0-s1",
+          "phase": "w0-plan",
+          "label": "Planner",
+          "sub": "one-plan",
+          "icon": "check",
+          "badge": "gate",
+          "detail": "writes the one-page plan of what's about to happen. You say go."
+        },
+        {
+          "id": "w0-s2",
+          "phase": "w0-connect",
+          "label": "GitHub Agent",
+          "sub": "set-up-repo",
+          "icon": "db",
+          "detail": "confirms your repo is cloned, connected and saving. save-work is your end-of-session habit from here on."
+        },
+        {
+          "id": "w0-s3",
+          "phase": "w0-connect",
+          "label": "API Manager",
+          "sub": "pick-the-door",
+          "icon": "shield",
+          "detail": "picks the right connection for each tool: a connector beats a command line tool beats a key."
+        },
+        {
+          "id": "w0-s4",
+          "phase": "w0-connect",
+          "label": "Keys Agent",
+          "sub": "add-a-key",
+          "icon": "db",
+          "detail": "stores anything secret in the `.env` file and proves the save skips it."
+        },
+        {
+          "id": "w0-s5",
+          "phase": "w0-connect",
+          "label": "Supabase Agent",
+          "sub": "set-up-project",
+          "icon": "search",
+          "detail": "connects your free Supabase account so it's ready the day something needs storing."
+        },
+        {
+          "id": "w0-s6",
+          "phase": "w0-connect",
+          "label": "Vercel Agent",
+          "sub": "ship-a-page",
+          "icon": "send",
+          "detail": "connects your free Vercel account to GitHub so shipping is ready."
+        },
+        {
+          "id": "w0-s7",
+          "phase": "w0-check",
+          "label": "Test Agent",
+          "sub": "pre-ship-check",
+          "icon": "search",
+          "detail": "runs the check on the whole setup and reports in plain words."
+        },
+        {
+          "id": "w1-s1",
+          "phase": "w1-plan",
+          "label": "Planner",
+          "sub": "one-plan",
+          "icon": "check",
+          "badge": "gate",
+          "detail": "turns the website team's build into a one-page ship plan. You say go."
+        },
+        {
+          "id": "w1-s2",
+          "phase": "w1-save",
+          "label": "Code Reviewer",
+          "sub": "review-changes",
+          "icon": "db",
+          "detail": "reads every change before it's saved."
+        },
+        {
+          "id": "w1-s3",
+          "phase": "w1-save",
+          "label": "GitHub Agent",
+          "sub": "save-work",
+          "icon": "db",
+          "detail": "saves it with history you can undo to."
+        },
+        {
+          "id": "w1-s4",
+          "phase": "w1-ship",
+          "label": "Vercel Agent",
+          "sub": "ship-a-page",
+          "icon": "send",
+          "detail": "puts it on the live internet and hands you the URL."
+        },
+        {
+          "id": "w1-s5",
+          "phase": "w1-check",
+          "label": "Test Agent",
+          "sub": "pre-ship-check",
+          "icon": "log",
+          "detail": "clicks what a stranger would click and reports what broke."
+        },
+        {
+          "id": "w1-s6",
+          "phase": "w1-check",
+          "label": "Security Checker",
+          "sub": "security-sweep",
+          "icon": "shield",
+          "detail": "sweeps for anything leaking (keys, form endpoints) before you share the link."
+        }
+      ],
+      "edges": [
+        {
+          "from": "w0-s1",
+          "to": "w0-s2"
+        },
+        {
+          "from": "w0-s2",
+          "to": "w0-s3"
+        },
+        {
+          "from": "w0-s3",
+          "to": "w0-s4"
+        },
+        {
+          "from": "w0-s4",
+          "to": "w0-s5"
+        },
+        {
+          "from": "w0-s5",
+          "to": "w0-s6"
+        },
+        {
+          "from": "w0-s6",
+          "to": "w0-s7"
+        },
+        {
+          "from": "w1-s1",
+          "to": "w1-s2"
+        },
+        {
+          "from": "w1-s2",
+          "to": "w1-s3"
+        },
+        {
+          "from": "w1-s3",
+          "to": "w1-s4"
+        },
+        {
+          "from": "w1-s4",
+          "to": "w1-s5"
+        },
+        {
+          "from": "w1-s5",
+          "to": "w1-s6"
+        }
+      ]
+    }
+  },
+  {
+    "id": "ads-team",
+    "name": "Ads Team",
+    "command": "/ads-team",
+    "department": "marketing",
+    "departmentName": "Marketing",
+    "teamType": "Marketing",
+    "buildStatus": "planning",
+    "purpose": "Paid traffic, once your pages and offer are proven without it.",
+    "sourceOfTruth": "departments/marketing/ads-team/team.md",
+    "flowAsOf": "2026-10-23",
+    "seats": [
+      {
+        "name": "Ad Writer",
+        "type": "Seeded",
+        "detail": "Writes ad copy from your offer and ICP, variant by variant, for your review. Never invents claims, everything traces to brand files."
+      },
+      {
+        "name": "Ads Manager",
+        "type": "Seeded",
+        "detail": "Drives your ad platform: campaigns staged, budgets watched, nothing launched without your word. Platform-specific setup arrives with the drop that sets up this team member."
+      },
+      {
+        "name": "Growth Lead",
+        "type": "Seeded",
+        "detail": "Runs the ads team. Decides what gets tested next, reads every report before you do, and brings you one recommendation instead of five dashboards."
+      }
+    ],
+    "skills": [],
+    "flow": {
+      "phases": [],
+      "nodes": [],
+      "edges": []
+    }
+  },
+  {
+    "id": "content-team",
+    "name": "Content Team",
+    "command": "/content-team",
+    "department": "marketing",
+    "departmentName": "Marketing",
+    "teamType": "Marketing",
+    "buildStatus": "planning",
+    "purpose": "Everything you publish: the words, the visuals, the calendar, and the numbers after.",
+    "sourceOfTruth": "departments/marketing/content-team/team.md",
+    "flowAsOf": "2026-10-23",
+    "seats": [
+      {
+        "name": "Copywriter",
+        "type": "Seeded",
+        "detail": "Writes everything with words in it: posts, captions, page copy, whatever the plan calls for. Reads brand/voice.md before every piece and saves drafts for the owner's review, never publishes."
+      },
+      {
+        "name": "Designer",
+        "type": "Seeded",
+        "detail": "Makes the visuals: social graphics, page sections, simple layouts. Reads brand/colors.md and brand/typography.md before every piece, pulls logos from brand/assets. When a visual matters enough to argue about, the argument updates brand/guidelines.md."
+      },
+      {
+        "name": "Editor",
+        "type": "Live",
+        "detail": "The second pass on everything before the owner sees it. Tightens drafts, catches what breaks the voice, cuts what a stranger wouldn't read. When video arrives, editing it lands here too."
+      },
+      {
+        "name": "Social Manager",
+        "type": "Seeded",
+        "detail": "One person for all of social. Knows where you post, what each platform wants, and what goes out when. Runs the calendar, stages the posts, reads the numbers after."
+      }
+    ],
+    "skills": [
+      {
+        "name": "draft-post",
+        "command": "/draft-post",
+        "seat": "Copywriter",
+        "owns": "Draft a social post in your voice, for one specific customer, doing one specific job. Use when you say \"draft a post\", \"write me a post about X\", \"turn this int"
+      },
+      {
+        "name": "write-hooks",
+        "command": "/write-hooks",
+        "seat": "Copywriter",
+        "owns": "Write the first line that earns the rest of the piece. Use on every post before it ships, or when the owner says a draft feels flat."
+      },
+      {
+        "name": "make-a-report-doc",
+        "command": "/make-a-report-doc",
+        "seat": "Designer",
+        "owns": "Turn any report in knowledge/ into one clean, brand-styled document the owner can share or save as a PDF. Use when the owner says \"make this a PDF\", \"make this "
+      },
+      {
+        "name": "edit-a-draft",
+        "command": "/edit-a-draft",
+        "seat": "Editor",
+        "owns": "The second pass on any draft before the owner sees it: check it against brand/voice.md, tighten it, and cut what a stranger wouldn't read. Use on every post, em"
+      },
+      {
+        "name": "plan-the-week",
+        "command": "/plan-the-week",
+        "seat": "Social Manager",
+        "owns": "Turn finished content into a simple posting calendar for the owner's yes. Use weekly, or whenever new content is ready."
+      },
+      {
+        "name": "post-content",
+        "command": "/post-content",
+        "seat": "Social Manager",
+        "owns": "Stage approved content onto its platform for the owner's final send. Use when the calendar says something goes out."
+      },
+      {
+        "name": "read-the-stats",
+        "command": "/read-the-stats",
+        "seat": "Social Manager",
+        "owns": "Read how content performed and say it plainly. Use weekly, after enough has gone out to mean something."
+      },
+      {
+        "name": "make-a-post",
+        "command": "/make-a-post",
+        "seat": "Workflow",
+        "owns": "Say \"make a post\". Any time you want one post written, checked and ready for you to send."
+      }
+    ],
+    "flow": {
+      "phases": [
+        {
+          "id": "w0-plan",
+          "label": "Plan",
+          "color": "sky"
+        },
+        {
+          "id": "w0-write",
+          "label": "Write",
+          "color": "violet"
+        },
+        {
+          "id": "w0-check",
+          "label": "Check",
+          "color": "amber"
+        },
+        {
+          "id": "w0-post",
+          "label": "Post",
+          "color": "rose"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "w0-s1",
+          "phase": "w0-plan",
+          "label": "Social Manager",
+          "sub": "reads `brand/channels.md` and picks the job this",
+          "icon": "search",
+          "detail": "reads `brand/channels.md` and picks the job this post does (give, prove or invite) and where it goes."
+        },
+        {
+          "id": "w0-s2",
+          "phase": "w0-write",
+          "label": "Copywriter",
+          "sub": "draft-post",
+          "icon": "form",
+          "detail": "drafts it in your voice for one buyer (a persona from `brand/personas/` if you have them)."
+        },
+        {
+          "id": "w0-s3",
+          "phase": "w0-write",
+          "label": "Copywriter",
+          "sub": "write-hooks",
+          "icon": "form",
+          "detail": "writes the first line that earns the rest."
+        },
+        {
+          "id": "w0-s4",
+          "phase": "w0-check",
+          "label": "Editor",
+          "sub": "edit-a-draft",
+          "icon": "sparkle",
+          "detail": "the second pass against `brand/voice.md`."
+        },
+        {
+          "id": "w0-s5",
+          "phase": "w0-check",
+          "label": "You",
+          "sub": "read the draft and say yes or what to fix.",
+          "icon": "check",
+          "badge": "gate",
+          "detail": "read the draft and say yes or what to fix."
+        },
+        {
+          "id": "w0-s6",
+          "phase": "w0-post",
+          "label": "Social Manager",
+          "sub": "post-content",
+          "icon": "sparkle",
+          "detail": "stages it on its platform for your final send and logs it."
+        }
+      ],
+      "edges": [
+        {
+          "from": "w0-s1",
+          "to": "w0-s2"
+        },
+        {
+          "from": "w0-s2",
+          "to": "w0-s3"
+        },
+        {
+          "from": "w0-s3",
+          "to": "w0-s4"
+        },
+        {
+          "from": "w0-s4",
+          "to": "w0-s5"
+        },
+        {
+          "from": "w0-s5",
+          "to": "w0-s6"
+        }
+      ]
+    }
+  },
+  {
+    "id": "follow-up-team",
+    "name": "Follow-Up Team",
+    "command": "/follow-up-team",
+    "department": "marketing",
+    "departmentName": "Marketing",
+    "teamType": "Marketing",
+    "buildStatus": "planning",
+    "purpose": "Everything after somebody already knows you: replies, check-ins, and keeping warm leads warm.",
+    "sourceOfTruth": "departments/marketing/follow-up-team/team.md",
+    "flowAsOf": "2026-10-23",
+    "seats": [
+      {
+        "name": "Nurture Agent",
+        "type": "Seeded",
+        "detail": "Keeps warm leads warm. Tracks who you've talked to, drafts the check-in that doesn't feel like a check-in, and flags anyone going quiet before they're gone."
+      },
+      {
+        "name": "Reply Agent",
+        "type": "Seeded",
+        "detail": "Drafts responses to real messages, comments, and questions in your voice, and saves them for your review. It never sends, you send."
+      }
+    ],
+    "skills": [],
+    "flow": {
+      "phases": [],
+      "nodes": [],
+      "edges": []
+    }
+  },
+  {
+    "id": "newsletter-team",
+    "name": "Newsletter Team",
+    "command": "/newsletter-team",
+    "department": "marketing",
+    "departmentName": "Marketing",
+    "teamType": "Marketing",
+    "buildStatus": "planning",
+    "purpose": "The email your audience actually opens, once your list exists.",
+    "sourceOfTruth": "departments/marketing/newsletter-team/team.md",
+    "flowAsOf": "2026-10-23",
+    "seats": [
+      {
+        "name": "List Manager",
+        "type": "Seeded",
+        "detail": "Knows who's on your list and how alive it is. Tracks growth, flags the quiet ones, and keeps you honest about whether the list is growing or just aging."
+      },
+      {
+        "name": "Newsletter Writer",
+        "type": "Seeded",
+        "detail": "Drafts your newsletter in your voice, one clear idea per issue, and saves it for your review. Deliverability rules come with the drop that sets up this team member."
+      }
+    ],
+    "skills": [],
+    "flow": {
+      "phases": [],
+      "nodes": [],
+      "edges": []
+    }
+  },
+  {
+    "id": "research-team",
+    "name": "Research Team",
+    "command": "/research-team",
+    "department": "marketing",
+    "departmentName": "Marketing",
+    "teamType": "Marketing",
+    "buildStatus": "planning",
+    "purpose": "Knows what's happening outside your business: competitors, what works in your space, and what belongs in your knowledge folder.",
+    "sourceOfTruth": "departments/marketing/research-team/team.md",
+    "flowAsOf": "2026-10-23",
+    "seats": [
+      {
+        "name": "Researcher",
+        "type": "Seeded",
+        "detail": "One team member for knowing what's happening outside your business. Reads competitors, collects what's working in your space, finds the posts beating their own channel size. Everything it learns lands in the knowledge folder, never straight into your copy."
+      }
+    ],
+    "skills": [
+      {
+        "name": "collect-swipes",
+        "command": "/collect-swipes",
+        "seat": "Researcher",
+        "owns": "Save a piece of marketing that works and write down why it works. Use whenever the owner sends something that caught their eye."
+      },
+      {
+        "name": "competitor-check",
+        "command": "/competitor-check",
+        "seat": "Researcher",
+        "owns": "Find and analyze the businesses your customers could pick instead of you, and file what matters. Use once the classroom gets there, monthly after that, and when"
+      },
+      {
+        "name": "find-outliers",
+        "command": "/find-outliers",
+        "seat": "Researcher",
+        "owns": "Find posts in your space performing far beyond their channel's size. Use monthly to feed the content team real signal."
+      },
+      {
+        "name": "run-my-marketing-checkup",
+        "command": "/run-my-marketing-checkup",
+        "seat": "Workflow",
+        "owns": "Say \"run my marketing checkup\". Once a month. Steps whose setup isn't ready yet (no key, no stats) get skipped with a plain line saying so. A checkup that silently skips half its checks is lying."
+      }
+    ],
+    "flow": {
+      "phases": [
+        {
+          "id": "w0-outside",
+          "label": "Outside",
+          "color": "sky"
+        },
+        {
+          "id": "w0-inside",
+          "label": "Inside",
+          "color": "violet"
+        },
+        {
+          "id": "w0-report",
+          "label": "Report",
+          "color": "amber"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "w0-s1",
+          "phase": "w0-outside",
+          "label": "Researcher",
+          "sub": "competitor-check",
+          "icon": "sparkle",
+          "detail": "what changed out there."
+        },
+        {
+          "id": "w0-s2",
+          "phase": "w0-outside",
+          "label": "Researcher",
+          "sub": "find-outliers",
+          "icon": "sparkle",
+          "detail": "what's overperforming in your space."
+        },
+        {
+          "id": "w0-s3",
+          "phase": "w0-inside",
+          "label": "Traffic Agent",
+          "sub": "weekly-traffic-read",
+          "icon": "sparkle",
+          "detail": "what came to your site, from where, and one action."
+        },
+        {
+          "id": "w0-s4",
+          "phase": "w0-inside",
+          "label": "Social Manager",
+          "sub": "read-the-stats",
+          "icon": "sparkle",
+          "detail": "how each post did against its own job."
+        },
+        {
+          "id": "w0-s5",
+          "phase": "w0-report",
+          "label": "Researcher",
+          "sub": "writes `knowledge/reports/marketing-checkup-<YYY",
+          "icon": "search",
+          "detail": "writes `knowledge/reports/marketing-checkup-<YYYY-MM>.md` from the four steps above: competitors, outliers, traffic, content, and the ONE thing to do next. Anything that changes what a team is building gets flagged to you directly."
+        }
+      ],
+      "edges": [
+        {
+          "from": "w0-s1",
+          "to": "w0-s2"
+        },
+        {
+          "from": "w0-s2",
+          "to": "w0-s3"
+        },
+        {
+          "from": "w0-s3",
+          "to": "w0-s4"
+        },
+        {
+          "from": "w0-s4",
+          "to": "w0-s5"
+        }
+      ]
+    }
+  },
+  {
+    "id": "website-team",
+    "name": "Website Team",
+    "command": "/website-team",
+    "department": "marketing",
+    "departmentName": "Marketing",
+    "teamType": "Marketing",
+    "buildStatus": "active",
+    "purpose": "Your pages on the live internet, and the traffic that finds them.",
+    "sourceOfTruth": "departments/marketing/website-team/team.md",
+    "flowAsOf": "2026-10-23",
+    "seats": [
+      {
+        "name": "Page Builder",
+        "type": "Live",
+        "detail": "Builds and updates your pages. Reads brand/offer.md, brand/colors.md, brand/typography.md, and brand/voice.md before touching anything, so every page comes out looking and sounding like you, selling the thing you actually sell."
+      },
+      {
+        "name": "Traffic Agent",
+        "type": "Live",
+        "detail": "Gets your pages found, by search engines, and by the AI engines people ask instead of searching now. Runs its checks BEFORE a page ships, reads the numbers after, and feeds the weekly traffic report routine."
+      }
+    ],
+    "skills": [
+      {
+        "name": "build-a-page",
+        "command": "/build-a-page",
+        "seat": "Page Builder",
+        "owns": "Build one page that does one job, start to finish. Use for the landing page in Build Your Landing Page and every page after it."
+      },
+      {
+        "name": "page-copy",
+        "command": "/page-copy",
+        "seat": "Page Builder",
+        "owns": "Write or fix the words on a page. Use inside build-a-page, or alone when a page reads wrong."
+      },
+      {
+        "name": "review-a-page",
+        "command": "/review-a-page",
+        "seat": "Page Builder",
+        "owns": "Review an EXISTING page like a stranger and report what's costing conversions. Use inside the site audit, or alone when a page underperforms."
+      },
+      {
+        "name": "style-the-page",
+        "command": "/style-the-page",
+        "seat": "Page Builder",
+        "owns": "Make a page look like the brand, on purpose. Use inside build-a-page or when a page looks off."
+      },
+      {
+        "name": "write-headlines",
+        "command": "/write-headlines",
+        "seat": "Page Builder",
+        "owns": "Write five landing page headlines from the owner's offer, grade each against the craft rules, and save the winner as the headline in brand/offer.md. Use when th"
+      },
+      {
+        "name": "ai-visibility",
+        "command": "/ai-visibility",
+        "seat": "Traffic Agent",
+        "owns": "Make pages the AI engines can find, quote, and recommend. Use on every page after seo-foundations, same pass."
+      },
+      {
+        "name": "seo-foundations",
+        "command": "/seo-foundations",
+        "seat": "Traffic Agent",
+        "owns": "The search basics every page gets before it ships. Use on every new page, and once on any old page that never got it."
+      },
+      {
+        "name": "speed-check",
+        "command": "/speed-check",
+        "seat": "Traffic Agent",
+        "owns": "Make sure a page loads fast enough that strangers stay. Use before ship and whenever a page gains images."
+      },
+      {
+        "name": "weekly-traffic-read",
+        "command": "/weekly-traffic-read",
+        "seat": "Traffic Agent",
+        "owns": "Read the week's traffic and say it plainly. Use weekly, this is what the Your Weekly Traffic Read lesson turns into a routine."
+      },
+      {
+        "name": "build-my-landing-page",
+        "command": "/build-my-landing-page",
+        "seat": "Workflow",
+        "owns": "Say \"build my landing page\". Your offer is locked and you want your first page. It stops first if `brand/offer.md`, `brand/colors.md` or `brand/typography.md` is still empty, because a page without them is a guess."
+      },
+      {
+        "name": "audit-my-site",
+        "command": "/audit-my-site",
+        "seat": "Workflow",
+        "owns": "Say \"audit my site\". Once your landing page is live, then every three months."
+      }
+    ],
+    "flow": {
+      "phases": [
+        {
+          "id": "w0-plan",
+          "label": "build my landing page · Plan",
+          "color": "sky"
+        },
+        {
+          "id": "w0-write",
+          "label": "build my landing page · Write",
+          "color": "violet"
+        },
+        {
+          "id": "w0-look",
+          "label": "build my landing page · Look",
+          "color": "amber"
+        },
+        {
+          "id": "w0-get-found",
+          "label": "build my landing page · Get found",
+          "color": "rose"
+        },
+        {
+          "id": "w0-hand-off",
+          "label": "build my landing page · Hand off",
+          "color": "teal"
+        },
+        {
+          "id": "w1-review",
+          "label": "audit my site · Review",
+          "color": "violet"
+        },
+        {
+          "id": "w1-check",
+          "label": "audit my site · Check",
+          "color": "amber"
+        },
+        {
+          "id": "w1-report",
+          "label": "audit my site · Report",
+          "color": "rose"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "w0-s1",
+          "phase": "w0-plan",
+          "label": "Page Builder",
+          "sub": "build-a-page",
+          "icon": "search",
+          "detail": "checks the brand files, then lays out one page with one job."
+        },
+        {
+          "id": "w0-s2",
+          "phase": "w0-write",
+          "label": "Page Builder",
+          "sub": "write-headlines",
+          "icon": "check",
+          "badge": "gate",
+          "detail": "writes five headlines from your offer and grades them; the winner goes in `brand/offer.md`."
+        },
+        {
+          "id": "w0-s3",
+          "phase": "w0-write",
+          "label": "Page Builder",
+          "sub": "page-copy",
+          "icon": "form",
+          "detail": "writes the rest of the words, like you talk."
+        },
+        {
+          "id": "w0-s4",
+          "phase": "w0-look",
+          "label": "Page Builder",
+          "sub": "style-the-page",
+          "icon": "sparkle",
+          "detail": "makes it look like your brand, on purpose."
+        },
+        {
+          "id": "w0-s5",
+          "phase": "w0-get-found",
+          "label": "Traffic Agent",
+          "sub": "seo-foundations",
+          "icon": "send",
+          "detail": "the search basics, before the page ships."
+        },
+        {
+          "id": "w0-s6",
+          "phase": "w0-get-found",
+          "label": "Traffic Agent",
+          "sub": "ai-visibility",
+          "icon": "sparkle",
+          "detail": "makes the page easy for AI answers to find and quote."
+        },
+        {
+          "id": "w0-s7",
+          "phase": "w0-hand-off",
+          "label": "Page Builder",
+          "sub": "hands the finished page to the Dev Team's \"ship ",
+          "icon": "send",
+          "detail": "hands the finished page to the Dev Team's \"ship my landing page\" workflow."
+        },
+        {
+          "id": "w1-s1",
+          "phase": "w1-review",
+          "label": "Page Builder",
+          "sub": "review-a-page",
+          "icon": "send",
+          "detail": "walks every live page like a stranger would."
+        },
+        {
+          "id": "w1-s2",
+          "phase": "w1-check",
+          "label": "Traffic Agent",
+          "sub": "seo-foundations",
+          "icon": "send",
+          "detail": "checks what's live against the search basics."
+        },
+        {
+          "id": "w1-s3",
+          "phase": "w1-check",
+          "label": "Traffic Agent",
+          "sub": "ai-visibility",
+          "icon": "search",
+          "detail": "checks what AI answers can find."
+        },
+        {
+          "id": "w1-s4",
+          "phase": "w1-check",
+          "label": "Traffic Agent",
+          "sub": "speed-check",
+          "icon": "search",
+          "detail": "checks every page loads fast."
+        },
+        {
+          "id": "w1-s5",
+          "phase": "w1-check",
+          "label": "Security Checker",
+          "sub": "security-sweep",
+          "icon": "shield",
+          "detail": "sweeps the form path."
+        },
+        {
+          "id": "w1-s6",
+          "phase": "w1-report",
+          "label": "Page Builder",
+          "sub": "writes `knowledge/reports/site-audit-<YYYY-MM>.m",
+          "icon": "form",
+          "detail": "writes `knowledge/reports/site-audit-<YYYY-MM>.md` from the steps above: Quick win, Strategic, Long-term, each with the team member who owns it, ending with the ONE fix to do first."
+        },
+        {
+          "id": "w1-s7",
+          "phase": "w1-report",
+          "label": "Designer",
+          "sub": "make-a-report-doc",
+          "icon": "sparkle",
+          "detail": "makes it a shareable PDF if you want one."
+        }
+      ],
+      "edges": [
+        {
+          "from": "w0-s1",
+          "to": "w0-s2"
+        },
+        {
+          "from": "w0-s2",
+          "to": "w0-s3"
+        },
+        {
+          "from": "w0-s3",
+          "to": "w0-s4"
+        },
+        {
+          "from": "w0-s4",
+          "to": "w0-s5"
+        },
+        {
+          "from": "w0-s5",
+          "to": "w0-s6"
+        },
+        {
+          "from": "w0-s6",
+          "to": "w0-s7"
+        },
+        {
+          "from": "w1-s1",
+          "to": "w1-s2"
+        },
+        {
+          "from": "w1-s2",
+          "to": "w1-s3"
+        },
+        {
+          "from": "w1-s3",
+          "to": "w1-s4"
+        },
+        {
+          "from": "w1-s4",
+          "to": "w1-s5"
+        },
+        {
+          "from": "w1-s5",
+          "to": "w1-s6"
+        },
+        {
+          "from": "w1-s6",
+          "to": "w1-s7"
+        }
+      ]
+    }
+  },
+  {
+    "id": "strategy-team",
+    "name": "Strategy Team",
+    "command": "/strategy-team",
+    "department": "operations",
+    "departmentName": "Operations",
+    "teamType": "Operations",
+    "buildStatus": "planning",
+    "purpose": "Runs the room: knows the whole business, keeps the shared brain true, scores ideas, and picks what comes next.",
+    "sourceOfTruth": "departments/operations/strategy-team/team.md",
+    "flowAsOf": "2026-10-23",
+    "seats": [
+      {
+        "name": "Company Strategist",
+        "type": "Seeded",
+        "detail": "Runs the room. Reads the whole repo, answers any question about the business, flags it when two files disagree, routes new information to the file it belongs in, and picks the one next move. It doesn't make content."
+      },
+      {
+        "name": "ICP & Offer Owner",
+        "type": "Seeded",
+        "detail": "Owns who you serve and what you sell. Keeps these files true and agreeing with each other: `brand/icp.md`, `brand/personas/`, `brand/friction-points.md`, `brand/contrarian-take.md` and `brand/offer.md`."
+      },
+      {
+        "name": "Moat Analyst",
+        "type": "Seeded",
+        "detail": "The go or no-go team member. Scores your business, or any idea you bring, out of 40 across margin, operations, advantage and market size. It only runs when you ask: \"run my moat\" or \"score my business\"."
+      }
+    ],
+    "skills": [
+      {
+        "name": "brain-dump-your-business",
+        "command": "/brain-dump-your-business",
+        "seat": "Company Strategist",
+        "owns": "Interview the owner about their business, one question at a time, then write business.md from their answers. This is the founding conversation every other team "
+      },
+      {
+        "name": "company-brain-dump",
+        "command": "/company-brain-dump",
+        "seat": "Company Strategist",
+        "owns": "Capture anything the owner just learned about their business and file it where it belongs. Use any time they want to talk something out, after a sales call, whe"
+      },
+      {
+        "name": "what-comes-next",
+        "command": "/what-comes-next",
+        "seat": "Workflow",
+        "owns": "Say \"what comes next\". Any time you want the strategist's one pick for the next move, usually at the end of a week. Needs the Set Up Your Company Strategist lesson done first."
+      }
+    ],
+    "flow": {
+      "phases": [
+        {
+          "id": "w0-read",
+          "label": "Read",
+          "color": "sky"
+        },
+        {
+          "id": "w0-pick",
+          "label": "Pick",
+          "color": "violet"
+        },
+        {
+          "id": "w0-brief",
+          "label": "Brief",
+          "color": "amber"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "w0-s1",
+          "phase": "w0-read",
+          "label": "Company Strategist",
+          "sub": "company-strategist",
+          "icon": "search",
+          "detail": "reads the whole repo and says what's true, what's thin, and what's missing, then makes ONE pick with its reasons."
+        },
+        {
+          "id": "w0-s2",
+          "phase": "w0-pick",
+          "label": "You",
+          "sub": "push back where it's wrong, then agree on the pi",
+          "icon": "check",
+          "badge": "gate",
+          "detail": "push back where it's wrong, then agree on the pick."
+        },
+        {
+          "id": "w0-s3",
+          "phase": "w0-brief",
+          "label": "Company Strategist",
+          "sub": "writes the brief to `departments/operations/stra",
+          "icon": "search",
+          "detail": "writes the brief to `departments/operations/strategy-team/company-strategist/briefs/<YYYY-MM-DD>-<team-member>.md`, in the shape `briefs/README.md` gives."
+        }
+      ],
+      "edges": [
+        {
+          "from": "w0-s1",
+          "to": "w0-s2"
+        },
+        {
+          "from": "w0-s2",
+          "to": "w0-s3"
+        }
+      ]
+    }
+  },
+  {
+    "id": "sales-team",
+    "name": "Sales Team",
+    "command": "/sales-team",
+    "department": "sales",
+    "departmentName": "Sales",
+    "teamType": "Sales",
+    "buildStatus": "planning",
+    "purpose": "The path from stranger to booked call: the assessment, the calendar, and the record.",
+    "sourceOfTruth": "departments/sales/sales-team/team.md",
+    "flowAsOf": "2026-10-23",
+    "seats": [
+      {
+        "name": "Assessment Agent",
+        "type": "Seeded",
+        "detail": "Runs your assessment: asks the questions that tell you whether a lead fits, and scores what comes back. Built as a skill so it runs the same way every time."
+      },
+      {
+        "name": "Calendar Agent",
+        "type": "Seeded",
+        "detail": "Gets qualified people onto your calendar. Wired to your booking tool, hands the details to the CRM agent when a call lands."
+      },
+      {
+        "name": "CRM Agent",
+        "type": "Seeded",
+        "detail": "Remembers every lead. Routes assessment answers and booked calls into the record you actually check, your inbox counts as a CRM until you outgrow it."
+      }
+    ],
+    "skills": [
+      {
+        "name": "build-your-assessment",
+        "command": "/build-your-assessment",
+        "seat": "Assessment Agent",
+        "owns": "Build the owner's lead assessment: the short set of questions that tells them whether a lead fits, before anyone books a call. Use during Build Your Assessment,"
+      }
+    ],
+    "flow": {
+      "phases": [],
+      "nodes": [],
+      "edges": []
+    }
+  }
+]
