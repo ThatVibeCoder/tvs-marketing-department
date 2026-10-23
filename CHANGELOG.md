@@ -30,7 +30,7 @@ The `VERSION` file at the root holds one number: the generation your repo was cl
 2. Add the new empty sections, At a Glance blocks and Updates logs to `business.md` and the files in `brand/`, keeping every word you already wrote.
 3. Fetch the new `AGENTS.md`, every `team.md`, and the new skills (write-headlines, edit-a-draft). Update every team member file's header: `**Status:**` becomes `seeded` or `live` (a `staffed` member is `live`), then a `**Team:**` line, then the read-first line from AGENTS.md. Add an `output/` folder next to each.
 4. Delete the old version-2 copies in BOTH `.claude/skills/` and `.agents/skills/`: add-a-key, audit-my-site, brain-dump-your-business, company-brain-dump, connect-a-tool, make-this-a-pdf, run-my-marketing-checkup, set-up-my-code-base, ship-my-landing-page. They all live inside `departments/` now. Any skill a lesson saved straight into those folders (for example staff-your-writer or web-copywriter) moves into its owner: the classroom's version-3 docs say where, and two skills doing one job become one.
-5. Run `python3 tools/sync.py`, open the Command Center, then save-work.
+5. Run the sync command (`python3 tools/sync.py`, or `py tools/sync.py` on Windows), open the Command Center, then save-work.
 
 ---
 

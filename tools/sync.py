@@ -13,12 +13,20 @@ and before every save. From the real folders, it:
   3. Rebuilds the Command Center data (command-center/data/) so the dashboard shows every team,
      workflow, team member, skill and routine.
 
-  python3 tools/sync.py           rebuild everything
-  python3 tools/sync.py --check   change nothing; exit 1 if anything is out of date or broken
+  python3 tools/sync.py           rebuild everything (Mac and Linux)
+  py tools/sync.py                the same on Windows (or: python tools/sync.py)
+  ... --check                     change nothing; exit 1 if anything is out of date or broken
 
 Standard library only. Works the same for Claude Code and Codex.
 """
 import json, os, re, sys, datetime
+
+# Windows consoles often can't print every character; never crash over that
+for _s in (sys.stdout, sys.stderr):
+    try:
+        _s.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEPTS = os.path.join(ROOT, "departments")
@@ -33,7 +41,7 @@ errors, warnings = [], []
 
 
 def rel(p):
-    return os.path.relpath(p, ROOT)
+    return os.path.relpath(p, ROOT).replace(os.sep, "/")  # same paths on Windows, Mac and Linux
 
 
 def read(p):
@@ -425,7 +433,7 @@ def build_cc(depts, today):
 def sync_cc(data, check):
     stale = []
     ex = os.path.join(CC_DATA, "executions.json")
-    executions = json.load(open(ex)) if os.path.exists(ex) else []
+    executions = json.loads(read(ex)) if os.path.exists(ex) else []
     files = {k: json.dumps(v, indent=2, ensure_ascii=False) + "\n" for k, v in data.items()}
     if not os.path.exists(ex):
         files["executions.json"] = "[]\n"

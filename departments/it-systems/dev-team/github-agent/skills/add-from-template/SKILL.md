@@ -15,7 +15,7 @@ One piece, fetched from the public template, placed in this repo. Never a pull, 
 5. Report back in one short paragraph: what got fetched, where it landed, whether it was new or replaced something, and that `business.md` and `brand/` were never in scope.
 
 ## Updating to a new version of the template
-When the owner says "update my department to the newest version", read the template's `CHANGELOG.md` from GitHub, compare it to this repo's `VERSION`, and walk each version's "How to update" list in order, one step at a time with the owner's yes. Structure can be added (new folders, new team members, new empty sections in a brand file). The owner's own words in `business.md` and `brand/` are never changed or deleted; adding an empty section heading to those files is allowed, and only with the owner's yes. Run `python3 tools/sync.py` at the end, then save-work.
+When the owner says "update my department to the newest version", read the template's `CHANGELOG.md` from GitHub, compare it to this repo's `VERSION`, and walk each version's "How to update" list in order, one step at a time with the owner's yes. Structure can be added (new folders, new team members, new empty sections in a brand file). The owner's own words in `business.md` and `brand/` are never changed or deleted; adding an empty section heading to those files is allowed, and only with the owner's yes. Run the sync command (`python3 tools/sync.py`, or `py tools/sync.py` on Windows) at the end, then save-work.
 
 ## Rules
 - Never fetch or write an identity file, whatever the owner asks. Say why and stop, no override.
