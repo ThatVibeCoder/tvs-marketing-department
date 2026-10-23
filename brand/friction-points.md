@@ -17,39 +17,39 @@ Friction 5: _Not filled in yet._
 ```
 
 ## Friction 1
-**What they say:** the doubt, in their words.
-**Our answer:** proof, how it works, or UNSOLVED (an honest gap is allowed, a fake answer is not).
-**Where it gets answered:** offer, page, content or sales call.
+_How to fill this: the doubt in the buyer's own words, your honest answer (proof, how it works, or UNSOLVED: an honest gap is allowed, a fake answer is not), and where it gets answered (offer, page, content or sales call). Replace each placeholder below with the answer, and leave this line as it is._
 
-_Not filled in yet._
+**What they say:** _Not filled in yet._
+**Our answer:** _Not filled in yet._
+**Where it gets answered:** _Not filled in yet._
 
 ## Friction 2
-**What they say:** the doubt, in their words.
-**Our answer:** proof, how it works, or UNSOLVED (an honest gap is allowed, a fake answer is not).
-**Where it gets answered:** offer, page, content or sales call.
+_How to fill this: the doubt in the buyer's own words, your honest answer (proof, how it works, or UNSOLVED: an honest gap is allowed, a fake answer is not), and where it gets answered (offer, page, content or sales call). Replace each placeholder below with the answer, and leave this line as it is._
 
-_Not filled in yet._
+**What they say:** _Not filled in yet._
+**Our answer:** _Not filled in yet._
+**Where it gets answered:** _Not filled in yet._
 
 ## Friction 3
-**What they say:** the doubt, in their words.
-**Our answer:** proof, how it works, or UNSOLVED (an honest gap is allowed, a fake answer is not).
-**Where it gets answered:** offer, page, content or sales call.
+_How to fill this: the doubt in the buyer's own words, your honest answer (proof, how it works, or UNSOLVED: an honest gap is allowed, a fake answer is not), and where it gets answered (offer, page, content or sales call). Replace each placeholder below with the answer, and leave this line as it is._
 
-_Not filled in yet._
+**What they say:** _Not filled in yet._
+**Our answer:** _Not filled in yet._
+**Where it gets answered:** _Not filled in yet._
 
 ## Friction 4
-**What they say:** the doubt, in their words.
-**Our answer:** proof, how it works, or UNSOLVED (an honest gap is allowed, a fake answer is not).
-**Where it gets answered:** offer, page, content or sales call.
+_How to fill this: the doubt in the buyer's own words, your honest answer (proof, how it works, or UNSOLVED: an honest gap is allowed, a fake answer is not), and where it gets answered (offer, page, content or sales call). Replace each placeholder below with the answer, and leave this line as it is._
 
-_Not filled in yet._
+**What they say:** _Not filled in yet._
+**Our answer:** _Not filled in yet._
+**Where it gets answered:** _Not filled in yet._
 
 ## Friction 5
-**What they say:** the doubt, in their words.
-**Our answer:** proof, how it works, or UNSOLVED (an honest gap is allowed, a fake answer is not).
-**Where it gets answered:** offer, page, content or sales call.
+_How to fill this: the doubt in the buyer's own words, your honest answer (proof, how it works, or UNSOLVED: an honest gap is allowed, a fake answer is not), and where it gets answered (offer, page, content or sales call). Replace each placeholder below with the answer, and leave this line as it is._
 
-_Not filled in yet._
+**What they say:** _Not filled in yet._
+**Our answer:** _Not filled in yet._
+**Where it gets answered:** _Not filled in yet._
 
 ## Extras
 Any friction past the first five, one line each.
