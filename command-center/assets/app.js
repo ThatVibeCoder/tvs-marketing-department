@@ -91,9 +91,9 @@ function moduleShell(active, child) {
       h("div", { class: "dash-gutter" }, [
         h("div", { class: "module-head-inner" }, [
           h("div", {}, [
-            h("p", { class: "eyebrow" }, "Dashboard"),
-            h("h1", {}, "Automations"),
-            h("p", { class: "lede" }, "Every agent team you can summon, and every scheduled or event-driven job the Command Center runs.")
+            h("p", { class: "eyebrow" }, "Command Center"),
+            h("h1", {}, "Your Company"),
+            h("p", { class: "lede" }, "Every agent team you can summon, its workflows and team members, and every routine your department runs. Rebuilt from your repo by python3 tools/sync.py.")
           ])
         ]),
         h("nav", { class: "tabs", "aria-label": "Automations sections" }, [
@@ -333,7 +333,7 @@ function renderSeats(t) {
       h("div", { class: "glass rounded-xl list-block" }, (t.seats || []).map((s) => h("a", { class: "seat-row", href: `#/agent-teams/${t.id}/members/${slug(s.name)}` }, [h("span", {}, s.name), chip(s.type)])))
     ]),
     h("section", {}, [
-      h("p", { class: "overline", style: "padding:0 .25rem .5rem" }, "Skills · the members' hands"),
+      h("p", { class: "overline", style: "padding:0 .25rem .5rem" }, "Skills"),
       h("div", { class: "glass rounded-xl list-block" }, (t.skills || []).map((s) => h("div", { class: "skill-row" }, [
         h("div", { class: "item-title" }, [h("span", { class: "item-name" }, s.name), commandPill(s.command)]),
         h("p", {}, s.owns || "")
