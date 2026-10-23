@@ -87,7 +87,7 @@ In Claude Code, type them with a slash: `/content-team`. In Codex, type them wit
 Run it any time a team, team member, skill, workflow or routine is added, renamed or removed, and before every save. It checks the structure, rebuilds the shortcuts in both skill folders, and refreshes the Command Center. If it prints a line starting with FIX, fix that first. Adding `--check` changes nothing and fails if anything is out of date, and the GitHub Agent's save-work runs it before every save.
 
 **Which command, by computer** (check which one the owner is on first):
-- **Mac or Linux:** the sync command (`python3 tools/sync.py`, or `py tools/sync.py` on Windows)
+- **Mac or Linux:** `python3 tools/sync.py`
 - **Windows:** `py tools/sync.py` (if that isn't found, try `python tools/sync.py`)
 
 **If none of those work, Python isn't installed.** Help the owner install it, because it takes two minutes: on Windows run `winget install Python.Python.3.12` in the terminal (or download it from python.org and tick "Add python.exe to PATH" on the first screen), then close and reopen the terminal and run the Windows command again. Every Mac already has it; if a Mac says it's missing, run `xcode-select --install` and accept.
