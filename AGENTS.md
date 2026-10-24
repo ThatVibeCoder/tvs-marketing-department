@@ -32,6 +32,8 @@ Every piece of information has exactly one home. Find it in this table and add t
 | Your goals: the wins, numbers and things you want running next, crossed off as they land | `knowledge/goals.md` | Company Strategist |
 | Competitors, swipes, outliers | `knowledge/competitors/`, `knowledge/swipes/`, `knowledge/outliers.md` | Researcher |
 | Reports (site audits, checkups, traffic) | `knowledge/reports/` | the workflow that made it |
+| Your ads: the ready check and the weekly read | `knowledge/reports/ads-ready-<YYYY-MM-DD>.md`, `knowledge/reports/ads-<YYYY-MM-DD>.md` | Growth Lead |
+| Your ad tests: the plan, the campaign (built paused, you turn it on), the tracking setup, each ad batch | `output/` next to the Growth Lead (`test-plan-<date>.md`), the Ads Manager (`campaign-<date>.md`, `tracking.md`) and the Ad Writer (`batch-<date>.md`) | the Ads Team |
 | The strategist's brief for the next team member | `departments/operations/strategy-team/company-strategist/briefs/<YYYY-MM-DD>-<team-member>.md` | Company Strategist |
 | Moat scores | `departments/operations/strategy-team/moat-analyst/scores.md` | Moat Analyst |
 | Your website's source: the files that go live (the test page first, then your landing page) | `site/` (what `vercel.json` puts online) | Page Builder; the Vercel Agent ships it |
