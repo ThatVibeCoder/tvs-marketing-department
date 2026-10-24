@@ -39,6 +39,9 @@ Every piece of information has exactly one home. Find it in this table and add t
 | Your website's source: the files that go live (the test page first, then your landing page) | `site/` (what `vercel.json` puts online) | Page Builder; the Vercel Agent ships it |
 | Raw recordings: your phone takes and voice memos before they're edited (the video files stay on your computer; their notes and transcripts get saved) | `recordings/` | Social Manager |
 | Finished work (drafts, pages, documents) | `output/` next to the team member that made it | that team member |
+| Your leads: one file per person, with where they came from, what they said, the touch log and call notes | `departments/sales/sales-team/crm-agent/leads/<lead-name>.md` | CRM Agent |
+| Booking messages | `output/` next to the Calendar Agent (`<date>-book-<lead>.md`) | Calendar Agent |
+| Reply drafts and follow-up nudges | `output/` next to the Reply Agent (`<date>-<lead>.md`) and the Nurture Agent (`<date>-<lead>.md`, `<date>-quiet-list.md`) | Reply Agent, Nurture Agent |
 | Scheduled work | `routines/<name>/README.md` | the team that owns it |
 
 If something truly has no home in this table, ask the owner before making one, then add the new home to this table in the same change.

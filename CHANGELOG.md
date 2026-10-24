@@ -31,6 +31,12 @@ The `VERSION` file at the root holds one number: the generation your repo was cl
 - Two new homes in `AGENTS.md`: the ads reports in `knowledge/reports/`, and the test plan, campaign, tracking and ad batches in each Ads Team member's `output/`.
 To take it, say to your AI: "Add the Ads Team skills from the template changelog." It fetches the seven skills, the Ads Team's `team.md` workflows, the three skills README lines, the two AGENTS.md rows and the reports README lines, then runs the sync command and save-work.
 
+**Added 2026-10-24 (the Follow-Up Team and the Sales Team's first skills).**
+- The Follow-Up Team has the Reply Agent's `draft-a-reply` and the Nurture Agent's `who-went-quiet` and `one-nudge`, plus the workflow "keep my clients warm". The Sales Team has the Calendar Agent's `book-the-call` and the CRM Agent's `log-a-lead`, plus the workflow "work my new lead". All four team members are now live.
+- The guards are inside every one: drafts only and you send every message, no price from memory (it writes `[CHECK PRICE]`), no promised results, never quoting a lead's fear back to them, one touch for one lead at a time, no third price nudge, and it stops when it doesn't have enough to go on.
+- New homes in `AGENTS.md`: one file per lead in `departments/sales/sales-team/crm-agent/leads/` (keep the repo private on GitHub, these hold real people's details), and the booking, reply and nudge drafts in each team member's `output/`.
+To take it, say to your AI: "Add the Follow-Up and Sales skills from the template changelog." It fetches the five skills, both `team.md` workflows, the four team member files, the leads folder and the three AGENTS.md rows, then runs the sync command and save-work.
+
 **Fixed 2026-10-24 (from a hands-on run of the content chapter's first three days).**
 - content-brain fills only what's missing when Where You Show Up is already filled (older repos filled it earlier).
 - plan-the-week dates today's post today, not next Monday.
