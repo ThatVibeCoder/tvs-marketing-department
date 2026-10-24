@@ -25,6 +25,10 @@ The `VERSION` file at the root holds one number: the generation your repo was cl
 
 **Who it's for.** Everyone. It's the shape every lesson from now on fills in.
 
+**Added 2026-10-24 (the content chapter, part 4).**
+- New skill: the Copywriter's `write-a-script`. Two or three options for one 30 to 45 second video, each on a different opener and structure from write-hooks, each opening a question in the first line and answering it at the end, with something useful in the middle and a label line saying how it's built. The "make a short video script" workflow now runs it.
+To take it, say to your AI: "Add the content chapter part 4 from the template changelog." It fetches the write-a-script skill and the Copywriter's skills README line, then runs the sync command and save-work.
+
 **Added 2026-10-24 (the content chapter, part 3).**
 - New skill: the Social Manager's `stand-up-a-specialist`. It sets up one platform specialist on the Content Team for each platform you picked, from a starting playbook per platform (Instagram, YouTube, LinkedIn and Facebook, Threads and X, TikTok) rewritten for your business, and plans today's first post there.
 - New skill: the Designer's `make-a-carousel` (5 to 8 slides at 1080 x 1350 in your colors and fonts: a hook slide, one idea per slide, a last slide that asks for the save or the send). You approve the words before the design.
