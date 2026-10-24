@@ -430,6 +430,12 @@
         "owns": "Draft a social post in your voice, for one specific customer, doing one specific job. Use when you say \"draft a post\", \"write me a post about X\", \"turn this int"
       },
       {
+        "name": "write-a-script",
+        "command": "/write-a-script",
+        "seat": "Copywriter",
+        "owns": "Write a 30 to 45 second video script the owner can read in one take: two or three options on different openers and structures, each opening a question in the fi"
+      },
+      {
         "name": "write-hooks",
         "command": "/write-hooks",
         "seat": "Copywriter",
