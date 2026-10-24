@@ -21,7 +21,7 @@ Tell the owner in your own plain words: "I'm going to pick this week's posts fro
 2. **Pick from the topics.** Choose from Topics in `knowledge/topics.md`, never from thin air, and answer The Four Questions for each one: who it's for, give / prove / invite, what they walk away with, where it sends them. A topic marked NEEDS A REAL EXAMPLE only goes in if the owner has the example today.
 3. **Weigh the mix** against The Funnel Split. Roughly 7 give / 2 prove / 1 invite means a 4-post week is usually 3 give and 1 prove, and an invite only when the last invite was a while ago. Never two invites back to back.
 4. **Spread the platforms** the way Where You Show Up ranks them: most posts on platform 1. If last week's report names a winning opener or topic, give it one slot.
-5. **One goes out today.** Mark the easiest one as today's, so the week starts with a post sent, not a plan.
+5. **One goes out today.** The plan starts today, not next Monday: date the easiest post with today's date, and lay the rest over the next 6 days, so the week starts with a post sent, not a plan.
 
 Show the plan on one screen, one line per post: day · platform · topic · job · reader · walks away with. Their yes locks the plan.
 

@@ -28,7 +28,7 @@ Say the rule out loud, word for word, because it's the whole point of this part:
 
 > "Don't try to post everywhere if you can't lock in 1 to 2 platforms first. Really get the workflow down."
 
-Before asking, read How Customers Find You in `business.md` and anything in `brand/icp.md` about where the buyer spends time, then offer 2 or 3 candidate picks, each labeled GUESS with the file it came from, for example: "GUESS, from business.md: Facebook, because two of your last three customers came from a neighborhood group." Ask which is right, push on any pick that isn't where the BUYER is (where the owner likes to scroll doesn't count), and stop at two. A third platform waits until the first two run every week without the owner thinking about it.
+Before asking, read How Customers Find You in `business.md` and anything in `brand/icp.md` about where the buyer spends time, then offer 2 or 3 candidate picks, each labeled GUESS with the file it came from, for example: "GUESS, from business.md: Facebook, because two of your last three customers came from a neighborhood group." If Where You Show Up is already filled (older repos filled it in The Everyone Trap lesson), read it back as the GUESS instead and add only what's missing: the honest hours per platform and the rule in quotes. Never re-ask from zero. Ask which is right, push on any pick that isn't where the BUYER is (where the owner likes to scroll doesn't count), and stop at two. A third platform waits until the first two run every week without the owner thinking about it.
 
 Then the honest hours: how many hours a week they'll really give content, and how that splits between the two. If the answer is under 2 hours, say plainly that one platform is the right number.
 
