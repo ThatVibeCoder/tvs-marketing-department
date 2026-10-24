@@ -5,6 +5,7 @@ Your marketing brain on disk: everything your department has learned, filed so a
 | What | Where | Filled by |
 |---|---|---|
 | Your business audit: tools, hours, what to cut, what to hand off first | `business-audit.md` | cut-what-you-dont-need (Cut What You Don't Need lesson) |
+| Your goals: what you're going after next, crossed off as they land | `goals.md` | the Company Strategist (Future Achievements lesson) |
 | One file per competitor, plus the summary | `competitors/` | the Researcher's competitor-check |
 | Marketing that works, one file per swipe | `swipes/` | the Researcher's collect-swipes |
 | Posts beating their own channel size | `outliers.md` | the Researcher's find-outliers |

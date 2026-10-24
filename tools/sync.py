@@ -57,6 +57,9 @@ def write(p, text):
 
 def frontmatter(text):
     """Simple `key: value` frontmatter between --- lines. Values may be wrapped in quotes. Returns (dict, body)."""
+    # A doc pasted from Google Docs often carries blank lines (or an invisible BOM) above the first ---.
+    # They change nothing, so skip them instead of failing with "needs a name: and a description:".
+    text = text.lstrip("\ufeff \t\r\n")
     if not text.startswith("---"):
         return {}, text
     end = text.find("\n---", 3)
@@ -121,6 +124,19 @@ def read_skill(path, owner):
     return {"name": name or folder, "description": desc, "path": rel(path), "owner": owner}
 
 
+def member_aliases(folder, title, body):
+    """Every name a workflow step may use for this team member, lowercased. Lessons invite owners to name a
+    team member ("Copywriter (Paige)", or just "Paige"), so the role name the workflows use must keep working:
+    the folder's role name, the full title, the title without a nickname, and a `**Name:**` line."""
+    names = {folder.replace("-", " "), title}
+    names.add(re.sub(r"\s*[(\[\"\u201c].*$", "", title))          # Copywriter ("Paige") -> Copywriter
+    names.add(re.split(r"\s+[-\u2013\u2014:,]\s+", title)[0])        # Copywriter - Paige -> Copywriter
+    nick = re.search(r"^\*\*Name:\*\*\s*(.+)$", body, re.M)
+    if nick:
+        names.add(nick.group(1).strip())
+    return {n.strip().lower() for n in names if n.strip()}
+
+
 def read_member(team_dir, folder, team):
     path = os.path.join(team_dir, folder, folder + ".md")
     if not os.path.exists(path):
@@ -138,6 +154,7 @@ def read_member(team_dir, folder, team):
         errors.append(f"{rel(path)}: needs the read-first line from AGENTS.md: \"{READ_LINE}\"")
     m = {"id": folder, "name": title.group(1).strip() if title else folder.replace("-", " ").title(),
          "status": st or "seeded", "path": rel(path), "desc": first_paragraph(body), "team": team, "skills": []}
+    m["aliases"] = member_aliases(folder, m["name"], body)
     sk = os.path.join(team_dir, folder, "skills")
     if os.path.isdir(sk):
         for s in sorted(os.listdir(sk)):
@@ -251,7 +268,7 @@ def all_skills(depts):
 
 def validate(depts):
     names = {s["name"] for s in all_skills(depts)}
-    member_names = {m["name"].lower() for d in depts for t in d["teams"] for m in t["members"]} | {"you"}
+    member_names = {a for d in depts for t in d["teams"] for m in t["members"] for a in m["aliases"]} | {"you"}
     ids = {}
 
     def claim(i, what):

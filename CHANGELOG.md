@@ -25,6 +25,13 @@ The `VERSION` file at the root holds one number: the generation your repo was cl
 
 **Who it's for.** Everyone. It's the shape every lesson from now on fills in.
 
+**Added 2026-10-24 (fixes from the classroom test runs).**
+- Naming a team member ("Copywriter (Paige)", or just "Paige" in its title) no longer breaks the sync check; the workflows keep finding it by its role.
+- A skill doc pasted with blank lines above its first `---` no longer fails the sync check.
+- Two new homes in the "Where everything goes" table: `knowledge/goals.md` (the Future Achievements goals file) and `site/` (your website's source). `site/` comes with a working test page, and `vercel.json` puts only that folder online, so your notes and brand files never become public pages.
+- `tests/test_sync.py` checks the sync (`python3 -m unittest discover tests`).
+To take it, say to your AI: "Add the 2026-10-24 version 3 fixes from the template changelog." It fetches `tools/sync.py`, `tests/`, `knowledge/goals.md`, `site/` and `vercel.json`, adds the two rows to `AGENTS.md` and the goals row to `knowledge/README.md`, keeping everything you already wrote, then runs the sync command and save-work. If your repo already has a `vercel.json` or a site somewhere else, it asks you first.
+
 **To take it.** Say to your AI: "Update my department to version 3 from the template changelog." The GitHub Agent's add-from-template skill walks it with you one step at a time:
 1. Fetch `tools/`, `command-center/`, `departments/operations/`, every `departments/*/README.md`, `brand/friction-points.md`, `brand/personas/`, the new `knowledge/` folders and `routines/`.
 2. Add the new empty sections, At a Glance blocks and Updates logs to `business.md` and the files in `brand/`, keeping every word you already wrote.

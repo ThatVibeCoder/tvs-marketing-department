@@ -27,10 +27,12 @@ Every piece of information has exactly one home. Find it in this table and add t
 | Banned words, formatting, never-do calls | `brand/guidelines.md` | whoever was corrected |
 | Colors, fonts, logos | `brand/colors.md`, `brand/typography.md`, `brand/assets/` | Designer |
 | Your business audit: tools, hours, what to cut and hand off | `knowledge/business-audit.md` | Company Strategist |
+| Your goals: the wins, numbers and things you want running next, crossed off as they land | `knowledge/goals.md` | Company Strategist |
 | Competitors, swipes, outliers | `knowledge/competitors/`, `knowledge/swipes/`, `knowledge/outliers.md` | Researcher |
 | Reports (site audits, checkups, traffic) | `knowledge/reports/` | the workflow that made it |
 | The strategist's brief for the next team member | `departments/operations/strategy-team/company-strategist/briefs/<YYYY-MM-DD>-<team-member>.md` | Company Strategist |
 | Moat scores | `departments/operations/strategy-team/moat-analyst/scores.md` | Moat Analyst |
+| Your website's source: the files that go live (the test page first, then your landing page) | `site/` (what `vercel.json` puts online) | Page Builder; the Vercel Agent ships it |
 | Finished work (drafts, pages, documents) | `output/` next to the team member that made it | that team member |
 | Scheduled work | `routines/<name>/README.md` | the team that owns it |
 
