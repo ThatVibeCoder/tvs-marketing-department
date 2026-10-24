@@ -436,6 +436,12 @@
         "owns": "Write the first line that earns the rest of the piece. Use on every post before it ships, or when the owner says a draft feels flat."
       },
       {
+        "name": "make-a-carousel",
+        "command": "/make-a-carousel",
+        "seat": "Designer",
+        "owns": "Turn one post idea into a swipeable carousel (5 to 8 slides at 1080 x 1350, in the owner's colors and fonts), with a hook slide, one idea per slide and a last s"
+      },
+      {
         "name": "make-a-report-doc",
         "command": "/make-a-report-doc",
         "seat": "Designer",
@@ -470,6 +476,12 @@
         "command": "/read-the-stats",
         "seat": "Social Manager",
         "owns": "Read how content performed and say it plainly. Use weekly, after enough has gone out to mean something."
+      },
+      {
+        "name": "stand-up-a-specialist",
+        "command": "/stand-up-a-specialist",
+        "seat": "Social Manager",
+        "owns": "Set up a platform specialist on the Content Team for each platform the owner actually posts on (Instagram, YouTube, LinkedIn, Facebook, Threads, X or TikTok), f"
       },
       {
         "name": "make-a-post",
