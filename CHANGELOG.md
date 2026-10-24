@@ -25,6 +25,11 @@ The `VERSION` file at the root holds one number: the generation your repo was cl
 
 **Who it's for.** Everyone. It's the shape every lesson from now on fills in.
 
+**Added 2026-10-24 (the content chapter, part 3).**
+- New skill: the Social Manager's `stand-up-a-specialist`. It sets up one platform specialist on the Content Team for each platform you picked, from a starting playbook per platform (Instagram, YouTube, LinkedIn and Facebook, Threads and X, TikTok) rewritten for your business, and plans today's first post there.
+- New skill: the Designer's `make-a-carousel` (5 to 8 slides at 1080 x 1350 in your colors and fonts: a hook slide, one idea per slide, a last slide that asks for the save or the send). You approve the words before the design.
+To take it, say to your AI: "Add the content chapter part 3 from the template changelog." It fetches both skills (with the playbooks folder) and the two skills README lines, then runs the sync command and save-work.
+
 **Added 2026-10-24 (the content chapter, part 2).**
 - The Content Team has two new workflows: "plan my week of content" (read last week, plan 3 to 5 posts from your topics with one going out today, draft, hooks, edit, post) and "make a short video script" (script options, edit, you record a one-take, cover, post).
 - `plan-the-week` now plans the week BEFORE anything is written (how many posts from your honest hours, picked from `knowledge/topics.md`, the mix weighed, one sent today), and still locks the calendar after.
