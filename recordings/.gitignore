@@ -1,0 +1,12 @@
+# Video and audio files are too big for GitHub. They stay on your computer.
+*.mp4
+*.mov
+*.m4v
+*.avi
+*.mkv
+*.webm
+*.mp3
+*.m4a
+*.wav
+*.aac
+*.caf

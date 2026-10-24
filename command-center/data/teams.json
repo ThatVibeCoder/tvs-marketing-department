@@ -9,7 +9,7 @@
     "buildStatus": "active",
     "purpose": "Keeps the machine under everything running: your repo, your live site, your database, your keys, and the checks that keep them safe.",
     "sourceOfTruth": "departments/it-systems/dev-team/team.md",
-    "flowAsOf": "2026-10-23",
+    "flowAsOf": "2026-10-24",
     "seats": [
       {
         "name": "API Manager",
@@ -364,7 +364,7 @@
     "buildStatus": "planning",
     "purpose": "Paid traffic, once your pages and offer are proven without it.",
     "sourceOfTruth": "departments/marketing/ads-team/team.md",
-    "flowAsOf": "2026-10-23",
+    "flowAsOf": "2026-10-24",
     "seats": [
       {
         "name": "Ad Writer",
@@ -399,7 +399,7 @@
     "buildStatus": "planning",
     "purpose": "Everything you publish: the words, the visuals, the calendar, and the numbers after.",
     "sourceOfTruth": "departments/marketing/content-team/team.md",
-    "flowAsOf": "2026-10-23",
+    "flowAsOf": "2026-10-24",
     "seats": [
       {
         "name": "Copywriter",
@@ -446,6 +446,12 @@
         "command": "/edit-a-draft",
         "seat": "Editor",
         "owns": "The second pass on any draft before the owner sees it: check it against brand/voice.md, tighten it, and cut what a stranger wouldn't read. Use on every post, em"
+      },
+      {
+        "name": "content-brain",
+        "command": "/content-brain",
+        "seat": "Social Manager",
+        "owns": "Decide what the owner's content is for before anything gets written: the 4 questions every post answers, the 1 or 2 platforms they post on first, and 20 topics "
       },
       {
         "name": "plan-the-week",
@@ -580,7 +586,7 @@
     "buildStatus": "planning",
     "purpose": "Everything after somebody already knows you: replies, check-ins, and keeping warm leads warm.",
     "sourceOfTruth": "departments/marketing/follow-up-team/team.md",
-    "flowAsOf": "2026-10-23",
+    "flowAsOf": "2026-10-24",
     "seats": [
       {
         "name": "Nurture Agent",
@@ -610,7 +616,7 @@
     "buildStatus": "planning",
     "purpose": "The email your audience actually opens, once your list exists.",
     "sourceOfTruth": "departments/marketing/newsletter-team/team.md",
-    "flowAsOf": "2026-10-23",
+    "flowAsOf": "2026-10-24",
     "seats": [
       {
         "name": "List Manager",
@@ -640,7 +646,7 @@
     "buildStatus": "planning",
     "purpose": "Knows what's happening outside your business: competitors, what works in your space, and what belongs in your knowledge folder.",
     "sourceOfTruth": "departments/marketing/research-team/team.md",
-    "flowAsOf": "2026-10-23",
+    "flowAsOf": "2026-10-24",
     "seats": [
       {
         "name": "Researcher",
@@ -764,7 +770,7 @@
     "buildStatus": "active",
     "purpose": "Your pages on the live internet, and the traffic that finds them.",
     "sourceOfTruth": "departments/marketing/website-team/team.md",
-    "flowAsOf": "2026-10-23",
+    "flowAsOf": "2026-10-24",
     "seats": [
       {
         "name": "Page Builder",
@@ -1065,7 +1071,7 @@
     "buildStatus": "planning",
     "purpose": "Runs the room: knows the whole business, keeps the shared brain true, scores ideas, and picks what comes next.",
     "sourceOfTruth": "departments/operations/strategy-team/team.md",
-    "flowAsOf": "2026-10-23",
+    "flowAsOf": "2026-10-24",
     "seats": [
       {
         "name": "Company Strategist",
@@ -1170,7 +1176,7 @@
     "buildStatus": "planning",
     "purpose": "The path from stranger to booked call: the assessment, the calendar, and the record.",
     "sourceOfTruth": "departments/sales/sales-team/team.md",
-    "flowAsOf": "2026-10-23",
+    "flowAsOf": "2026-10-24",
     "seats": [
       {
         "name": "Assessment Agent",

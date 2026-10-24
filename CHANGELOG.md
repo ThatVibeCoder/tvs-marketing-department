@@ -25,6 +25,12 @@ The `VERSION` file at the root holds one number: the generation your repo was cl
 
 **Who it's for.** Everyone. It's the shape every lesson from now on fills in.
 
+**Added 2026-10-24 (the content chapter, part 1).**
+- New skill: the Social Manager's `content-brain` (what your content is for, your 1 or 2 platforms, 20 topics). It fills Where You Show Up in `brand/channels.md` and the new `knowledge/topics.md`.
+- `write-hooks` now carries an opener bank (10 shapes, each worked for three example businesses) and the five structures a post hangs on. Winners get logged in the new `knowledge/hooks.md`.
+- A new `recordings/` home for raw takes. Video and audio files stay on your computer (its own `.gitignore` keeps them out of saves); only the notes get saved.
+To take it, say to your AI: "Add the content chapter part 1 from the template changelog." It fetches the content-brain skill, the new write-hooks, `knowledge/topics.md`, `knowledge/hooks.md` and `recordings/`, adds the three rows to `AGENTS.md` and two to `knowledge/README.md`, keeping everything you already wrote, then runs the sync command and save-work.
+
 **Added 2026-10-24 (fixes from the classroom test runs).**
 - Naming a team member ("Copywriter (Paige)", or just "Paige" in its title) no longer breaks the sync check; the workflows keep finding it by its role.
 - A skill doc pasted with blank lines above its first `---` no longer fails the sync check.
