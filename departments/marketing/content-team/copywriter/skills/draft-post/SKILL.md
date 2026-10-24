@@ -56,6 +56,8 @@ Every post gives the reader something they can use even if they never reply: the
 - **Email:** one reader, one idea, one link. It reads like a note from the owner, not a newsletter blast.
 - **Google Business Profile:** what the business did this week, with a photo, and the one action (call, book, visit).
 
+If the platform needs a photo or a video (Google Business Profile, Instagram, a carousel), name the exact one in the draft ("the before and after from the Riverview job") so the owner has it ready when they send.
+
 ## Three examples
 Made-up businesses from the other lessons, shown so the owner sees the shape land. Never copy them into the owner's posts.
 - **Marcus, the roofer (Facebook, give):** "Got a water stain on the ceiling after last week's storm? Before anyone quotes you a new roof, here's the 2-minute check: go in the attic with a flashlight and look right above the stain. Wet wood means it's active, dry and dark means it's old. Most of the stains we get called about turn out to be one cracked boot around a pipe, a few hundred dollars, not a roof. If yours is wet, that's when to call someone, and ask them for photos before a price."

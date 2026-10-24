@@ -31,6 +31,13 @@ The `VERSION` file at the root holds one number: the generation your repo was cl
 - Two new homes in `AGENTS.md`: the ads reports in `knowledge/reports/`, and the test plan, campaign, tracking and ad batches in each Ads Team member's `output/`.
 To take it, say to your AI: "Add the Ads Team skills from the template changelog." It fetches the seven skills, the Ads Team's `team.md` workflows, the three skills README lines, the two AGENTS.md rows and the reports README lines, then runs the sync command and save-work.
 
+**Fixed 2026-10-24 (from a hands-on run of the content chapter's first three days).**
+- content-brain fills only what's missing when Where You Show Up is already filled (older repos filled it earlier).
+- plan-the-week dates today's post today, not next Monday.
+- draft-post names the exact photo or video a post needs.
+- post-content logs a post the owner sends later as STAGED, then asks for the time and link next session.
+To take it, say to your AI: "Add the 2026-10-24 content fixes from the template changelog."
+
 **Added 2026-10-24 (the content chapter, part 6).**
 - `read-the-stats` now keeps a scoreboard: every opener and topic scored against YOUR own usual numbers, with replies, DMs and sends counted above views. A winner after beating your median 3 times (it moves to Openers That Won in `knowledge/hooks.md`), retired after losing 3 times in a row. "Too early to call" is an honest answer under 5 posts, and about one post in four keeps testing something new.
 - `knowledge/reports/README.md` lists the weekly `content-stats-<date>.md` report.
