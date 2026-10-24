@@ -430,6 +430,12 @@
         "owns": "Draft a social post in your voice, for one specific customer, doing one specific job. Use when you say \"draft a post\", \"write me a post about X\", \"turn this int"
       },
       {
+        "name": "repurpose-it",
+        "command": "/repurpose-it",
+        "seat": "Copywriter",
+        "owns": "Turn one video or one winning post into four more pieces: a caption post, a carousel outline, a newsletter paragraph and a question post, each answering The Fou"
+      },
+      {
         "name": "write-a-script",
         "command": "/write-a-script",
         "seat": "Copywriter",
@@ -446,6 +452,12 @@
         "command": "/make-a-carousel",
         "seat": "Designer",
         "owns": "Turn one post idea into a swipeable carousel (5 to 8 slides at 1080 x 1350, in the owner's colors and fonts), with a hook slide, one idea per slide and a last s"
+      },
+      {
+        "name": "make-a-cover",
+        "command": "/make-a-cover",
+        "seat": "Designer",
+        "owns": "Make the cover for a video or post in the owner's ONE locked cover style (set once, then reused so every cover looks like the same brand): their colors and font"
       },
       {
         "name": "make-a-report-doc",
@@ -566,9 +578,14 @@
           "color": "rose"
         },
         {
+          "id": "w2-edit",
+          "label": "make a short video script · Edit",
+          "color": "teal"
+        },
+        {
           "id": "w2-post",
           "label": "make a short video script · Post",
-          "color": "teal"
+          "color": "lime"
         }
       ],
       "nodes": [
@@ -698,6 +715,15 @@
         },
         {
           "id": "w2-s4",
+          "phase": "w2-edit",
+          "label": "Video Editor",
+          "sub": "cut-a-recording",
+          "icon": "check",
+          "badge": "gate",
+          "detail": "cuts the dead air, levels the sound and adds captions."
+        },
+        {
+          "id": "w2-s5",
           "phase": "w2-post",
           "label": "Designer",
           "sub": "make-a-cover",
@@ -705,7 +731,7 @@
           "detail": "the cover in your one locked style."
         },
         {
-          "id": "w2-s5",
+          "id": "w2-s6",
           "phase": "w2-post",
           "label": "Social Manager",
           "sub": "post-content",
@@ -769,6 +795,111 @@
         {
           "from": "w2-s4",
           "to": "w2-s5"
+        },
+        {
+          "from": "w2-s5",
+          "to": "w2-s6"
+        }
+      ]
+    }
+  },
+  {
+    "id": "editing-team",
+    "name": "Editing Team",
+    "command": "/editing-team",
+    "department": "marketing",
+    "departmentName": "Marketing",
+    "teamType": "Marketing",
+    "buildStatus": "planning",
+    "purpose": "Turns your raw recordings into posts: cut, captioned, covered, and turned into more than one piece.",
+    "sourceOfTruth": "departments/marketing/editing-team/team.md",
+    "flowAsOf": "2026-10-24",
+    "seats": [
+      {
+        "name": "Video Editor",
+        "type": "Seeded",
+        "detail": "Takes your raw phone takes and makes them ready to post: the dead air cut out, the sound levelled, captions on, the right size for where it's going. Never changes what you said, only how tight it plays."
+      }
+    ],
+    "skills": [
+      {
+        "name": "cut-a-recording",
+        "command": "/cut-a-recording",
+        "seat": "Video Editor",
+        "owns": "Turn a raw phone take from recordings/ into a video ready to post: trim the start and end, cut the long pauses, level the sound, add captions, and size it for t"
+      },
+      {
+        "name": "edit-my-video",
+        "command": "/edit-my-video",
+        "seat": "Workflow",
+        "owns": "Say \"edit my video\". You recorded a take and it's sitting in `recordings/`. Best right after \"make a short video script\"."
+      }
+    ],
+    "flow": {
+      "phases": [
+        {
+          "id": "w0-cut",
+          "label": "Cut",
+          "color": "sky"
+        },
+        {
+          "id": "w0-dress",
+          "label": "Dress",
+          "color": "violet"
+        },
+        {
+          "id": "w0-post",
+          "label": "Post",
+          "color": "amber"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "w0-s1",
+          "phase": "w0-cut",
+          "label": "Video Editor",
+          "sub": "cut-a-recording",
+          "icon": "check",
+          "badge": "gate",
+          "detail": "trims the start and end, cuts the dead air, levels the sound and adds captions."
+        },
+        {
+          "id": "w0-s2",
+          "phase": "w0-dress",
+          "label": "Designer",
+          "sub": "make-a-cover",
+          "icon": "sparkle",
+          "detail": "the cover in your one locked style."
+        },
+        {
+          "id": "w0-s3",
+          "phase": "w0-dress",
+          "label": "Copywriter",
+          "sub": "repurpose-it",
+          "icon": "sparkle",
+          "detail": "turns the video into four more pieces."
+        },
+        {
+          "id": "w0-s4",
+          "phase": "w0-post",
+          "label": "Social Manager",
+          "sub": "post-content",
+          "icon": "sparkle",
+          "detail": "stages the video and the pieces for your send and logs them."
+        }
+      ],
+      "edges": [
+        {
+          "from": "w0-s1",
+          "to": "w0-s2"
+        },
+        {
+          "from": "w0-s2",
+          "to": "w0-s3"
+        },
+        {
+          "from": "w0-s3",
+          "to": "w0-s4"
         }
       ]
     }
