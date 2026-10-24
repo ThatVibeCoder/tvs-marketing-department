@@ -24,6 +24,8 @@ Every piece of information has exactly one home. Find it in this table and add t
 | What you sell, the price, and the headline | `brand/offer.md` | ICP & Offer Owner (headline by the Page Builder) |
 | How you sound | `brand/voice.md` | Editor |
 | Your content mix and where you post | `brand/channels.md` | Social Manager |
+| Your content topics, and the 4 questions every post answers | `knowledge/topics.md` | Social Manager |
+| Your openers: the ones that won, and the ones to try next | `knowledge/hooks.md` | Copywriter (read-the-stats marks the winners) |
 | Banned words, formatting, never-do calls | `brand/guidelines.md` | whoever was corrected |
 | Colors, fonts, logos | `brand/colors.md`, `brand/typography.md`, `brand/assets/` | Designer |
 | Your business audit: tools, hours, what to cut and hand off | `knowledge/business-audit.md` | Company Strategist |
@@ -33,6 +35,7 @@ Every piece of information has exactly one home. Find it in this table and add t
 | The strategist's brief for the next team member | `departments/operations/strategy-team/company-strategist/briefs/<YYYY-MM-DD>-<team-member>.md` | Company Strategist |
 | Moat scores | `departments/operations/strategy-team/moat-analyst/scores.md` | Moat Analyst |
 | Your website's source: the files that go live (the test page first, then your landing page) | `site/` (what `vercel.json` puts online) | Page Builder; the Vercel Agent ships it |
+| Raw recordings: your phone takes and voice memos before they're edited (the video files stay on your computer; their notes and transcripts get saved) | `recordings/` | Social Manager |
 | Finished work (drafts, pages, documents) | `output/` next to the team member that made it | that team member |
 | Scheduled work | `routines/<name>/README.md` | the team that owns it |
 

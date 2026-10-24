@@ -4,7 +4,7 @@ Skills this team member knows live here, one folder per skill. A skill is clean 
 
 
 ## What lands here
-- plan-the-week, post-content, read-the-stats (in the template)
+- plan-the-week, post-content, read-the-stats, content-brain (in the template)
 - set-your-content-mix (The Everyone Trap lesson)
 
 A lesson's skill doc saves its skill into this folder, then runs the sync command (`python3 tools/sync.py`, or `py tools/sync.py` on Windows) so Claude Code and Codex both find it.
