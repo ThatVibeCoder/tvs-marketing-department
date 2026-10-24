@@ -25,6 +25,11 @@ The `VERSION` file at the root holds one number: the generation your repo was cl
 
 **Who it's for.** Everyone. It's the shape every lesson from now on fills in.
 
+**Added 2026-10-24 (the content chapter, part 6).**
+- `read-the-stats` now keeps a scoreboard: every opener and topic scored against YOUR own usual numbers, with replies, DMs and sends counted above views. A winner after beating your median 3 times (it moves to Openers That Won in `knowledge/hooks.md`), retired after losing 3 times in a row. "Too early to call" is an honest answer under 5 posts, and about one post in four keeps testing something new.
+- `knowledge/reports/README.md` lists the weekly `content-stats-<date>.md` report.
+To take it, say to your AI: "Add the content chapter part 6 from the template changelog." It fetches read-the-stats and the reports README line, then runs the sync command and save-work.
+
 **Added 2026-10-24 (the content chapter, part 5).**
 - A new team: the Editing Team (`departments/marketing/editing-team/`), with a Video Editor and an "edit my video" workflow (cut, cover, turn it into four, post). Say `/editing-team`.
 - New skills: the Video Editor's `cut-a-recording` (trim, cut the long pauses, level the sound, captions, sized for the platform, never changes what you said), the Designer's `make-a-cover` (one locked cover style, set once in `brand/assets/cover-template.html`, then reused) and the Copywriter's `repurpose-it` (one video or winning post into four more pieces).

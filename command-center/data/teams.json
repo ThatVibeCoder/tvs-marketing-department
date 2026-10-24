@@ -493,7 +493,7 @@
         "name": "read-the-stats",
         "command": "/read-the-stats",
         "seat": "Social Manager",
-        "owns": "Read how content performed and say it plainly. Use weekly, after enough has gone out to mean something."
+        "owns": "Read how the week's content performed and say it plainly, score every opener and topic against the owner's own usual numbers (a winner after beating them 3 time"
       },
       {
         "name": "stand-up-a-specialist",
