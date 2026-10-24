@@ -25,6 +25,13 @@ The `VERSION` file at the root holds one number: the generation your repo was cl
 
 **Who it's for.** Everyone. It's the shape every lesson from now on fills in.
 
+**Added 2026-10-24 (the content chapter, part 2).**
+- The Content Team has two new workflows: "plan my week of content" (read last week, plan 3 to 5 posts from your topics with one going out today, draft, hooks, edit, post) and "make a short video script" (script options, edit, you record a one-take, cover, post).
+- `plan-the-week` now plans the week BEFORE anything is written (how many posts from your honest hours, picked from `knowledge/topics.md`, the mix weighed, one sent today), and still locks the calendar after.
+- `draft-post` now puts something useful inside every post, builds from the opener bank and the five structures, and shapes the same message for Facebook, LinkedIn, Instagram, Threads/X, email and Google Business Profile.
+The video workflow names two skills that arrive in later parts (write-a-script, make-a-cover); until then the sync check lists them as a NOTE, not an error.
+To take it, say to your AI: "Add the content chapter part 2 from the template changelog." It fetches the Content Team's `team.md` workflows, `plan-the-week` and `draft-post`, keeping your own Memory lines, then runs the sync command and save-work.
+
 **Added 2026-10-24 (the content chapter, part 1).**
 - New skill: the Social Manager's `content-brain` (what your content is for, your 1 or 2 platforms, 20 topics). It fills Where You Show Up in `brand/channels.md` and the new `knowledge/topics.md`.
 - `write-hooks` now carries an opener bank (10 shapes, each worked for three example businesses) and the five structures a post hangs on. Winners get logged in the new `knowledge/hooks.md`.

@@ -457,7 +457,7 @@
         "name": "plan-the-week",
         "command": "/plan-the-week",
         "seat": "Social Manager",
-        "owns": "Turn finished content into a simple posting calendar for the owner's yes. Use weekly, or whenever new content is ready."
+        "owns": "Plan the owner's week of content (3 to 5 posts picked from their topics, each with a job, one reader and a platform, one going out today), then lock the approve"
       },
       {
         "name": "post-content",
@@ -476,29 +476,81 @@
         "command": "/make-a-post",
         "seat": "Workflow",
         "owns": "Say \"make a post\". Any time you want one post written, checked and ready for you to send."
+      },
+      {
+        "name": "plan-my-week-of-content",
+        "command": "/plan-my-week-of-content",
+        "seat": "Workflow",
+        "owns": "Say \"plan my week of content\". Once a week. It stops first if `brand/icp.md`, `brand/voice.md` or Where You Show Up in `brand/channels.md` is still empty, because the content-brain skill fills that and a week planned without it is posting to post."
+      },
+      {
+        "name": "make-a-short-video-script",
+        "command": "/make-a-short-video-script",
+        "seat": "Workflow",
+        "owns": "Say \"make a short video script\". Any time you want to record. Best after \"plan my week of content\" picks the topic."
       }
     ],
     "flow": {
       "phases": [
         {
           "id": "w0-plan",
-          "label": "Plan",
+          "label": "make a post · Plan",
           "color": "sky"
         },
         {
           "id": "w0-write",
-          "label": "Write",
+          "label": "make a post · Write",
           "color": "violet"
         },
         {
           "id": "w0-check",
-          "label": "Check",
+          "label": "make a post · Check",
           "color": "amber"
         },
         {
           "id": "w0-post",
-          "label": "Post",
+          "label": "make a post · Post",
           "color": "rose"
+        },
+        {
+          "id": "w1-read",
+          "label": "plan my week of content · Read",
+          "color": "violet"
+        },
+        {
+          "id": "w1-plan",
+          "label": "plan my week of content · Plan",
+          "color": "amber"
+        },
+        {
+          "id": "w1-write",
+          "label": "plan my week of content · Write",
+          "color": "rose"
+        },
+        {
+          "id": "w1-check",
+          "label": "plan my week of content · Check",
+          "color": "teal"
+        },
+        {
+          "id": "w1-post",
+          "label": "plan my week of content · Post",
+          "color": "lime"
+        },
+        {
+          "id": "w2-write",
+          "label": "make a short video script · Write",
+          "color": "amber"
+        },
+        {
+          "id": "w2-record",
+          "label": "make a short video script · Record",
+          "color": "rose"
+        },
+        {
+          "id": "w2-post",
+          "label": "make a short video script · Post",
+          "color": "teal"
         }
       ],
       "nodes": [
@@ -550,6 +602,97 @@
           "sub": "post-content",
           "icon": "sparkle",
           "detail": "stages it on its platform for your final send and logs it."
+        },
+        {
+          "id": "w1-s1",
+          "phase": "w1-read",
+          "label": "Social Manager",
+          "sub": "read-the-stats",
+          "icon": "sparkle",
+          "detail": "last week's numbers and which openers won. Skipped on the very first week."
+        },
+        {
+          "id": "w1-s2",
+          "phase": "w1-plan",
+          "label": "Social Manager",
+          "sub": "plan-the-week",
+          "icon": "check",
+          "badge": "gate",
+          "detail": "picks 3 to 5 posts from `knowledge/topics.md`, each with its job, its one reader and its platform, and one that goes out today."
+        },
+        {
+          "id": "w1-s3",
+          "phase": "w1-write",
+          "label": "Copywriter",
+          "sub": "draft-post",
+          "icon": "form",
+          "detail": "drafts each one, with something useful inside the post, not only an ask at the end."
+        },
+        {
+          "id": "w1-s4",
+          "phase": "w1-write",
+          "label": "Copywriter",
+          "sub": "write-hooks",
+          "icon": "sparkle",
+          "detail": "five first lines for each post, from the opener bank and your winners in `knowledge/hooks.md`. You pick."
+        },
+        {
+          "id": "w1-s5",
+          "phase": "w1-check",
+          "label": "Editor",
+          "sub": "edit-a-draft",
+          "icon": "check",
+          "badge": "gate",
+          "detail": "the second pass against `brand/voice.md`, read out loud."
+        },
+        {
+          "id": "w1-s6",
+          "phase": "w1-post",
+          "label": "Social Manager",
+          "sub": "post-content",
+          "icon": "sparkle",
+          "detail": "stages today's post for your send, puts the rest on the calendar on their days, and logs each one."
+        },
+        {
+          "id": "w2-s1",
+          "phase": "w2-write",
+          "label": "Copywriter",
+          "sub": "write-a-script",
+          "icon": "sparkle",
+          "detail": "two or three options on different openers and structures, each one opening a question in the first line and answering it at the end."
+        },
+        {
+          "id": "w2-s2",
+          "phase": "w2-write",
+          "label": "Editor",
+          "sub": "edit-a-draft",
+          "icon": "check",
+          "badge": "gate",
+          "detail": "reads each option out loud and cuts whatever stalls."
+        },
+        {
+          "id": "w2-s3",
+          "phase": "w2-record",
+          "label": "You",
+          "sub": "record it in one take on your phone, reading fro",
+          "icon": "search",
+          "detail": "record it in one take on your phone, reading from the script, and drop the file in `recordings/`."
+        },
+        {
+          "id": "w2-s4",
+          "phase": "w2-post",
+          "label": "Designer",
+          "sub": "make-a-cover",
+          "icon": "sparkle",
+          "detail": "the cover in your one locked style."
+        },
+        {
+          "id": "w2-s5",
+          "phase": "w2-post",
+          "label": "Social Manager",
+          "sub": "post-content",
+          "icon": "sparkle",
+          "detail": "stages it with its caption for your send and logs which opener it used."
         }
       ],
       "edges": [
@@ -572,6 +715,42 @@
         {
           "from": "w0-s5",
           "to": "w0-s6"
+        },
+        {
+          "from": "w1-s1",
+          "to": "w1-s2"
+        },
+        {
+          "from": "w1-s2",
+          "to": "w1-s3"
+        },
+        {
+          "from": "w1-s3",
+          "to": "w1-s4"
+        },
+        {
+          "from": "w1-s4",
+          "to": "w1-s5"
+        },
+        {
+          "from": "w1-s5",
+          "to": "w1-s6"
+        },
+        {
+          "from": "w2-s1",
+          "to": "w2-s2"
+        },
+        {
+          "from": "w2-s2",
+          "to": "w2-s3"
+        },
+        {
+          "from": "w2-s3",
+          "to": "w2-s4"
+        },
+        {
+          "from": "w2-s4",
+          "to": "w2-s5"
         }
       ]
     }
