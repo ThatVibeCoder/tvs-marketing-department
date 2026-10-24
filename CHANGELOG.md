@@ -25,6 +25,13 @@ The `VERSION` file at the root holds one number: the generation your repo was cl
 
 **Who it's for.** Everyone. It's the shape every lesson from now on fills in.
 
+**Added 2026-10-24 (the content chapter, part 5).**
+- A new team: the Editing Team (`departments/marketing/editing-team/`), with a Video Editor and an "edit my video" workflow (cut, cover, turn it into four, post). Say `/editing-team`.
+- New skills: the Video Editor's `cut-a-recording` (trim, cut the long pauses, level the sound, captions, sized for the platform, never changes what you said), the Designer's `make-a-cover` (one locked cover style, set once in `brand/assets/cover-template.html`, then reused) and the Copywriter's `repurpose-it` (one video or winning post into four more pieces).
+- The "make a short video script" workflow now has an Edit step (the Video Editor's cut) between recording and the cover.
+- Edited video files stay on your computer: the Video Editor's `output/` has its own `.gitignore`, the same as `recordings/`.
+To take it, say to your AI: "Add the content chapter part 5 from the template changelog." It fetches the Editing Team folder, the three skills, the Content Team's updated video workflow and the skills README lines, then runs the sync command and save-work.
+
 **Added 2026-10-24 (the content chapter, part 4).**
 - New skill: the Copywriter's `write-a-script`. Two or three options for one 30 to 45 second video, each on a different opener and structure from write-hooks, each opening a question in the first line and answering it at the end, with something useful in the middle and a label line saying how it's built. The "make a short video script" workflow now runs it.
 To take it, say to your AI: "Add the content chapter part 4 from the template changelog." It fetches the write-a-script skill and the Copywriter's skills README line, then runs the sync command and save-work.

@@ -1,0 +1,12 @@
+# Edited videos are too big for GitHub. They stay on your computer; the notes get saved.
+*.mp4
+*.mov
+*.m4v
+*.avi
+*.mkv
+*.webm
+*.mp3
+*.m4a
+*.wav
+*.aac
+*.caf

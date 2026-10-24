@@ -57,9 +57,11 @@ When: Any time you want to record. Best after "plan my week of content" picks th
 2. **Editor** · edit-a-draft · reads each option out loud and cuts whatever stalls. [you approve]
 ### Record
 3. **You** record it in one take on your phone, reading from the script, and drop the file in `recordings/`.
+### Edit
+4. **Video Editor** · cut-a-recording · cuts the dead air, levels the sound and adds captions. [you approve]
 ### Post
-4. **Designer** · make-a-cover · the cover in your one locked style.
-5. **Social Manager** · post-content · stages it with its caption for your send and logs which opener it used.
+5. **Designer** · make-a-cover · the cover in your one locked style.
+6. **Social Manager** · post-content · stages it with its caption for your send and logs which opener it used.
 
 ## Platform specialists
 When a single platform earns its own attention, tell your AI "stand up my [platform] specialist" and it builds the folder under this team from the pattern in `platform-specialists.md`. Don't pre-create them.
