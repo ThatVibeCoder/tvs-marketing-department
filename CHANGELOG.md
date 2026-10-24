@@ -25,6 +25,12 @@ The `VERSION` file at the root holds one number: the generation your repo was cl
 
 **Who it's for.** Everyone. It's the shape every lesson from now on fills in.
 
+**Added 2026-10-24 (the Ads Team's skills).**
+- The Ads Team has its first seven skills and two workflows ("launch my first ads", "read my ads"): the Growth Lead's `ads-ready-check`, `plan-a-test` and `weekly-ads-read`, the Ads Manager's `set-up-tracking` and `build-paused-campaign`, and the Ad Writer's `write-ad-batch` and `iterate-a-winner`. Meta (Facebook and Instagram) only.
+- The guards are inside every one: everything is built paused and you turn it on, your AI never touches billing, it asks before every create or change, the browser only looks, and it writes `[CHECK BUDGET]` and asks you instead of picking any dollar amount.
+- Two new homes in `AGENTS.md`: the ads reports in `knowledge/reports/`, and the test plan, campaign, tracking and ad batches in each Ads Team member's `output/`.
+To take it, say to your AI: "Add the Ads Team skills from the template changelog." It fetches the seven skills, the Ads Team's `team.md` workflows, the three skills README lines, the two AGENTS.md rows and the reports README lines, then runs the sync command and save-work.
+
 **Added 2026-10-24 (the content chapter, part 6).**
 - `read-the-stats` now keeps a scoreboard: every opener and topic scored against YOUR own usual numbers, with replies, DMs and sends counted above views. A winner after beating your median 3 times (it moves to Openers That Won in `knowledge/hooks.md`), retired after losing 3 times in a row. "Too early to call" is an honest answer under 5 posts, and about one post in four keeps testing something new.
 - `knowledge/reports/README.md` lists the weekly `content-stats-<date>.md` report.

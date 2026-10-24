@@ -382,11 +382,217 @@
         "detail": "Runs the ads team. Decides what gets tested next, reads every report before you do, and brings you one recommendation instead of five dashboards."
       }
     ],
-    "skills": [],
+    "skills": [
+      {
+        "name": "iterate-a-winner",
+        "command": "/iterate-a-winner",
+        "seat": "Ad Writer",
+        "owns": "Take an ad the weekly read called a winner and make 2-3 new versions that change the idea or the look (a new hook, a new face, photo to video), not just the wor"
+      },
+      {
+        "name": "write-ad-batch",
+        "command": "/write-ad-batch",
+        "seat": "Ad Writer",
+        "owns": "Write 3-5 Meta ads that are genuinely different from each other (idea, hook and format), each matched to its own landing page, with every claim traced to a bran"
+      },
+      {
+        "name": "build-paused-campaign",
+        "command": "/build-paused-campaign",
+        "seat": "Ads Manager",
+        "owns": "Build the owner's test campaign in Meta Ads Manager, always PAUSED, from the approved test plan and ad batch, or walk them through it click by click. Also draft"
+      },
+      {
+        "name": "set-up-tracking",
+        "command": "/set-up-tracking",
+        "seat": "Ads Manager",
+        "owns": "Walk the owner through Meta tracking for their landing pages: one pixel and ONE conversion event (a lead, or a booked call), proven with a test lead. The owner "
+      },
+      {
+        "name": "ads-ready-check",
+        "command": "/ads-ready-check",
+        "seat": "Growth Lead",
+        "owns": "Check whether the owner is ready to spend on ads: offer and ICP filled, a live page whose form reaches the inbox, real customers without ads, and a target cost "
+      },
+      {
+        "name": "plan-a-test",
+        "command": "/plan-a-test",
+        "seat": "Growth Lead",
+        "owns": "Write the owner's ad test plan BEFORE anything launches: which ads, the daily budget and end date (the owner's numbers), broad targeting, and the stop and winne"
+      },
+      {
+        "name": "weekly-ads-read",
+        "command": "/weekly-ads-read",
+        "seat": "Growth Lead",
+        "owns": "Read the owner's live ads once a week against the test plan: cost per lead and booked calls (never clicks), a page problem vs an ad problem, and ONE recommendat"
+      },
+      {
+        "name": "launch-my-first-ads",
+        "command": "/launch-my-first-ads",
+        "seat": "Workflow",
+        "owns": "Say \"launch my first ads\". Your offer is locked and your landing page is live and catching leads. It stops first if the ads-ready check says \"not yet\", because ads only make a broken page fail faster."
+      },
+      {
+        "name": "read-my-ads",
+        "command": "/read-my-ads",
+        "seat": "Workflow",
+        "owns": "Say \"read my ads\". Once a week while a test is live."
+      }
+    ],
     "flow": {
-      "phases": [],
-      "nodes": [],
-      "edges": []
+      "phases": [
+        {
+          "id": "w0-check",
+          "label": "launch my first ads · Check",
+          "color": "sky"
+        },
+        {
+          "id": "w0-track",
+          "label": "launch my first ads · Track",
+          "color": "violet"
+        },
+        {
+          "id": "w0-write",
+          "label": "launch my first ads · Write",
+          "color": "amber"
+        },
+        {
+          "id": "w0-launch",
+          "label": "launch my first ads · Launch",
+          "color": "rose"
+        },
+        {
+          "id": "w1-read",
+          "label": "read my ads · Read",
+          "color": "violet"
+        },
+        {
+          "id": "w1-act",
+          "label": "read my ads · Act",
+          "color": "amber"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "w0-s1",
+          "phase": "w0-check",
+          "label": "Growth Lead",
+          "sub": "ads-ready-check",
+          "icon": "check",
+          "badge": "gate",
+          "detail": "confirms the offer, the live page, real customers without ads, and your target cost per lead."
+        },
+        {
+          "id": "w0-s2",
+          "phase": "w0-track",
+          "label": "Ads Manager",
+          "sub": "set-up-tracking",
+          "icon": "check",
+          "detail": "the pixel and one event, proven with a test lead."
+        },
+        {
+          "id": "w0-s3",
+          "phase": "w0-write",
+          "label": "Researcher",
+          "sub": "competitor-check",
+          "icon": "sparkle",
+          "detail": "what your competitors are running in Meta's Ad Library, and the gap nobody fills."
+        },
+        {
+          "id": "w0-s4",
+          "phase": "w0-write",
+          "label": "Page Builder",
+          "sub": "build-a-page",
+          "icon": "sparkle",
+          "detail": "one page per promise: two or three pages, each locked to one angle from your ICP."
+        },
+        {
+          "id": "w0-s5",
+          "phase": "w0-write",
+          "label": "Ad Writer",
+          "sub": "write-ad-batch",
+          "icon": "check",
+          "badge": "gate",
+          "detail": "three to five really different ads, each pointing at its own page."
+        },
+        {
+          "id": "w0-s6",
+          "phase": "w0-launch",
+          "label": "Growth Lead",
+          "sub": "plan-a-test",
+          "icon": "check",
+          "badge": "gate",
+          "detail": "your budget, the end date, and the winner and stop lines, written before anything runs."
+        },
+        {
+          "id": "w0-s7",
+          "phase": "w0-launch",
+          "label": "Ads Manager",
+          "sub": "build-paused-campaign",
+          "icon": "check",
+          "badge": "gate",
+          "detail": "builds it paused, and you turn it on in Ads Manager yourself."
+        },
+        {
+          "id": "w1-s1",
+          "phase": "w1-read",
+          "label": "Growth Lead",
+          "sub": "weekly-ads-read",
+          "icon": "form",
+          "detail": "the numbers against your plan, page problem or ad problem, and one recommendation."
+        },
+        {
+          "id": "w1-s2",
+          "phase": "w1-act",
+          "label": "Ads Manager",
+          "sub": "build-paused-campaign",
+          "icon": "check",
+          "badge": "gate",
+          "detail": "drafts the pause or cut the read called for, and acts only on your yes."
+        },
+        {
+          "id": "w1-s3",
+          "phase": "w1-act",
+          "label": "Ad Writer",
+          "sub": "iterate-a-winner",
+          "icon": "check",
+          "badge": "gate",
+          "detail": "new versions of the winner for the next test, only if there is a winner."
+        }
+      ],
+      "edges": [
+        {
+          "from": "w0-s1",
+          "to": "w0-s2"
+        },
+        {
+          "from": "w0-s2",
+          "to": "w0-s3"
+        },
+        {
+          "from": "w0-s3",
+          "to": "w0-s4"
+        },
+        {
+          "from": "w0-s4",
+          "to": "w0-s5"
+        },
+        {
+          "from": "w0-s5",
+          "to": "w0-s6"
+        },
+        {
+          "from": "w0-s6",
+          "to": "w0-s7"
+        },
+        {
+          "from": "w1-s1",
+          "to": "w1-s2"
+        },
+        {
+          "from": "w1-s2",
+          "to": "w1-s3"
+        }
+      ]
     }
   },
   {
