@@ -1117,27 +1117,116 @@
     "department": "marketing",
     "departmentName": "Marketing",
     "teamType": "Marketing",
-    "buildStatus": "planning",
+    "buildStatus": "active",
     "purpose": "Everything after somebody already knows you: replies, check-ins, and keeping warm leads warm.",
     "sourceOfTruth": "departments/marketing/follow-up-team/team.md",
     "flowAsOf": "2026-10-24",
     "seats": [
       {
         "name": "Nurture Agent",
-        "type": "Seeded",
+        "type": "Live",
         "detail": "Keeps warm leads warm. Tracks who you've talked to, drafts the check-in that doesn't feel like a check-in, and flags anyone going quiet before they're gone."
       },
       {
         "name": "Reply Agent",
-        "type": "Seeded",
+        "type": "Live",
         "detail": "Drafts responses to real messages, comments, and questions in your voice, and saves them for your review. It never sends, you send."
       }
     ],
-    "skills": [],
+    "skills": [
+      {
+        "name": "one-nudge",
+        "command": "/one-nudge",
+        "seat": "Nurture Agent",
+        "owns": "Draft ONE follow-up message for ONE quiet lead or past client, timed from their touch log. If it is too soon, it drafts nothing and says the date it is due. Dra"
+      },
+      {
+        "name": "who-went-quiet",
+        "command": "/who-went-quiet",
+        "seat": "Nurture Agent",
+        "owns": "List the leads and past clients who went quiet and are due a follow-up, with the days since the last touch and why, so the owner can pick one. Drafts nothing. U"
+      },
+      {
+        "name": "draft-a-reply",
+        "command": "/draft-a-reply",
+        "seat": "Reply Agent",
+        "owns": "Draft the owner's next reply when a lead or client SAID something: a question, pushback, a price question, or \"let me think about it\". The owner pastes the thre"
+      },
+      {
+        "name": "keep-my-clients-warm",
+        "command": "/keep-my-clients-warm",
+        "seat": "Workflow",
+        "owns": "Say \"keep my clients warm\". Once or twice a week, or whenever a lead or client writes back. Needs lead files in `departments/sales/sales-team/crm-agent/leads/` (the CRM Agent's log-a-lead makes them)."
+      }
+    ],
     "flow": {
-      "phases": [],
-      "nodes": [],
-      "edges": []
+      "phases": [
+        {
+          "id": "w0-find",
+          "label": "Find",
+          "color": "sky"
+        },
+        {
+          "id": "w0-draft",
+          "label": "Draft",
+          "color": "violet"
+        },
+        {
+          "id": "w0-send",
+          "label": "Send",
+          "color": "amber"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "w0-s1",
+          "phase": "w0-find",
+          "label": "Nurture Agent",
+          "sub": "who-went-quiet",
+          "icon": "sparkle",
+          "detail": "the list of who's owed a touch and why. You pick one."
+        },
+        {
+          "id": "w0-s2",
+          "phase": "w0-draft",
+          "label": "Reply Agent",
+          "sub": "draft-a-reply",
+          "icon": "check",
+          "badge": "gate",
+          "detail": "if they said something."
+        },
+        {
+          "id": "w0-s3",
+          "phase": "w0-draft",
+          "label": "Nurture Agent",
+          "sub": "one-nudge",
+          "icon": "check",
+          "badge": "gate",
+          "detail": "if they went quiet."
+        },
+        {
+          "id": "w0-s4",
+          "phase": "w0-send",
+          "label": "You",
+          "sub": "send it yourself. The touch gets a dated line in",
+          "icon": "sparkle",
+          "detail": "send it yourself. The touch gets a dated line in the lead's file."
+        }
+      ],
+      "edges": [
+        {
+          "from": "w0-s1",
+          "to": "w0-s2"
+        },
+        {
+          "from": "w0-s2",
+          "to": "w0-s3"
+        },
+        {
+          "from": "w0-s3",
+          "to": "w0-s4"
+        }
+      ]
     }
   },
   {
@@ -1707,7 +1796,7 @@
     "department": "sales",
     "departmentName": "Sales",
     "teamType": "Sales",
-    "buildStatus": "planning",
+    "buildStatus": "active",
     "purpose": "The path from stranger to booked call: the assessment, the calendar, and the record.",
     "sourceOfTruth": "departments/sales/sales-team/team.md",
     "flowAsOf": "2026-10-24",
@@ -1719,12 +1808,12 @@
       },
       {
         "name": "Calendar Agent",
-        "type": "Seeded",
+        "type": "Live",
         "detail": "Gets qualified people onto your calendar. Wired to your booking tool, hands the details to the CRM agent when a call lands."
       },
       {
         "name": "CRM Agent",
-        "type": "Seeded",
+        "type": "Live",
         "detail": "Remembers every lead. Routes assessment answers and booked calls into the record you actually check, your inbox counts as a CRM until you outgrow it."
       }
     ],
@@ -1734,12 +1823,106 @@
         "command": "/build-your-assessment",
         "seat": "Assessment Agent",
         "owns": "Build the owner's lead assessment: the short set of questions that tells them whether a lead fits, before anyone books a call. Use during Build Your Assessment,"
+      },
+      {
+        "name": "book-the-call",
+        "command": "/book-the-call",
+        "seat": "Calendar Agent",
+        "owns": "Draft two booking messages that get a lead onto a short call: one specific time the owner gives, the call named as short, and an easy way to say no. Drafts only"
+      },
+      {
+        "name": "log-a-lead",
+        "command": "/log-a-lead",
+        "seat": "CRM Agent",
+        "owns": "Turn an assessment, a DM, an email or a form fill into one file for that lead, with where they came from, what they said in their own words, and a dated touch l"
+      },
+      {
+        "name": "work-my-new-lead",
+        "command": "/work-my-new-lead",
+        "seat": "Workflow",
+        "owns": "Say \"work my new lead\". A new assessment, DM or form fill lands. If you don't have an assessment yet, run the Assessment Agent's build-your-assessment first."
       }
     ],
     "flow": {
-      "phases": [],
-      "nodes": [],
-      "edges": []
+      "phases": [
+        {
+          "id": "w0-sort",
+          "label": "Sort",
+          "color": "sky"
+        },
+        {
+          "id": "w0-book",
+          "label": "Book",
+          "color": "violet"
+        },
+        {
+          "id": "w0-keep",
+          "label": "Keep",
+          "color": "amber"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "w0-s1",
+          "phase": "w0-sort",
+          "label": "CRM Agent",
+          "sub": "log-a-lead",
+          "icon": "sparkle",
+          "detail": "makes the lead's file from what came in."
+        },
+        {
+          "id": "w0-s2",
+          "phase": "w0-sort",
+          "label": "You",
+          "sub": "read the file and decide if it's a fit.",
+          "icon": "check",
+          "badge": "gate",
+          "detail": "read the file and decide if it's a fit."
+        },
+        {
+          "id": "w0-s3",
+          "phase": "w0-book",
+          "label": "Calendar Agent",
+          "sub": "book-the-call",
+          "icon": "check",
+          "badge": "gate",
+          "detail": "two booking messages with a time you pick."
+        },
+        {
+          "id": "w0-s4",
+          "phase": "w0-book",
+          "label": "You",
+          "sub": "send it yourself.",
+          "icon": "sparkle",
+          "detail": "send it yourself."
+        },
+        {
+          "id": "w0-s5",
+          "phase": "w0-keep",
+          "label": "CRM Agent",
+          "sub": "adds a dated line to the lead's file when you sa",
+          "icon": "form",
+          "detail": "adds a dated line to the lead's file when you say it went out. If they reply, the Follow-Up Team's draft-a-reply takes the next message."
+        }
+      ],
+      "edges": [
+        {
+          "from": "w0-s1",
+          "to": "w0-s2"
+        },
+        {
+          "from": "w0-s2",
+          "to": "w0-s3"
+        },
+        {
+          "from": "w0-s3",
+          "to": "w0-s4"
+        },
+        {
+          "from": "w0-s4",
+          "to": "w0-s5"
+        }
+      ]
     }
   }
 ]
