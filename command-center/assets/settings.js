@@ -1,4 +1,4 @@
-// Settings: Account, Workspace, Brands, Connected Accounts, Payments, Posting Cadence, AI Agents, Developer.
+// Settings: Account, Workspace, Brands, Connected Accounts, Payments, Web connections, Posting Cadence, AI Agents, Developer.
 // Plain settings save to command-center/settings.json. API keys save to the .env file at the top of
 // the repo (skipped by every save) and never come back to this page: it only ever learns set / not set.
 
@@ -8,6 +8,7 @@ const SETTINGS_SECTIONS = [
   { slug: "brands", label: "Brands", icon: "layers" },
   { slug: "accounts", label: "Connected Accounts", icon: "radio" },
   { slug: "payments", label: "Payments", icon: "card" },
+  { slug: "web", label: "Web connections", icon: "globe" },
   { slug: "cadence", label: "Posting Cadence", icon: "calendarClock" },
   { slug: "agents", label: "AI Agents", icon: "sparkle" },
   { slug: "developer", label: "Developer", icon: "terminal" }
@@ -58,6 +59,18 @@ const PAYMENT_PROVIDERS = [
   { id: "other", name: "Something else", url: "", urlLabel: "",
     steps: ["Find your provider's API settings and make the most limited key it offers (read only, if it has one).", "Paste it below. Tell the Payments Agent which provider it's for when you add the Dev Team.", "No key at all? The Payments Agent can also fill payments.json from an export (a CSV of your payments)."],
     keys: [["PAYMENTS_API_KEY", "API key"]] }
+];
+// Web connections past Google. Their keys wait in .env; nothing pulls from them yet, and the page says so.
+const WEB_PROVIDERS = [
+  { id: "clarity", name: "Microsoft Clarity", url: "https://clarity.microsoft.com/projects", urlLabel: "clarity.microsoft.com",
+    steps: ["Sign in to Microsoft Clarity (free) and press New project. Name it after your site and type its address.", "Clarity gives you a tracking code. Your Website Team's Page Builder adds it to your pages when you ask: \"add Clarity to my site\". Or follow Clarity's steps to paste it yourself.", "In the project, open Settings, then Overview: copy the Project ID. Then Settings, Data Export: press Generate new API token, name it \"Command Center\", and copy it. Paste both below."],
+    keys: [["CLARITY_PROJECT_ID", "Project ID"], ["CLARITY_API_TOKEN", "Data Export API token"]] },
+  { id: "bing", name: "Bing Webmaster Tools", url: "https://www.bing.com/webmasters", urlLabel: "bing.com/webmasters",
+    steps: ["Sign in to Bing Webmaster Tools. The fastest way to add your site is Import from Google Search Console: it brings your verified sites over in one click.", "Otherwise add the site by hand and verify it (Bing shows a few ways; the DNS one is the steadiest).", "Open Settings (the gear), then API access, and generate an API key. Paste it below with your site's address exactly as Bing shows it (https://www.yoursite.com/)."],
+    keys: [["BING_SITE_URL", "Site address"], ["BING_WEBMASTER_API_KEY", "API key"]] },
+  { id: "otherweb", name: "Other (Plausible, Fathom, Matomo…)", url: "", urlLabel: "",
+    steps: ["Write the tool's name below so this page and your AI know which one it is.", "In that tool, find its API settings and make the most limited key it offers (read only, if it has one). Plausible: Settings, API keys. Fathom: Settings, API.", "Paste the key below. Ask your AI to wire a pull for it when you want its numbers here."],
+    keys: [["OTHER_ANALYTICS_API_KEY", "API key"]] }
 ];
 const COMMON_TZ = ["America/New_York", "America/Chicago", "America/Denver", "America/Phoenix", "America/Los_Angeles", "America/Anchorage", "Pacific/Honolulu", "America/Toronto", "America/Vancouver", "America/Mexico_City", "America/Sao_Paulo", "Europe/London", "Europe/Dublin", "Europe/Paris", "Europe/Berlin", "Europe/Madrid", "Europe/Amsterdam", "Africa/Johannesburg", "Asia/Dubai", "Asia/Kolkata", "Asia/Singapore", "Asia/Tokyo", "Australia/Sydney", "Pacific/Auckland"];
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -282,6 +295,20 @@ function renderPaymentSettings() {
     ])
   ]);
 }
+function renderWebConnections() {
+  const w = settings().web || {};
+  const otherIn = fieldInput({ value: w.otherName || "", placeholder: "Plausible", maxlength: "60" });
+  const card = (p) => providerCard({ ...p, url: p.url || "#/settings/web", urlLabel: p.urlLabel || "the tool's API settings" });
+  return settingsPane("Web connections", "Every tool that watches your website, in one place. Google Analytics and Search Console fill the Web & Analytics pages today; Clarity, Bing and any other tool are set up here so their keys are ready when a pull for them is added.", [
+    settingsSection("web-status", "Where each one stands", null, [webConnectionsList(), h("p", { class: "set-hint mt3" }, "Keys go into the .env file at the top of your repo, which saving to GitHub always skips. This page only ever shows whether a key is set.")]),
+    webGoogleSetup(),
+    settingsSection("web-more", "More tools", "Set up, not pulled yet: saving a key here doesn't put numbers on the Web pages yet. It keeps everything in one place for the day it does.", [
+      card(WEB_PROVIDERS[0]), card(WEB_PROVIDERS[1]),
+      h("div", { class: "glass rounded-xl provider-like" }, [h("label", { class: "pf-field" }, [h("span", { class: "pf-label" }, "The other tool's name"), h("div", { class: "form-grid two" }, [otherIn, saveBtn(() => saveSettings({ web: { ...w, otherName: otherIn.value.trim() } }, "Saved."))])])]),
+      card({ ...WEB_PROVIDERS[2], name: w.otherName ? `Other: ${w.otherName}` : WEB_PROVIDERS[2].name })
+    ])
+  ]);
+}
 function renderSettings(parts) {
   switch (parts[1] || "account") {
     case "account": return renderAccountSettings();
@@ -289,6 +316,7 @@ function renderSettings(parts) {
     case "brands": return renderBrandSettings();
     case "accounts": return renderConnectedAccounts();
     case "payments": return renderPaymentSettings();
+    case "web": return renderWebConnections();
     case "cadence": return renderCadenceSettings();
     case "developer": return renderDeveloperSettings();
     case "agents": return renderAgentSettings();

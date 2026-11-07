@@ -133,5 +133,35 @@ class PullTest(unittest.TestCase):
         self.assertIn("command-center/data/web.js", text)
 
 
+class WebConnections(unittest.TestCase):
+    """Settings → Web connections: every tool's keys go to .env only; only Google pulls today."""
+    def setUp(self):
+        import serve
+        self.serve = serve
+
+    def test_every_tool_has_its_keys(self):
+        for k in ("GA_SERVICE_ACCOUNT_KEY", "GA_PROPERTY_ID", "GSC_SITE", "CLARITY_PROJECT_ID", "CLARITY_API_TOKEN",
+                  "BING_SITE_URL", "BING_WEBMASTER_API_KEY", "OTHER_ANALYTICS_API_KEY"):
+            self.assertIn(k, self.serve.ALL_KEYS)
+
+    def test_bing_and_clarity_values_are_checked(self):
+        with self.assertRaises(ValueError):
+            self.serve.clean_key("BING_SITE_URL", "www.yoursite.com")
+        self.assertEqual(self.serve.clean_key("BING_SITE_URL", "https://www.yoursite.com/"), "https://www.yoursite.com/")
+        with self.assertRaises(ValueError):
+            self.serve.clean_key("CLARITY_PROJECT_ID", "not an id!")
+
+    def test_one_place_to_connect(self):
+        with open(os.path.join(ROOT, "command-center", "assets", "web.js"), encoding="utf-8") as f:
+            web = f.read()
+        with open(os.path.join(ROOT, "command-center", "assets", "settings.js"), encoding="utf-8") as f:
+            st = f.read()
+        self.assertIn('href: "#/settings/web"', web)          # Web → Settings points at Settings → Web connections
+        self.assertIn('slug: "web", label: "Web connections"', st)
+        self.assertIn("webGoogleSetup()", st)                # the Google steps live on the settings page
+        for host in ("clarity.ms/export", "ssl.bing.com/webmaster/api"):  # nothing pulls from Clarity or Bing yet
+            self.assertNotIn(host, web + st)
+
+
 if __name__ == "__main__":
     unittest.main()

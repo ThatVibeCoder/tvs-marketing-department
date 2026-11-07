@@ -60,6 +60,10 @@ KEYS = {
     "youtube": ["YOUTUBE_CLIENT_ID", "YOUTUBE_CLIENT_SECRET"],
     "tiktok": ["TIKTOK_CLIENT_KEY", "TIKTOK_CLIENT_SECRET"],
     "web": ["GA_SERVICE_ACCOUNT_KEY", "GA_PROPERTY_ID", "GSC_SITE"],
+    # web tools set up in Settings → Web connections; nothing pulls from these yet
+    "clarity": ["CLARITY_PROJECT_ID", "CLARITY_API_TOKEN"],
+    "bing": ["BING_SITE_URL", "BING_WEBMASTER_API_KEY"],
+    "otherweb": ["OTHER_ANALYTICS_API_KEY"],
     # payments: saved here for the Payments Agent; nothing in this repo calls a payment provider
     "stripe": ["STRIPE_RESTRICTED_KEY"],
     "square": ["SQUARE_ACCESS_TOKEN"],
@@ -255,6 +259,10 @@ def clean_key(name, value):
         raise ValueError("A Stripe restricted key starts with rk_live_ (or rk_test_ for test mode).")
     if name == "SHOPIFY_STORE_DOMAIN" and value and not re.match(r"^[a-z0-9][a-z0-9-]*\.myshopify\.com$", value):
         raise ValueError("Write the store's myshopify address, like your-store.myshopify.com (no https://).")
+    if name == "BING_SITE_URL" and value and not re.match(r"^https?://\S+/$", value):
+        raise ValueError("Write the address the way Bing shows it, with https:// and the last slash: https://www.yoursite.com/")
+    if name == "CLARITY_PROJECT_ID" and value and not re.match(r"^[A-Za-z0-9]{4,32}$", value):
+        raise ValueError("The Clarity Project ID is the short code from Settings, Overview (a short code of letters and numbers).")
     if re.search(r"[\r\n]", value):
         raise ValueError("A key is one line.")
     return value

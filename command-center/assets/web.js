@@ -111,7 +111,7 @@ function usMap(regions) {
 function webEmpty(ic, title, desc) {
   return h("div", { class: "dash-container" }, h("div", { class: "empty glass rounded-xl" }, [
     h("div", { html: lineIcon(ic) }), h("p", { class: "empty-title" }, title), h("p", { class: "empty-desc", html: desc }),
-    h("a", { href: "#/web/settings", class: "btn-accent-outline mt2" }, [svgIcon("plug", "accent"), "Connect your site"])
+    h("a", { href: "#/settings/web", class: "btn-accent-outline mt2" }, [svgIcon("plug", "accent"), "Connect your site"])
   ]));
 }
 function webHeader(tab) {
@@ -204,7 +204,7 @@ async function webPull() {
   webUi.busy = null; render();
   if (r) toast("Pulled. Your Web pages now show the latest numbers.");
 }
-function renderWebSettings() {
+function webGoogleSetup() {
   const snap = webSnap(), keys = state.keys || {}, srv = !!state.server, w = settings().web || {};
   const row = (label, value, ok) => h("div", { class: "web-set-row" }, [h("span", { class: "set-label" }, label), h("span", { class: "row gap2 set-value b" }, [ok === undefined ? null : h("span", { class: cls("presence", ok && "on") }), value])]);
   const has = (k) => srv && !!keys[k];
@@ -217,11 +217,8 @@ function renderWebSettings() {
   const step = (n, title, body) => h("li", { class: "web-step" }, [h("span", { class: "web-step-n" }, n), h("div", { class: "min0 flex1" }, [h("p", { class: "set-value b" }, title), ...body])]);
   const t = webUi.test;
   const testLine = (label, v) => v ? h("p", { class: cls("web-test", v === "ok" ? "ok" : "bad") }, [svgIcon(v === "ok" ? "checkCircle" : "alertTriangle"), h("span", {}, [h("b", {}, label + ": "), v === "ok" ? "connected" : v])]) : null;
-  return h("div", { class: "dash-container space-y-6 web-settings" }, [
-    readOnlyNote(),
-    webPanel("Property & site", "settings", null, h("div", {}, [row("Site", (snap && snap.siteDomain) || w.siteDomain || "—"), row("GA4 property", (snap && snap.propertyId) || (has("GA_PROPERTY_ID") ? "saved" : "—")), row("Data as of", snap ? webAsOf(snap.capturedAt) : "—")])),
-    webPanel("Connections", "plug", null, h("div", {}, [row("Google Analytics", snap ? "Connected" : has("GA_PROPERTY_ID") && has("GA_SERVICE_ACCOUNT_KEY") ? "Saved, not pulled yet" : "Not connected", !!snap), row("Search Console", snap && snap.search ? "Connected" : has("GSC_SITE") ? "Saved" : "Not connected", !!(snap && snap.search)), row("Data source", snap ? "Your last pull (stays on this computer)" : "Nothing pulled yet", !!snap)])),
-    webPanel("Connect your site", "key", "about 15 minutes, once", h("ol", { class: "web-steps" }, [
+  return h("div", { class: "space-y-6" }, [
+    webPanel("Google Analytics 4 + Search Console", "key", "about 15 minutes, once", h("ol", { class: "web-steps" }, [
       step("1", "Make a Google service account (a robot login that can only read)", [h("p", { class: "set-hint" }, ["In ", h("a", { class: "accent-link", href: "https://console.cloud.google.com/projectcreate", target: "_blank", rel: "noreferrer" }, "Google Cloud"), ", make a project (any name). Turn on the ", h("a", { class: "accent-link", href: "https://console.cloud.google.com/apis/library/analyticsdata.googleapis.com", target: "_blank", rel: "noreferrer" }, "Google Analytics Data API"), " and the ", h("a", { class: "accent-link", href: "https://console.cloud.google.com/apis/library/searchconsole.googleapis.com", target: "_blank", rel: "noreferrer" }, "Search Console API"), ". Then open ", h("a", { class: "accent-link", href: "https://console.cloud.google.com/iam-admin/serviceaccounts", target: "_blank", rel: "noreferrer" }, "Service accounts"), ", create one (no roles needed), open it, go to Keys, Add key, JSON. A .json file downloads."])]),
       step("2", "Save the key here", [h("p", { class: "set-hint" }, "Open the downloaded file in any text editor, copy all of it, and paste it below. It goes into .env only, and this page never shows it again. Then delete the downloaded file."), saJson, h("div", { class: "row gap2 mt2 wrap" }, [saveBtn(() => saveKey("GA_SERVICE_ACCOUNT_KEY", saJson, "Service-account key saved to .env."), "Save key"), status("GA_SERVICE_ACCOUNT_KEY")])]),
       step("3", "Let it read your Google Analytics", [h("p", { class: "set-hint" }, "Copy the service account's email (it ends in .iam.gserviceaccount.com; it's in the JSON as client_email). In Google Analytics, open Admin, Property access management, the + button, Add users, paste the email, pick the Viewer role, and add it.")]),
@@ -235,8 +232,40 @@ function renderWebSettings() {
         ]),
         t ? h("div", { class: "mt3" }, [testLine("Google Analytics", t.analytics), testLine("Search Console", t.search)]) : null,
         !srv ? h("p", { class: "set-hint mt2" }, ["Or from the terminal: ", h("code", {}, "python3 tools/pull_web.py --test"), " then ", h("code", {}, "python3 tools/pull_web.py"), "."]) : null])
-    ])),
-    webPanel("Display", "settings", null, h("div", {}, [row("Default range", "Last 30 days"), row("Datacenter/bot filtering", "On", true), row("Windows end", "Yesterday (today is still filling in)")]))
+    ]))
+  ]);
+}
+// Every web tool's state in one list: Google Analytics and Search Console pull today; Clarity, Bing and the
+// "other" slot are set up here so their keys are waiting when a pull for them exists, and say so.
+const WEB_TOOLS = [
+  { id: "ga4", name: "Google Analytics 4", keys: ["GA_SERVICE_ACCOUNT_KEY", "GA_PROPERTY_ID"], pulls: true },
+  { id: "gsc", name: "Google Search Console", keys: ["GA_SERVICE_ACCOUNT_KEY", "GSC_SITE"], pulls: true },
+  { id: "clarity", name: "Microsoft Clarity", keys: ["CLARITY_PROJECT_ID", "CLARITY_API_TOKEN"] },
+  { id: "bing", name: "Bing Webmaster Tools", keys: ["BING_SITE_URL", "BING_WEBMASTER_API_KEY"] },
+  { id: "otherweb", name: "Other", keys: ["OTHER_ANALYTICS_API_KEY"] }
+];
+function webToolState(t) {
+  const snap = webSnap(), keys = state.keys || {}, srv = !!state.server;
+  if (t.id === "ga4" && snap) return ["Connected, pulling", true];
+  if (t.id === "gsc" && snap && snap.search) return ["Connected, pulling", true];
+  if (!srv) return ["start the server to check", false];
+  const set = t.keys.filter((k) => keys[k]).length;
+  if (!set) return ["Not connected", false];
+  if (set < t.keys.length) return [`${set} of ${t.keys.length} saved`, false];
+  return [t.pulls ? "Saved, not pulled yet" : "Set up, not pulled yet", false];
+}
+function webConnectionsList() {
+  const other = ((settings().web || {}).otherName || "").trim();
+  return h("div", {}, WEB_TOOLS.map((t) => { const [label, on] = webToolState(t); return h("div", { class: "web-set-row" }, [h("span", { class: "set-label" }, t.id === "otherweb" && other ? `Other: ${other}` : t.name), h("span", { class: "row gap2 set-value b" }, [h("span", { class: cls("presence", on && "on") }), label])]); }));
+}
+function renderWebSettings() {
+  const snap = webSnap(), w = settings().web || {}, keys = state.keys || {};
+  const row = (label, value) => h("div", { class: "web-set-row" }, [h("span", { class: "set-label" }, label), h("span", { class: "row gap2 set-value b" }, value)]);
+  return h("div", { class: "dash-container space-y-6 web-settings" }, [
+    webPanel("Property & site", "settings", null, h("div", {}, [row("Site", (snap && snap.siteDomain) || w.siteDomain || "—"), row("GA4 property", (snap && snap.propertyId) || (state.server && keys.GA_PROPERTY_ID ? "saved" : "—")), row("Data as of", snap ? webAsOf(snap.capturedAt) : "—")])),
+    webPanel("Connections", "plug", null, h("div", {}, [webConnectionsList(),
+      h("div", { class: "row wrap gap3 mt4" }, [h("a", { href: "#/settings/web", class: "btn-primary" }, [svgIcon("plug"), "Manage connections"]), h("span", { class: "tiny-sub" }, "Every web tool is connected in one place: Settings → Web connections.")])])),
+    webPanel("Display", "settings", null, h("div", {}, [row("Default range", "Last 30 days"), row("Datacenter/bot filtering", "On"), row("Windows end", "Yesterday (today is still filling in)")]))
   ]);
 }
 function renderWeb(parts) {
