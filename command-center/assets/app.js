@@ -39,12 +39,13 @@ const ICONS = {
   log: '<path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/>',
   trend: '<path d="m3 17 6-6 4 4 7-8"/><path d="M14 7h6v6"/>',
   shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/>',
   chevron: '<path d="m9 6 6 6-6 6"/>',
   close: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'
 };
 const icon = (name, cls = "") => `<svg viewBox="0 0 24 24" class="${cls}" aria-hidden="true">${ICONS[name] || ICONS.zap}</svg>`;
 
-const state = { automations: [], teams: [], executions: [], content: null, web: null, settings: null, keys: null, problems: [], server: null, route: {}, flow: { zoom: 1, pan: { x: 0, y: 0 } } };
+const state = { automations: [], teams: [], executions: [], content: null, web: null, payments: null, settings: null, keys: null, problems: [], server: null, route: {}, flow: { zoom: 1, pan: { x: 0, y: 0 } } };
 
 function h(tag, attrs = {}, children = []) {
   const n = document.createElement(tag);
@@ -662,6 +663,7 @@ function applyState(s) {
   state.settings = s.settings || state.settings;
   state.keys = s.keys || null;
   state.web = s.web || null;
+  state.payments = s.payments || null;
   state.problems = s.problems || [];
   state.server = s.server || null;
 }
@@ -676,6 +678,7 @@ async function boot() {
     state.settings = window.CC_DATA.settings || {};
   }
   state.web = window.CC_WEB || null; // tools/pull_web.py writes data/web.js; it stays on this computer
+  state.payments = window.CC_PAYMENTS || null; // tools/sync.py copies payments.json to data/payments.js; both stay on this computer
   // Served by tools/serve.py? Then read the live files and turn editing on.
   if (location.protocol.startsWith("http")) {
     try {

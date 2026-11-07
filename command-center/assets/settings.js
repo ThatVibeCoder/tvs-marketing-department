@@ -1,4 +1,4 @@
-// Settings: Account, Workspace, Brands, Connected Accounts, Posting Cadence, Developer.
+// Settings: Account, Workspace, Brands, Connected Accounts, Payments, Posting Cadence, AI Agents, Developer.
 // Plain settings save to command-center/settings.json. API keys save to the .env file at the top of
 // the repo (skipped by every save) and never come back to this page: it only ever learns set / not set.
 
@@ -7,6 +7,7 @@ const SETTINGS_SECTIONS = [
   { slug: "workspace", label: "Workspace", icon: "box" },
   { slug: "brands", label: "Brands", icon: "layers" },
   { slug: "accounts", label: "Connected Accounts", icon: "radio" },
+  { slug: "payments", label: "Payments", icon: "card" },
   { slug: "cadence", label: "Posting Cadence", icon: "calendarClock" },
   { slug: "agents", label: "AI Agents", icon: "sparkle" },
   { slug: "developer", label: "Developer", icon: "terminal" }
@@ -35,6 +36,28 @@ const PROVIDERS = [
     steps: ["Turn on the YouTube Data API v3 in a Google Cloud project.", "Create an OAuth client (desktop app).", "Paste its client id and secret below. The first upload asks you to sign in once."], keys: [["YOUTUBE_CLIENT_ID", "Client id"], ["YOUTUBE_CLIENT_SECRET", "Client secret"]] },
   { id: "tiktok", name: "TikTok", kind: "api", url: "https://developers.tiktok.com/apps", urlLabel: "developers.tiktok.com/apps",
     steps: ["Create an app and add the Content Posting API to it.", "TikTok reviews the app before it can post publicly.", "Paste the client key and secret below."], keys: [["TIKTOK_CLIENT_KEY", "Client key"], ["TIKTOK_CLIENT_SECRET", "Client secret"]] }
+];
+// Payments: where each provider keeps a key that can only READ. Nothing in this repo calls a provider: the key
+// waits in .env for the Payments Agent (Dev Team), which makes the connection and fills command-center/data/payments.json.
+const PAYMENT_PROVIDERS = [
+  { id: "stripe", name: "Stripe", url: "https://dashboard.stripe.com/apikeys", urlLabel: "dashboard.stripe.com → Developers → API keys",
+    steps: ["In Stripe, open Developers, then API keys, and press Create restricted key.", "Name it \"Command Center (read only)\" and give it Read on Charges, Customers, Invoices, Subscriptions and Balance. Leave everything else at None.", "Copy the key (it starts with rk_live_) and paste it below. A secret key (sk_) is refused here: it can move money."],
+    keys: [["STRIPE_RESTRICTED_KEY", "Restricted key (read only)"]] },
+  { id: "square", name: "Square", url: "https://developer.squareup.com/apps", urlLabel: "developer.squareup.com/apps",
+    steps: ["Sign in to the Square Developer Console with your Square account and create an application.", "Switch the app to Production and open Credentials.", "Copy the Production access token and paste it below. Square's personal token isn't read-only, so it stays in .env and the Payments Agent only ever reads with it."],
+    keys: [["SQUARE_ACCESS_TOKEN", "Production access token"]] },
+  { id: "paypal", name: "PayPal", url: "https://developer.paypal.com/dashboard/applications/live", urlLabel: "developer.paypal.com → Apps & Credentials",
+    steps: ["Sign in to the PayPal Developer Dashboard with your business account and switch to Live.", "Create an app (type: Merchant) and turn on Transaction Search under its features.", "Copy the client id and the secret below. PayPal has no read-only key, so the Payments Agent only reads with it."],
+    keys: [["PAYPAL_CLIENT_ID", "Client id"], ["PAYPAL_CLIENT_SECRET", "Secret"]] },
+  { id: "lemonsqueezy", name: "Lemon Squeezy", url: "https://app.lemonsqueezy.com/settings/api", urlLabel: "app.lemonsqueezy.com → Settings → API",
+    steps: ["In Lemon Squeezy, open Settings, then API.", "Press the plus button, name the key \"Command Center\" and create it.", "Copy it right away (it's only shown once) and paste it below."],
+    keys: [["LEMONSQUEEZY_API_KEY", "API key"]] },
+  { id: "shopify", name: "Shopify", url: "https://dev.shopify.com/dashboard", urlLabel: "dev.shopify.com (Dev Dashboard)",
+    steps: ["Open Shopify's Dev Dashboard and create an app for your own store.", "Give it read scopes only: read_orders and read_customers (add read_all_orders for history older than 60 days). Install it on your store.", "Paste your store's myshopify address and the app's client id and secret below."],
+    keys: [["SHOPIFY_STORE_DOMAIN", "Store address (your-store.myshopify.com)"], ["SHOPIFY_CLIENT_ID", "Client id"], ["SHOPIFY_CLIENT_SECRET", "Client secret"]] },
+  { id: "other", name: "Something else", url: "", urlLabel: "",
+    steps: ["Find your provider's API settings and make the most limited key it offers (read only, if it has one).", "Paste it below. Tell the Payments Agent which provider it's for when you add the Dev Team.", "No key at all? The Payments Agent can also fill payments.json from an export (a CSV of your payments)."],
+    keys: [["PAYMENTS_API_KEY", "API key"]] }
 ];
 const COMMON_TZ = ["America/New_York", "America/Chicago", "America/Denver", "America/Phoenix", "America/Los_Angeles", "America/Anchorage", "Pacific/Honolulu", "America/Toronto", "America/Vancouver", "America/Mexico_City", "America/Sao_Paulo", "Europe/London", "Europe/Dublin", "Europe/Paris", "Europe/Berlin", "Europe/Madrid", "Europe/Amsterdam", "Africa/Johannesburg", "Asia/Dubai", "Asia/Kolkata", "Asia/Singapore", "Asia/Tokyo", "Australia/Sydney", "Pacific/Auckland"];
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -199,6 +222,7 @@ function renderDeveloperSettings() {
         fact("Rebuild the picture", h("code", {}, "python3 tools/sync.py"), "Windows: py tools/sync.py. Add --check to change nothing and fail if anything is out of date."),
         fact("Turn editing on", h("code", {}, "python3 tools/serve.py"), "Serves on http://localhost:8765 only. --port 9000 to change it, --open to open the browser."),
         fact("Pull website numbers", h("code", {}, "python3 tools/pull_web.py"), "Google Analytics and Search Console, read-only. --test only checks the connection. Saved to command-center/data/web.json, which never leaves this computer."),
+        fact("Payments", h("code", {}, "command-center/data/payments.json"), "Filled by the Payments Agent from the key in Settings → Payments; nothing in the repo calls a provider. sync copies it to payments.js. Shape: command-center/data/README.md. Never leaves this computer."),
         fact("Run the tests", h("code", {}, "python3 -m unittest discover tests"), "Each test runs on a temporary copy, never your files.")
       ]),
       group("Endpoints (tools/serve.py)", [["GET", "/api/state", "posts, research, settings, key presence"], ["POST", "/api/posts", "create a post file"], ["POST", "/api/posts/<id>", "save fields of one post"], ["POST", "/api/posts/<id>/duplicate", "copy a post as a new draft"], ["POST", "/api/settings", "write settings.json"], ["POST", "/api/keys", "set or remove one key in .env"], ["POST", "/api/web/test", "check the Google connection"], ["POST", "/api/web/pull", "pull the website numbers"]].map(([m, p, d]) => h("div", { class: "kv-row" }, [h("code", { class: "mono-sm" }, `${m} ${p}`), h("span", { class: "tiny-sub" }, d)]))),
@@ -238,12 +262,33 @@ function renderAgentSettings() {
     settingsSection("agent-other", "Any other agent", null, [h("p", { class: "set-hint" }, "Point it at AGENTS.md (most agents read it on their own) and ask for a team by name, like \"run my content team\". Every team's steps live in its team.md, so any agent that reads files can follow them.")])
   ]);
 }
+function renderPaymentSettings() {
+  const pay = settings().payments || {}, chosen = PAYMENT_PROVIDERS.find((p) => p.id === pay.provider), data = state.payments;
+  const devTeam = state.teams.some((t) => t.id === "dev-team"), agent = devTeam && (state.teams.find((t) => t.id === "dev-team").seats || []).some((m) => /payments/i.test(m.name || ""));
+  const asProvider = (p) => ({ ...p, url: p.url || "#/settings/payments", urlLabel: p.urlLabel || "your provider's API settings" });
+  return settingsPane("Payments", "Where your money comes from, so the Dashboard can show your revenue. You pick the provider and save a read-only key; the Payments Agent makes the connection.", [
+    settingsSection("pay-provider", "Your payment provider", "Pick the one you take money with. You can change it any time.", [
+      h("div", { class: "poster-grid" }, PAYMENT_PROVIDERS.map((p) => h("button", { type: "button", class: cls("poster-opt", pay.provider === p.id && "on"), "aria-pressed": pay.provider === p.id ? "true" : "false", disabled: state.server ? null : "", onclick: () => saveSettings({ payments: { ...pay, provider: p.id } }, `Payment provider: ${p.name}.`) }, [h("span", { class: "row gap15 b" }, [pay.provider === p.id ? svgIcon("checkCircle", "accent") : svgIcon("plug", "muted"), p.name]), h("span", { class: "set-hint" }, p.keys.map(([k]) => k).join(" · "))])))
+    ]),
+    chosen ? settingsSection("pay-key", `Your ${chosen.name} key`, "Read-only wherever the provider allows it. It goes into the .env file at the top of your repo, which saving to GitHub always skips, and this page only ever shows whether it's set.", [(() => { openProviders.add(`pay-${chosen.id}`); return providerCard({ ...asProvider(chosen), id: `pay-${chosen.id}` }); })()])
+      : settingsSection("pay-key", "Your key", null, [h("p", { class: "set-hint" }, "Pick a provider above and its steps and key field show up here.")]),
+    settingsSection("pay-agent", "Who connects it", null, [
+      h("p", { class: "set-hint" }, ["Nothing on this page talks to your provider. The ", h("b", {}, "Payments Agent"), " on the Dev Team does: it reads your key from .env, pulls your payments and writes them to ", h("code", {}, "command-center/data/payments.json"), ". That file stays on this computer, and the Dashboard reads it."]),
+      h("div", { class: "mt3" }, [
+        settingRow("Payments Agent", agent ? "Added" : devTeam ? "Not added yet" : "Comes with the Dev Team", agent ? "Ask your AI: connect my payments." : "Ask your AI: add the dev team. The Payments Agent joins it once it's ready."),
+        settingRow("payments.json", data ? `${(data.payments || []).length} payments · ${(data.invoices || []).length} invoices` : "Not there yet", data && data.capturedAt ? `Last filled ${new Date(data.capturedAt).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZone: tzName() })}.` : "Its shape is in command-center/data/README.md."),
+        settingRow("Provider", chosen ? chosen.name : "None picked", "Saved in command-center/settings.json (no key ever goes there).")
+      ])
+    ])
+  ]);
+}
 function renderSettings(parts) {
   switch (parts[1] || "account") {
     case "account": return renderAccountSettings();
     case "workspace": return renderWorkspaceSettings();
     case "brands": return renderBrandSettings();
     case "accounts": return renderConnectedAccounts();
+    case "payments": return renderPaymentSettings();
     case "cadence": return renderCadenceSettings();
     case "developer": return renderDeveloperSettings();
     case "agents": return renderAgentSettings();
