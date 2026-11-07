@@ -38,7 +38,7 @@ Open `departments/operations/strategy-team/company-strategist/company-strategist
 Don't write a list of teams into it. The strategist reads `departments/` fresh on every ask, so a team added next week is found without touching this file.
 
 ## 4. Run the sync command
-Run `python3 tools/sync.py` (Windows: `py tools/sync.py`). If it prints a line starting with FIX, fix that first. Then check that `.claude/skills/company-strategist/` and `.agents/skills/company-strategist/` are there. That's what makes it a command on every AI.
+Run `python3 tools/sync.py` (Windows: `py tools/sync.py`). If it prints a line starting with FIX, fix that first. Then check that all four are there: `.claude/skills/company-strategist/` (Claude Code), `.agents/skills/company-strategist/` (Codex and Grok Build), `.gemini/commands/company-strategist.toml` (Gemini CLI) and `.cursor/commands/company-strategist.md` (Cursor). That's what makes it a command on every AI. If you did the sync by hand, the Gemini and Cursor files catch up on the next real sync; say so in one line.
 
 ## 5. Show them how to talk to it
 Ask which AI they use, then show only that one:

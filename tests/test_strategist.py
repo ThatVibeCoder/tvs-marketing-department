@@ -71,6 +71,13 @@ class StrategistSkillsTest(unittest.TestCase):
         for t in teams:
             self.assertNotIn(t, body, f"the front door names {t} by its folder; it must read departments/ instead")
 
+    def test_setup_checks_the_shortcut_on_every_ai(self):
+        body = read(os.path.join(ROOT, LIB_MEMBER, "skills/set-up-your-company-strategist/SKILL.md"))
+        step4 = body[body.index("## 4."):body.index("## 5.")]
+        for p in AGENT_PATHS:
+            path = p.format("company-strategist")
+            self.assertIn(path[:-len("/SKILL.md")] + "/" if path.endswith("SKILL.md") else path, step4)
+
     def test_what_comes_next_runs_a_real_skill(self):
         body = read(os.path.join(ROOT, "library/teams/operations/strategy-team/team.md"))
         flows = sync.read_workflows(sync.frontmatter(body)[1], "team.md")
