@@ -444,7 +444,107 @@ def build_cc(depts, today):
                       "stats": {"lastRunAt": None, "lastRunStatus": None, "runCount": None, "failureCount": None,
                                 "failureRate": None, "avgRunMs": None, "extras": []},
                       "flow": {"topologySource": rel(p), "nodes": [], "edges": []}})
-    return {"teams.json": teams, "automations.json": autos}
+    return {"teams.json": teams, "automations.json": autos, "content.json": build_content()}
+
+
+# ---------- 3. Content data (the Content pages of the Command Center) ----------
+# Every post is one file in departments/marketing/content-team/social-manager/posts/<id>.md: a small header, then the post.
+# The content team's skills write them, tools/serve.py edits them, and this reads them for the dashboard.
+POSTS_DIR = os.path.join(DEPTS, "marketing", "content-team", "social-manager", "posts")
+SETTINGS_FILE = os.path.join(ROOT, "command-center", "settings.json")
+PLATFORMS = ["tiktok", "instagram", "twitter", "threads", "youtube", "skool", "linkedin"]
+POST_STATUSES = ["draft", "approved", "rejected", "posted"]
+POST_FIELDS = ["platform", "status", "date", "time", "title", "category", "account", "media", "media_type",
+               "job", "posted_at", "link", "notes", "created", "updated"]
+VIDEO_EXT = (".mp4", ".mov", ".webm", ".m4v")
+DEFAULT_SETTINGS = {
+    "account": {"name": "", "role": "Owner"},
+    "workspace": {"name": "Your Department", "timezone": "America/New_York"},
+    "brands": [{"id": "your-brand", "name": "Your Brand", "handle": "@yourhandle", "active": True}],
+    "accounts": {p: {"handle": "", "connectedVia": "manual"} for p in PLATFORMS},
+    "poster": "manual",
+    "cadence": [],
+    "skoolCategories": ["General discussion", "Announcements", "Wins"],
+}
+
+
+def load_settings():
+    """command-center/settings.json, filled out with the defaults for anything missing. Never holds a key."""
+    s = json.loads(json.dumps(DEFAULT_SETTINGS))
+    if os.path.isfile(SETTINGS_FILE):
+        try:
+            mine = json.loads(read(SETTINGS_FILE))
+        except ValueError as e:
+            errors.append(f"command-center/settings.json isn't valid JSON ({e}). Fix it, or delete it to start from the defaults.")
+            mine = {}
+        for k, v in mine.items():
+            if isinstance(v, dict) and isinstance(s.get(k), dict):
+                s[k].update(v)
+            else:
+                s[k] = v
+    return s
+
+
+def read_post(path):
+    meta, body = frontmatter(read(path))
+    pid = os.path.splitext(os.path.basename(path))[0]
+    platform = str(meta.get("platform", "")).strip().lower()
+    status = str(meta.get("status", "draft")).strip().lower() or "draft"
+    if platform not in PLATFORMS:
+        errors.append(f"{rel(path)}: `platform:` must be one of {', '.join(PLATFORMS)} (found `{platform or 'nothing'}`)")
+        return None
+    if status not in POST_STATUSES:
+        errors.append(f"{rel(path)}: `status:` must be one of {', '.join(POST_STATUSES)} (found `{status}`)")
+        return None
+    date = str(meta.get("date", "")).strip()
+    if date and not re.match(r"^\d{4}-\d{2}-\d{2}$", date):
+        errors.append(f"{rel(path)}: `date:` must look like 2026-11-07 (found `{date}`)")
+        return None
+    time = str(meta.get("time", "")).strip()
+    if time and not re.match(r"^\d{1,2}:\d{2}$", time):
+        errors.append(f"{rel(path)}: `time:` must look like 09:30 (found `{time}`)")
+        return None
+    media = str(meta.get("media", "")).strip()
+    mtype = str(meta.get("media_type", "")).strip().lower()
+    if media and mtype not in ("image", "video"):
+        mtype = "video" if media.lower().split("?")[0].endswith(VIDEO_EXT) else "image"
+    post = {"id": pid, "path": rel(path), "platform": platform, "status": status, "date": date,
+            "time": time.zfill(5) if time else "", "body": body.rstrip("\n"), "media": media,
+            "mediaType": mtype if media else ""}
+    for k in ("title", "category", "account", "job", "posted_at", "link", "notes", "created", "updated"):
+        post[{"posted_at": "postedAt"}.get(k, k)] = str(meta.get(k, "")).strip() if k != "notes" else str(meta.get(k, ""))
+    return post
+
+
+def read_doc(path):
+    return {"name": os.path.splitext(os.path.basename(path))[0], "path": rel(path), "text": read(path)}
+
+
+def build_content():
+    posts = []
+    if os.path.isdir(POSTS_DIR):
+        for f in sorted(os.listdir(POSTS_DIR)):
+            if f.endswith(".md") and f.lower() != "readme.md":
+                p = read_post(os.path.join(POSTS_DIR, f))
+                if p:
+                    posts.append(p)
+    kdir = os.path.join(ROOT, "knowledge")
+    research = {}
+    for key in ("outliers", "topics", "hooks"):
+        p = os.path.join(kdir, key + ".md")
+        research[key] = read_doc(p) if os.path.isfile(p) else None
+    for key in ("competitors", "swipes"):
+        d = os.path.join(kdir, key)
+        research[key] = [read_doc(os.path.join(d, f)) for f in sorted(os.listdir(d))
+                         if f.endswith(".md") and f.lower() != "readme.md" and not f.startswith("_")] if os.path.isdir(d) else []
+    rdir = os.path.join(kdir, "reports")
+    reports = [read_doc(os.path.join(rdir, f)) for f in sorted(os.listdir(rdir), reverse=True)
+               if re.match(r"^content-.*\.md$", f)] if os.path.isdir(rdir) else []
+    cal_dir = os.path.join(DEPTS, "marketing", "content-team", "social-manager", "output")
+    calendars = [rel(os.path.join(cal_dir, f)) for f in sorted(os.listdir(cal_dir), reverse=True)
+                 if re.match(r"^calendar-.*\.md$", f)] if os.path.isdir(cal_dir) else []
+    return {"posts": posts, "research": research, "reports": reports, "calendars": calendars,
+            "postsDir": rel(POSTS_DIR)}
 
 
 def sync_cc(data, check):
@@ -456,7 +556,8 @@ def sync_cc(data, check):
         files["executions.json"] = "[]\n"
     files["data.js"] = ("// generated by tools/sync.py so the dashboard opens straight from the folder. Do not edit.\n"
                         "window.CC_DATA = " + json.dumps({"teams": data["teams.json"], "automations": data["automations.json"],
-                                                          "executions": executions}, ensure_ascii=False) + ";\n")
+                                                          "executions": executions, "content": data["content.json"],
+                                                          "settings": load_settings()}, ensure_ascii=False) + ";\n")
 
     def strip_dates(s):
         return re.sub(r'"flowAsOf": ?"[0-9-]+"', "", s)
