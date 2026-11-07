@@ -417,8 +417,9 @@ class Handler(BaseHTTPRequestHandler):
                     changes = data.get("changes") or {}
                     if not isinstance(changes, dict):
                         raise ValueError("Nothing to save.")
-                    clean = {k: changes[k] for k in ("title", "glance", "sections", "fields") if k in changes}
-                    what_changed = [*(clean.get("glance") or {}), *(clean.get("sections") or {}), *[f for fs in (clean.get("fields") or {}).values() for f in fs]]
+                    clean = {k: changes[k] for k in ("title", "glance", "sections", "sectionsAt", "fields") if k in changes}
+                    what_changed = [*(clean.get("glance") or {}), *(clean.get("sections") or {}), *[str(a.get("title")) for a in clean.get("sectionsAt") or [] if isinstance(a, dict)],
+                                    *[f for fs in (clean.get("fields") or {}).values() for f in fs]]
                     clean["update"] = "edited in the Command Center: " + ", ".join(dict.fromkeys(short(x) for x in what_changed))[:300] if what_changed else None
                     business.save(rel, clean, expect=str(data.get("hash") or ""))
                     result, what = {"path": rel}, f"saved {rel}"

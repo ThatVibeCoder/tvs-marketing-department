@@ -212,7 +212,8 @@ def parse(text, guides=None):
             m = FIELD.match(ln.strip())
             if m:
                 fields.append({"key": m.group(1).strip(), "value": "" if empty(m.group(2)) else m.group(2).strip()})
-        doc["sections"].append({"title": name, "guide": guide, "body": "" if empty(answer) else answer, "fields": fields})
+        nth = 1 + sum(1 for x in doc["sections"] if x["title"].lower() == name.lower())
+        doc["sections"].append({"title": name, "n": nth, "guide": guide, "body": "" if empty(answer) else answer, "fields": fields})
     return doc
 
 
@@ -237,17 +238,22 @@ def _set_glance(lines, key, value):
     if close_i is None:
         return lines
     val = value.strip().replace("\n", " ") or MARKER
-    for i in range(open_i + 1, close_i):
-        k, _ = split_key(lines[i])
-        if k and (k == key or short_key(k).lower() == short_key(key).lower()):
-            lines[i] = f"{k}: {val}"
-            return lines
+    keys = [(i, split_key(lines[i])[0]) for i in range(open_i + 1, close_i)]
+    # the exact key first, so Price (monthly) never lands on Price (one-off); the short label only as a fallback
+    hit = next((i for i, k in keys if k == key), None)
+    if hit is None:
+        hit = next((i for i, k in keys if k and short_key(k).lower() == short_key(key).lower()), None)
+    if hit is not None:
+        lines[hit] = f"{keys[hit - open_i - 1][1]}: {val}"
+        return lines
     lines.insert(close_i, f"{key}: {val}")
     return lines
 
 
-def _find(lines, title):
-    return next(((s, e) for s, e in _blocks(lines) if lines[s][3:].strip().lower() == title.lower()), None)
+def _find(lines, title, n=1):
+    """The n-th section with this title (a file can have two ## Notes; the page says which one it showed)."""
+    hits = [(s, e) for s, e in _blocks(lines) if lines[s][3:].strip().lower() == title.lower()]
+    return hits[n - 1] if 0 < n <= len(hits) else None
 
 
 def _insert_section(lines, title, guide):
@@ -261,8 +267,8 @@ def _insert_section(lines, title, guide):
     return lines
 
 
-def _answer_span(lines, title, guides):
-    span = _find(lines, title)
+def _answer_span(lines, title, guides, n=1):
+    span = _find(lines, title, n)
     if not span:
         raise ValueError(f"There's no section called {title} in this file.")
     s, e = span
@@ -276,10 +282,12 @@ def _answer_span(lines, title, guides):
     return start, end
 
 
-def _set_section(lines, title, value, guides):
-    if not _find(lines, title):
+def _set_section(lines, title, value, guides, n=1):
+    if not _find(lines, title, n):
+        if n > 1:
+            raise ValueError(f"This file has no {n}th ## {title} section anymore. Reload the page.")
         lines = _insert_section(lines, title, (guides or {}).get(title, ""))
-    start, end = _answer_span(lines, title, guides)
+    start, end = _answer_span(lines, title, guides, n)
     new = (value or "").strip("\n").splitlines() or [MARKER]
     if not any(ln.strip() for ln in new):
         new = [MARKER]
@@ -333,6 +341,7 @@ def _add_update(lines, note, today=None, title="Updates"):
 
 def apply(text, changes, guides=None, today=None):
     """Change only what's asked: changes = {"title", "glance": {key: value}, "sections": {title: text},
+    "sectionsAt": [{"title", "n", "text"}] (when a title appears twice),
     "fields": {section: {field: value}}, "update": "what changed"}. Everything else stays byte for byte."""
     trail = text.endswith("\n")
     lines = text.splitlines()
@@ -344,6 +353,8 @@ def apply(text, changes, guides=None, today=None):
         lines = _set_glance(lines, k, str(v))
     for t, v in (changes.get("sections") or {}).items():
         lines = _set_section(lines, t, str(v), guides)
+    for at in changes.get("sectionsAt") or []:   # {"title", "n", "text"}: the n-th of two sections with one title
+        lines = _set_section(lines, str(at["title"]), str(at["text"]), guides, int(at.get("n") or 1))
     for t, fs in (changes.get("fields") or {}).items():
         for k, v in fs.items():
             lines = _set_field(lines, t, k, str(v), guides)

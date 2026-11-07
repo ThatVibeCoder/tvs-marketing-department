@@ -122,7 +122,7 @@ function autoGrow(t) { requestAnimationFrame(() => { t.style.height = "auto"; t.
 function area(value, attrs = {}) { const t = h("textarea", { class: "field biz-area", rows: "2", readonly: state.server ? null : "", ...attrs }, value || ""); t.addEventListener("input", () => autoGrow(t)); autoGrow(t); return t; }
 function docEditor(kind, doc, back) {
   if (!doc) return h("div", { class: "dash-container" }, emptyState("alert", "That file isn't there", `It may have been renamed. <a class="accent-link" href="${back}">Back</a>`));
-  const inputs = { glance: {}, sections: {}, fields: {} };
+  const inputs = { glance: {}, sections: {}, fields: {}, at: [] };
   const name = docName(doc, { icp: "ICP", offer: "Offer" }[kind]);
   const titleIn = kind === "persona" || kind === "competitor" || (kind === "icp" && !doc.main) ? h("input", { class: "field biz-title-in", value: name, readonly: state.server ? null : "", "aria-label": "Name" }) : null;
   const glanceBox = (doc.glance || []).length ? h("div", { class: "glass biz-sec" }, [h("p", { class: "overline" }, "At a glance"),
@@ -148,7 +148,8 @@ function docEditor(kind, doc, back) {
         }))]);
     }
     const t = area(s.body, { placeholder: "Not filled in yet", "aria-label": s.title });
-    inputs.sections[s.title] = [t, s.body];
+    const twice = (doc.sections || []).filter((x) => x.title.toLowerCase() === s.title.toLowerCase()).length > 1;
+    if (twice) inputs.at.push([s, t]); else inputs.sections[s.title] = [t, s.body]; // a title that's there twice is saved by its place
     return h("details", { class: "glass biz-sec", open: s.body || state.server ? "" : null }, [h("summary", { class: "row" }, [h("span", { class: "b fg" }, s.title), s.body ? h("span", { class: "status-pill ok ml-auto" }, "filled") : h("span", { class: "status-pill ml-auto" }, "empty")]),
       s.guide ? h("p", { class: "tiny-sub mt1" }, s.guide) : null, h("div", { class: "mt2" }, t)]);
   });
@@ -158,6 +159,8 @@ function docEditor(kind, doc, back) {
     const gl = pick("glance"), ss = pick("sections"), fs = {};
     for (const [t, m] of Object.entries(inputs.fields)) { const o = {}; for (const [k, [el, was]] of Object.entries(m)) if ((el.value || "").trim() !== (was || "").trim()) o[k] = el.value.trim(); if (Object.keys(o).length) fs[t] = o; }
     if (Object.keys(gl).length) ch.glance = gl; if (Object.keys(ss).length) ch.sections = ss; if (Object.keys(fs).length) ch.fields = fs;
+    const at = inputs.at.filter(([sec, el]) => el.value.trim() !== (sec.body || "").trim()).map(([sec, el]) => ({ title: sec.title, n: sec.n, text: el.value.trim() }));
+    if (at.length) ch.sectionsAt = at;
     if (titleIn && titleIn.value.trim() && titleIn.value.trim() !== name) ch.title = kind === "icp" ? `ICP: ${titleIn.value.trim()}` : titleIn.value.trim();
     if (!Object.keys(ch).length) return toast("Nothing changed.");
     bizSave(doc.path, ch);

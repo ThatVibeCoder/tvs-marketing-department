@@ -267,6 +267,30 @@ class F10AtomicWrites(unittest.TestCase):
                 plain = [ln.strip() for ln in f if "open(" in ln and '"w"' in ln]
             self.assertEqual(plain, [], f"{rel} still writes a file in place")
 
+class F5TheOneYouClicked(unittest.TestCase):
+    """Two sections with the same title: editing the second overwrote the first. Two glance keys sharing a
+    short label (Price (one-off), Price (monthly)): editing the monthly one wrote the one-off line."""
+
+    T = "# X\n\n## At a Glance\n```\nPrice (one-off): $500\nPrice (monthly): $50\n```\n\n## Notes\nfirst notes\n\n## Notes\nsecond notes\n\n## Updates\nDated lines.\n"
+
+    def test_the_second_of_two_sections(self):
+        d = b.parse(self.T)
+        self.assertEqual([(s["title"], s.get("n")) for s in d["sections"] if s["title"] == "Notes"], [("Notes", 1), ("Notes", 2)])
+        n = b.apply(self.T, {"sectionsAt": [{"title": "Notes", "n": 2, "text": "new second"}]})
+        self.assertIn("first notes", n)
+        self.assertIn("new second", n)
+        self.assertNotIn("second notes", n)
+
+    def test_the_exact_glance_key_wins(self):
+        n = b.apply(self.T, {"glance": {"Price (monthly)": "$60"}})
+        self.assertIn("Price (one-off): $500", n)
+        self.assertIn("Price (monthly): $60", n)
+
+    def test_the_page_sends_the_one_it_shows(self):
+        with open(os.path.join(ROOT, "command-center", "assets", "business.js"), encoding="utf-8") as f:
+            self.assertIn("sectionsAt", f.read())
+
+
 CHROME = next((p for p in ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",) if os.path.exists(p)), None) or \
     next((p for p in (__import__("shutil").which("google-chrome"), __import__("shutil").which("chromium")) if p), None)
 
