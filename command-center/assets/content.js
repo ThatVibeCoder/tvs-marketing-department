@@ -119,11 +119,7 @@ function markIcon(platform, c = "") {
 function contentTeamNote() {
   if ((state.teams || []).some((t) => t.id === "content-team")) return null;
   return h("p", { class: "ro-note" }, [
-    "Your posts come from the Content Team, and it isn't in your department yet. Ask your AI: ",
-    h("code", {}, "add the content team"),
-    " (or run ",
-    h("code", {}, "python3 tools/add_team.py content-team"),
-    "). Until then these pages stay empty.",
+    "Your posts come from the Content Team, and it isn't in your folder yet: the Content Team lesson builds it. Until then these pages stay empty.",
   ]);
 }
 function readOnlyNote() {
@@ -1818,7 +1814,7 @@ function renderResearch() {
             "search",
             tab === "competitors" ? "No competitors saved yet" : "No swipes saved yet",
             tab === "competitors"
-              ? "The Researcher's competitor-check saves one file per competitor in <code>knowledge/competitors/</code>."
+              ? "The Researcher saves one file per competitor in <code>knowledge/competitors/</code>, once the Research Team lesson builds its team."
               : "Posts and pages worth stealing the shape of go in <code>knowledge/swipes/</code>, one file each.",
           ),
         );
@@ -1832,7 +1828,7 @@ function renderResearch() {
             emptyState(
               "trend",
               "No outliers yet",
-              "The Researcher's find-outliers skill adds the top posts in your space to <code>knowledge/outliers.md</code> each month: posts doing far better than their channel's size, and the shape that made them work.",
+              "Once the Research Team lesson builds its team, the Researcher adds the top posts in your space to <code>knowledge/outliers.md</code> each month: posts doing far better than their channel's size, and the shape that made them work.",
             ),
           );
   return h("div", {}, [

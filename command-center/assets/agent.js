@@ -3,7 +3,7 @@
 const AGENT_SUGGESTIONS = [
   ["pencil", "Write this week's Threads post"],
   ["globe", "How did my website do this week?"],
-  ["users", "Add the website team"],
+  ["checkCircle", "Save my work"],
   ["calendarDays", "What's on my content calendar?"],
 ];
 

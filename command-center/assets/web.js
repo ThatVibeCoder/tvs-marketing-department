@@ -936,11 +936,11 @@ function renderLandingPages() {
         h("p", { class: "empty-title" }, "No landing pages yet"),
         h("p", {
           class: "empty-desc",
-          html: "Your Website Team lists every page it builds here, with the pages under it: forms, thank-you pages, upsells and product pages, on any domain. Ask your AI: <b>add the website team</b>, then <b>build my landing page</b>. The list lives in <code>knowledge/landing-pages.json</code>.",
+          html: "Your Website Team lists every page it builds here, with the pages under it: forms, thank-you pages, upsells and product pages, on any domain. The Website Team lesson builds that team; then ask it to <b>build my landing page</b>. The list lives in <code>knowledge/landing-pages.json</code>.",
         }),
         h("a", { href: "#/agent-teams", class: "btn-accent-outline mt2" }, [
-          svgIcon("plus", "accent"),
-          "See the Website Team",
+          svgIcon("users", "accent"),
+          "See your teams",
         ]),
       ]),
     );

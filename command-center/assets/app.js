@@ -382,37 +382,19 @@ function renderTeams() {
     ]),
   );
 }
-// The department ships nearly empty; every full team waits in library/teams/ until the owner adds it.
+// The department ships with the Dev Team only; every other team is built by its classroom lesson.
 function addTeamCard() {
-  const lib = (window.CC_DATA && window.CC_DATA.library) || [];
-  const waiting = lib.filter((t) => !t.added);
-  if (!lib.length) return null;
   return h("section", { class: "dept-section" }, [
-    h("p", { class: "dept-label" }, "Add a team"),
+    h("p", { class: "dept-label" }, "More teams"),
     h("div", { class: "list-block glass add-team" }, [
       h("div", { class: "add-team-head" }, [
-        h("p", { class: "item-name" }, "Your teams come from the team library, one at a time"),
-        h("p", { class: "item-desc wrap-desc" }, [
-          "Ask your AI: ",
-          h("code", {}, "add the website team"),
-          ". The whole team (every team member, skill and workflow) lands in your department and shows up here. Or run ",
-          h("code", {}, "python3 tools/add_team.py website-team"),
-          ".",
-        ]),
+        h("p", { class: "item-name" }, "Your teams come from the classroom lessons"),
+        h(
+          "p",
+          { class: "item-desc wrap-desc" },
+          "Each lesson's skill builds one team in your folder from your own answers, and it shows up here as soon as it's built. The Dev Team is already here: it saves your work, keeps your keys and ships your pages.",
+        ),
       ]),
-      ...waiting.map((t) =>
-        h("div", { class: "item-link static" }, [
-          h("div", { class: "item-main" }, [
-            h("div", { class: "item-title" }, [
-              h("span", { class: "item-name" }, t.name),
-              chip(labelDept(t.department.replace(/-/g, "_")) || t.department),
-              t.ready ? chip("Ready", "") : chip("Not ready yet", "dashed"),
-            ]),
-            h("p", { class: "item-desc" }, t.purpose),
-            h("div", { class: "meta" }, [h("span", {}, "Say"), h("code", {}, `add the ${t.name.toLowerCase()}`)]),
-          ]),
-        ]),
-      ),
     ]),
   ]);
 }

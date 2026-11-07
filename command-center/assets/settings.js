@@ -242,7 +242,7 @@ const PAYMENT_PROVIDERS = [
     urlLabel: "",
     steps: [
       "Find your provider's API settings and make the most limited key it offers (read only, if it has one).",
-      "Paste it below. Tell the Payments Agent which provider it's for when you add the Dev Team.",
+      "Paste it below. The Payments Agent on your Dev Team uses it once its skills are ready.",
       "No key at all? The Payments Agent can also fill payments.json from an export (a CSV of your payments).",
     ],
     keys: [["PAYMENTS_API_KEY", "API key"]],
@@ -257,7 +257,7 @@ const WEB_PROVIDERS = [
     urlLabel: "clarity.microsoft.com",
     steps: [
       "Sign in to Microsoft Clarity (free) and press New project. Name it after your site and type its address.",
-      "Clarity gives you a tracking code. Your Website Team's Page Builder adds it to your pages when you ask: \"add Clarity to my site\". Or follow Clarity's steps to paste it yourself.",
+      "Clarity gives you a tracking code. Once the Website Team lesson builds your Website Team, its Page Builder adds it to your pages when you ask: \"add Clarity to my site\". Or follow Clarity's steps to paste it yourself.",
       'In the project, open Settings, then Overview: copy the Project ID. Then Settings, Data Export: press Generate new API token, name it "Command Center", and copy it. Paste both below.',
     ],
     keys: [
@@ -1081,7 +1081,7 @@ const AI_AGENTS = [
     by: "Anthropic",
     install: "https://docs.anthropic.com/en/docs/claude-code/overview",
     open: "claude",
-    summon: "/example-team",
+    summon: "/dev-team",
     files: ["CLAUDE.md (points at AGENTS.md)", ".claude/skills/ (every team, workflow and skill)"],
     note: "Also in the Claude desktop app and VS Code: open this folder there.",
   },
@@ -1091,7 +1091,7 @@ const AI_AGENTS = [
     by: "OpenAI",
     install: "https://developers.openai.com/codex/cli",
     open: "codex",
-    summon: "$example-team",
+    summon: "$dev-team",
     files: ["AGENTS.md (read directly)", ".agents/skills/ (every team, workflow and skill)"],
     note: "Or pick a skill from Codex's /skills menu.",
   },
@@ -1101,7 +1101,7 @@ const AI_AGENTS = [
     by: "Google",
     install: "https://geminicli.com/docs/",
     open: "gemini",
-    summon: "/example-team",
+    summon: "/dev-team",
     files: ["GEMINI.md (imports AGENTS.md)", ".gemini/commands/ (every team, workflow and skill as a / command)"],
     note: "Signing in with a Google account is enough; an API key is optional and goes in your terminal, not here.",
   },
@@ -1111,7 +1111,7 @@ const AI_AGENTS = [
     by: "Anysphere",
     install: "https://cursor.com/downloads",
     open: "cursor .",
-    summon: "/example-team",
+    summon: "/dev-team",
     files: [
       "AGENTS.md (read directly)",
       ".cursor/rules/agents.mdc (always on, points at AGENTS.md)",
@@ -1125,9 +1125,9 @@ const AI_AGENTS = [
     by: "xAI",
     install: "https://x.ai/",
     open: "grok",
-    summon: 'say "run my example team"',
+    summon: 'say "run my dev team"',
     files: ["AGENTS.md (read directly)"],
-    note: "Early beta. It reads AGENTS.md and loads the shortcuts in .agents/skills once you trust this folder, so /content-team works. Install: curl -fsSL https://x.ai/cli/install.sh | bash (Mac, Linux) or irm https://x.ai/cli/install.ps1 | iex (Windows PowerShell). Run grok inspect to see what it picked up.",
+    note: "Early beta. It reads AGENTS.md and loads the shortcuts in .agents/skills once you trust this folder, so /dev-team works. Install: curl -fsSL https://x.ai/cli/install.sh | bash (Mac, Linux) or irm https://x.ai/cli/install.ps1 | iex (Windows PowerShell). Run grok inspect to see what it picked up.",
   },
 ];
 function renderAgentSettings() {
@@ -1157,7 +1157,7 @@ function renderAgentSettings() {
             ]),
             h("div", {}, [
               h("p", { class: "overline mb15" }, "Summon a team"),
-              h("p", { class: "set-hint" }, "For example the Example Team (every team you add works the same way):"),
+              h("p", { class: "set-hint" }, "For example the Dev Team (every team a lesson builds works the same way):"),
               h("code", { class: "agent-cmd" }, a.summon),
             ]),
           ]),
@@ -1179,7 +1179,7 @@ function renderAgentSettings() {
         h(
           "p",
           { class: "set-hint" },
-          'Point it at AGENTS.md (most agents read it on their own) and ask for a team by name, like "run my content team". Every team\'s steps live in its team.md, so any agent that reads files can follow them.',
+          'Point it at AGENTS.md (most agents read it on their own) and ask for a team by name, like "run my dev team". Every team\'s steps live in its team.md, so any agent that reads files can follow them.',
         ),
       ]),
     ],
@@ -1190,8 +1190,8 @@ function renderPaymentSettings() {
     chosen = PAYMENT_PROVIDERS.find((p) => p.id === pay.provider),
     data = state.payments;
   const devTeam = state.teams.some((t) => t.id === "dev-team"),
-    agent =
-      devTeam && (state.teams.find((t) => t.id === "dev-team").seats || []).some((m) => /payments/i.test(m.name || ""));
+    seat = devTeam && (state.teams.find((t) => t.id === "dev-team").seats || []).find((m) => /payments/i.test(m.name || "")),
+    agent = seat && /live/i.test(seat.type || "");
   const asProvider = (p) => ({
     ...p,
     url: p.url || "#/settings/payments",
@@ -1257,10 +1257,10 @@ function renderPaymentSettings() {
         h("div", { class: "mt3" }, [
           settingRow(
             "Payments Agent",
-            agent ? "Added" : devTeam ? "Not added yet" : "Comes with the Dev Team",
+            agent ? "Ready" : seat ? "On the Dev Team, not ready yet" : "Comes with the Dev Team",
             agent
               ? "Ask your AI: connect my payments."
-              : "Ask your AI: add the dev team. The Payments Agent joins it once it's ready.",
+              : "Its skills aren't built yet, so nothing fills payments.json for now. Your key waits safely in .env until they are.",
           ),
           settingRow(
             "payments.json",
