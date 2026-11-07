@@ -21,7 +21,7 @@ When the owner names a team, a workflow or a skill, skip the front door and run 
 
 ## Where everything goes
 
-Every piece of information has exactly one home. Find it in this table and add to it. Never make a second copy somewhere else, because copies drift. "Kept by" names the team member who keeps it once its team's lesson builds that team; until then, the owner and their AI keep it, in the same home.
+Every piece of information has exactly one home. Find it in this table and add to it. Never make a second copy somewhere else, because copies drift. "Kept by" names the team member who keeps it once its team's lesson builds that team; until then, the owner and their AI keep it, in the same home. A home inside a team's folder (like the posts folder) only exists once that team's lesson builds it: never make a team folder by hand to hold a file.
 
 | What it is | Its one home | Kept by |
 |---|---|---|
@@ -34,7 +34,7 @@ Every piece of information has exactly one home. Find it in this table and add t
 | How you sound | `brand/voice.md` | Editor |
 | Your content mix and where you post | `brand/channels.md` | Social Manager |
 | Your content topics, and the 4 questions every post answers | `knowledge/topics.md` | Social Manager |
-| Every post: one file each, with its platform, status (draft, approved, rejected, posted), day and time | `departments/marketing/content-team/social-manager/posts/<date>-<platform>-<words>.md` (the README there shows the header) | Copywriter writes it, Social Manager dates and posts it; the owner approves and edits it in the Command Center |
+| Every post: one file each, with its platform, status (draft, approved, rejected, posted), day and time | `departments/marketing/content-team/social-manager/posts/<date>-<platform>-<words>.md` (the Content Team lesson adds this folder and its README, which shows the header) | Copywriter writes it, Social Manager dates and posts it; the owner approves and edits it in the Command Center |
 | Your website's numbers from Google Analytics and Search Console (stays on your computer, skipped by every save) | `command-center/data/web.json`, written by `tools/pull_web.py` | Traffic Agent |
 | Your payments: revenue, MRR, invoices, from your payment provider (stays on your computer, skipped by every save) | `command-center/data/payments.json` (its shape is in `command-center/data/README.md`); the provider and its read-only key are set in Settings → Payments | Payments Agent (Dev Team) |
 | Command Center settings: brands, handles, how posts go out, posting cadence, payment provider (never a key) | `command-center/settings.json` | the owner, in the Command Center's Settings |
@@ -141,14 +141,14 @@ Run it any time a team, team member, skill, workflow or routine is added, rename
 
 Open it straight from the folder, no server needed: everything shows, read-only. It's rebuilt from the folders by `tools/sync.py`, so never edit `command-center/data/` by hand. If the owner asks to "see my team", "see my company" or "update the Command Center", run sync and open that file. (`org-chart.html` just forwards there.)
 
-To make its buttons work (Save changes, Approve, Reject, Settings), run `python3 tools/serve.py` (Windows: `py tools/serve.py`) and open the link it prints. It runs on the owner's computer only, writes every change to the files above, keeps API keys in `.env` only, and runs sync after each change. It never posts anything: posting stays with the post-content skill.
+To make its buttons work (Save changes, Approve, Reject, Settings), run `python3 tools/serve.py` (Windows: `py tools/serve.py`) and open the link it prints. It runs on the owner's computer only, writes every change to the files above, keeps API keys in `.env` only, and runs sync after each change. It never posts anything: posting stays with the Content Team's post-content skill, once its lesson builds that team.
 
 ## Adding something new
 
 - **A team from a classroom lesson:** the lesson's skill doc (the Google Drive doc at the bottom of the lesson) says which department and team it builds. Follow it exactly: make `departments/<department>/<team>/team.md` and its team members in the shape above, fill them from the owner's answers, write what it gathers into the homes in the table above, then run sync. If the team's folder is already in `departments/`, build onto it: never replace a team member file or skill that's there without showing the owner what would change and getting a yes. Never touch `business.md` or `brand/` except where the doc says to fill them.
 - **A skill from a classroom lesson:** the lesson's doc says which team member it belongs to. Save it to that member's `skills/<skill-name>/SKILL.md`, write the information it gathers into the home from the table above, then run sync.
 - **Setting up a seeded team member:** fill in its job in its own file, change `**Status:** seeded` to `**Status:** live`, then run sync.
-- **A new team:** make `departments/<department>/<team>/team.md` in the shape above (copy another team's file), one folder per team member with its file, then run sync.
+- **A new team:** teams come from their classroom lesson, whose skill builds the folder, its `team.md` and its team members, then runs sync. Never make a team folder by hand to hold a stray file; move the file to its home in the table above instead.
 - **A new team member:** a folder inside its team with `<member>.md` in the shape above and an empty `skills/` folder. Add it to the team's Members list, then run sync.
 
 Before adding anything, check it doesn't already exist under another name. Two team members doing one job, or two skills doing one job, is a bug: build onto the one that's there.

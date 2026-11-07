@@ -693,7 +693,7 @@ function renderConnectedAccounts() {
   const handleInputs = {};
   return settingsPane(
     "Connected Accounts",
-    "Your accounts on each platform, and how approved posts get out the door. Posting always runs through the post-content skill; nothing here posts on its own.",
+    "Your accounts on each platform, and how approved posts get out the door. Posting runs through the Content Team's post-content skill once its lesson builds that team; nothing here posts on its own.",
     [
       settingsSection("poster", "How your posts go out", "Pick one. You can change it any time.", [
         h(

@@ -67,7 +67,7 @@ Every piece of information has exactly one home: your audit, your voice, your of
 
 ## Staying up to date
 
-This repo doesn't update itself, on purpose. `git pull` can't tell your own answers from the template's, so nothing here pulls or merges behind your back. `CHANGELOG.md` and `VERSION` show what's shipped since your copy was made. When something looks useful, say to your AI, "update my department to version 3," and it fetches that piece and places it, never touching what you already wrote in `business.md` or `brand/`.
+This repo doesn't update itself, on purpose. `git pull` can't tell your own answers from the template's, so nothing here pulls or merges behind your back. `CHANGELOG.md` and `VERSION` show what's shipped since your copy was made. When something looks useful, say to your AI, "update my department to the newest version," and it fetches that piece and places it, never touching what you already wrote in `business.md` or `brand/`.
 
 ## The honest fine print
 

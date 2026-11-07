@@ -5,7 +5,7 @@ Scheduled work your department does without you. One folder per routine, each wi
 ```
 ---
 name: Weekly Traffic Report
-team: Website Team
+team: Dev Team
 status: planned
 schedule: every Monday 6am
 purpose: one sentence on what it does

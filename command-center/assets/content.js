@@ -1047,7 +1047,7 @@ function renderPlatformOverview(platform) {
           : h(
               "p",
               { class: "dashed-note" },
-              `Nothing on ${PLATFORM_LABEL[platform]} is marked posted yet. post-content marks each one when it goes out.`,
+              `Nothing on ${PLATFORM_LABEL[platform]} is marked posted yet. Your Content Team marks each one when it goes out, once its lesson builds the team.`,
             ),
       ]),
     ]),

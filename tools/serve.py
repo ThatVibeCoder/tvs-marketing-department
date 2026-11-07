@@ -18,7 +18,7 @@ After each change it runs tools/sync.py, so the folder view catches up too.
   ... --open                          also open it in your browser
 
 Stop it with Ctrl+C. Standard library only. Nothing here posts anywhere: posting stays with the
-post-content skill, and you send every post yourself.
+post-content skill (the Content Team's, once its lesson builds it), and you send every post yourself.
 """
 import datetime
 import json
