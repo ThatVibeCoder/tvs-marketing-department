@@ -49,5 +49,27 @@ class F1GuidesWithoutATemplate(unittest.TestCase):
                     self.assertIn(ln, kept, f"{rel}: lost the line {ln[:60]!r}")
 
 
+class F2Fences(unittest.TestCase):
+    """An unclosed ``` in one answer hid every later section, and the next edit crashed."""
+
+    def test_an_unclosed_fence_ends_at_the_next_heading(self):
+        t = b.read("brand/offer.md")
+        g = b.guides_for("offer")
+        n = b.apply(t, {"sections": {"The Offer": "Run this:\n```\npython3 go.py"}}, g, DAY)
+        titles = [s["title"] for s in b.parse(n, g)["sections"]]
+        self.assertEqual(titles, [s["title"] for s in b.parse(t, g)["sections"]])
+        n2 = b.apply(n, {"sections": {"What It Costs": "$58"}, "update": "price"}, g, DAY)   # used to raise TypeError
+        self.assertIn("$58", n2)
+        self.assertEqual(n2.count("## Updates"), 1)
+
+    def test_tilde_fences_count(self):
+        t = "# X\n\n## A\nGuide.\n\n~~~\n## not a heading\n~~~\n\n## B\nGuide b.\n\n_Not filled in yet._\n"
+        self.assertEqual([s["title"] for s in b.parse(t)["sections"]], ["A", "B"])
+
+    def test_a_missing_section_is_a_plain_error(self):
+        with self.assertRaises(ValueError):
+            b._answer_span(["# X", "## A", "text"], "Nope", None)
+
+
 if __name__ == "__main__":
     unittest.main()

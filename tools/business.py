@@ -63,14 +63,32 @@ def short_key(key):
 
 
 # ---------- reading ----------
+def _fence(ln):
+    """The fence a line opens or closes (``` or ~~~), or None."""
+    m = re.match(r"^\s{0,3}(`{3,}|~{3,})", ln)
+    return m.group(1)[0] if m else None
+
+
+def _fenced_lines(lines):
+    """Indexes of the lines inside code fences (``` or ~~~). A fence with no closer below it isn't a fence: it's
+    text someone typed, so it can't swallow the headings after it."""
+    inside, i = set(), 0
+    while i < len(lines):
+        kind = _fence(lines[i])
+        if kind:
+            close = next((j for j in range(i + 1, len(lines)) if _fence(lines[j]) == kind), None)
+            if close is not None:
+                inside.update(range(i, close + 1))
+                i = close + 1
+                continue
+        i += 1
+    return inside
+
+
 def _blocks(lines):
     """(start, end) line ranges of every `## ` section, ignoring headings inside code fences."""
-    heads, fenced = [], False
-    for i, ln in enumerate(lines):
-        if ln.strip().startswith(FENCE):
-            fenced = not fenced
-        elif not fenced and ln.startswith("## "):
-            heads.append(i)
+    fenced = _fenced_lines(lines)
+    heads = [i for i, ln in enumerate(lines) if ln.startswith("## ") and i not in fenced]
     return [(s, heads[n + 1] if n + 1 < len(heads) else len(lines)) for n, s in enumerate(heads)]
 
 
@@ -210,7 +228,10 @@ def _insert_section(lines, title, guide):
 
 
 def _answer_span(lines, title, guides):
-    s, e = _find(lines, title)
+    span = _find(lines, title)
+    if not span:
+        raise ValueError(f"There's no section called {title} in this file.")
+    s, e = span
     body = lines[s + 1:e]
     n, paras = _guide_count(title, body, guides)
     start = s + 1 + (paras[n - 1][1] if n else 0)
