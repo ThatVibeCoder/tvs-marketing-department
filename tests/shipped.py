@@ -1,6 +1,6 @@
 """Is this the template as shipped, or a member's repo that has grown?
 
-Some tests check the template itself: only the Example Team in departments/, the business files still blank,
+Some tests check the template itself: only the Dev Team in departments/, the business files still blank,
 no posts and no landing pages. In a member's repo (teams added, files filled in) those facts are meant to be
 false, so those tests skip with this reason instead of failing.
 """
@@ -38,7 +38,7 @@ def _empty_dir(rel, keep=("README.md", "_template.md", ".gitkeep")):
 
 
 def as_shipped():
-    return (_teams() == ["example-team"]
+    return (_teams() == ["dev-team"]
             and all(_blank(f) for f in ("business.md", "brand/icp.md", "brand/offer.md", "brand/friction-points.md", "brand/contrarian-take.md"))
             and all(_empty_dir(d) for d in ("brand/personas", "brand/icps", "brand/offers", "knowledge/competitors")))
 

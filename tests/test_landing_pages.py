@@ -72,9 +72,10 @@ class Registry(unittest.TestCase):
         self.assertEqual(lp["pages"], [])
         self.assertIn("isn't valid JSON", out)
 
-    def test_the_website_team_keeps_it(self):
-        for rel in ("library/teams/marketing/website-team/page-builder/skills/build-a-page/SKILL.md",
-                    "library/teams/it-systems/dev-team/vercel-agent/skills/ship-a-page/SKILL.md"):
+    def test_the_dev_team_marks_it_live(self):
+        # the Website Team's build-a-page registers pages once its lesson builds that team; the shipped Dev Team's
+        # ship-a-page marks them live
+        for rel in ("departments/it-systems/dev-team/vercel-agent/skills/ship-a-page/SKILL.md",):
             with open(os.path.join(ROOT, rel), encoding="utf-8") as f:
                 self.assertIn("knowledge/landing-pages.json", f.read(), rel)
 

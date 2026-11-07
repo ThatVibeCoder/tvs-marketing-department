@@ -15,6 +15,7 @@ import time
 import unittest
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from shipped import AS_SHIPPED, WHY  # noqa: E402  (template-only tests skip in a member's repo)
+from fixtures import add_content_team  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 POSTS = "departments/marketing/content-team/social-manager/posts"
@@ -26,8 +27,8 @@ class RepoCopy(unittest.TestCase):
         self.tmp = tempfile.mkdtemp()
         self.repo = os.path.join(self.tmp, "repo")
         shutil.copytree(ROOT, self.repo, ignore=shutil.ignore_patterns(".git", "__pycache__", ".env", "settings.json"))
-        # posts live with the Content Team's Social Manager, so add the team the way a member does
-        subprocess.run([sys.executable, "tools/add_team.py", "content-team"], cwd=self.repo, capture_output=True, check=True)
+        # posts live with the Content Team's Social Manager; its lesson builds it, so write a stand-in
+        add_content_team(self.repo)
 
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)

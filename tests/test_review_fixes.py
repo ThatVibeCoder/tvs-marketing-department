@@ -22,7 +22,9 @@ class ServerCase(unittest.TestCase):
         self.tmp = tempfile.mkdtemp()
         self.repo = os.path.join(self.tmp, "repo")
         shutil.copytree(ROOT, self.repo, ignore=shutil.ignore_patterns(".git", "__pycache__", ".env", "settings.json"))
-        subprocess.run([sys.executable, "tools/add_team.py", "content-team"], cwd=self.repo, capture_output=True)
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from fixtures import add_content_team
+        add_content_team(self.repo)  # posts need a Content Team; its lesson builds it, so write a stand-in
         s = socket.socket(); s.bind(("127.0.0.1", 0)); self.port = s.getsockname()[1]; s.close()
         self.proc = subprocess.Popen([sys.executable, "tools/serve.py", "--port", str(self.port)], cwd=self.repo,
                                      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -248,65 +250,6 @@ class F11KeyLookingValues(unittest.TestCase):
     def test_ordinary_words_that_name_a_key_are_fine(self):
         self.serve.save_settings({"account": {"name": "Notes about STRIPE_RESTRICTED_KEY setup", "role": "Owner"}})
         self.serve.save_settings({"web": {"siteDomain": "www.my-long-business-name-that-goes-on.example"}})
-
-
-class F12GithubFetchNeverOverwrites(unittest.TestCase):
-    """add_team.py --from-github wrote the fetched team over whatever was already in its library folder."""
-
-    def test_an_existing_folder_is_left_alone(self):
-        import json, tempfile, shutil
-        from unittest import mock
-        import add_team
-        tmp = os.path.realpath(tempfile.mkdtemp())
-        old = (add_team.ROOT, add_team.LIBRARY, add_team.DEPTS)
-        try:
-            add_team.ROOT, add_team.LIBRARY, add_team.DEPTS = tmp, os.path.join(tmp, "library", "teams"), os.path.join(tmp, "departments")
-            mine = os.path.join(add_team.LIBRARY, "marketing", "ads-team", "notes.md")
-            os.makedirs(os.path.dirname(mine))
-            with open(mine, "w") as f:
-                f.write("my own notes")
-            api = {"library/teams": [{"name": "marketing", "type": "dir"}],
-                   "library/teams/marketing": [{"name": "ads-team", "type": "dir"}],
-                   "library/teams/marketing/ads-team": [{"type": "file", "path": "library/teams/marketing/ads-team/notes.md"},
-                                                        {"type": "file", "path": "library/teams/marketing/ads-team/team.md"}]}
-            def get(url):
-                for k, v in api.items():
-                    if url.endswith("/contents/" + k):
-                        return json.dumps(v).encode()
-                return b"from github"
-            with mock.patch.object(add_team, "_get", side_effect=get):
-                with self.assertRaises(SystemExit) as e:
-                    add_team.fetch_from_github("ads-team")
-            self.assertIn("already", str(e.exception))
-            with open(mine) as f:
-                self.assertEqual(f.read(), "my own notes")
-            self.assertFalse(os.path.exists(os.path.join(add_team.LIBRARY, "marketing", "ads-team", "team.md")))
-        finally:
-            add_team.ROOT, add_team.LIBRARY, add_team.DEPTS = old
-            shutil.rmtree(tmp, ignore_errors=True)
-
-    def test_a_path_outside_the_library_is_refused(self):
-        import json, tempfile, shutil
-        from unittest import mock
-        import add_team
-        tmp = os.path.realpath(tempfile.mkdtemp())
-        old = (add_team.ROOT, add_team.LIBRARY)
-        try:
-            add_team.ROOT, add_team.LIBRARY = tmp, os.path.join(tmp, "library", "teams")
-            api = {"library/teams": [{"name": "marketing", "type": "dir"}], "library/teams/marketing": [{"name": "x-team", "type": "dir"}],
-                   "library/teams/marketing/x-team": [{"type": "file", "path": "library/teams/marketing/x-team/../../../../tools/sync.py"}]}
-            def get(url):
-                for k, v in api.items():
-                    if url.endswith("/contents/" + k):
-                        return json.dumps(v).encode()
-                return b"bad"
-            with mock.patch.object(add_team, "_get", side_effect=get):
-                with self.assertRaises(SystemExit):
-                    add_team.fetch_from_github("x-team")
-            self.assertFalse(os.path.exists(os.path.join(tmp, "tools", "sync.py")))
-        finally:
-            add_team.ROOT, add_team.LIBRARY = old
-            shutil.rmtree(tmp, ignore_errors=True)
 
 
 def _test_rsa_pem():

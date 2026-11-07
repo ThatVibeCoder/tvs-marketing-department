@@ -11,6 +11,7 @@ import tempfile
 import unittest
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from shipped import AS_SHIPPED, WHY  # noqa: E402  (template-only tests skip in a member's repo)
+from fixtures import add_content_team  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 COPYWRITER = "departments/marketing/content-team/copywriter/copywriter.md"
@@ -23,8 +24,8 @@ class SyncTest(unittest.TestCase):
         self.tmp = tempfile.mkdtemp()
         self.repo = os.path.join(self.tmp, "repo")
         shutil.copytree(ROOT, self.repo, ignore=shutil.ignore_patterns(".git", "__pycache__"))
-        # the department ships nearly empty; these tests run on the Content Team, added the way a member adds it
-        subprocess.run([sys.executable, "tools/add_team.py", "content-team"], cwd=self.repo, capture_output=True, check=True)
+        # the template ships with the Dev Team only; these tests run on a stand-in Content Team, the shape its lesson builds
+        add_content_team(self.repo)
 
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)
@@ -65,12 +66,16 @@ class SyncTest(unittest.TestCase):
         self.edit(COPYWRITER, lambda t: t.replace("**Team:**", "**Name:** Paige\n**Team:**", 1))
         self.assert_clean()
 
+    # A lesson's team may hand a step to a team member a later lesson builds, so an unknown name is a NOTE that
+    # names it (a typo shows up the same way), never a FIX that stops the owner's sync.
     def test_unknown_member_still_flagged(self):
         team = "departments/marketing/content-team/team.md"
         self.edit(team, lambda t: t.replace("**Copywriter** · draft-post", "**Ghostwriter** · draft-post", 1))
-        code, out = self.sync("--check")
-        self.assertEqual(code, 1, out)
-        self.assertIn("Ghostwriter", out)
+        code, out = self.sync()
+        self.assertEqual(code, 0, out)
+        note = [l for l in out.splitlines() if "Ghostwriter" in l]
+        self.assertTrue(note and note[0].startswith("NOTE:"), out)
+        self.assertIn("typo", note[0])
 
     # (2) A skill doc pasted from a Google Doc with blank lines (or a BOM) above the first ---.
     def test_leading_blank_lines(self):

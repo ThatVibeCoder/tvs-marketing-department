@@ -65,7 +65,7 @@ class AgentSyncTest(unittest.TestCase):
         return r.returncode, r.stdout + r.stderr
 
     def test_a_new_skill_reaches_every_agent_and_a_removed_one_leaves(self):
-        skill = os.path.join(self.repo, "departments/example/example-team/example-member/skills/test-the-agents")
+        skill = os.path.join(self.repo, "departments/it-systems/dev-team/planner/skills/test-the-agents")
         os.makedirs(skill)
         with open(os.path.join(skill, "SKILL.md"), "w", encoding="utf-8") as f:
             f.write("---\nname: test-the-agents\ndescription: A skill made by a test.\n---\n# test\n")
