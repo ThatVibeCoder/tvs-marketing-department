@@ -44,7 +44,7 @@ const ICONS = {
 };
 const icon = (name, cls = "") => `<svg viewBox="0 0 24 24" class="${cls}" aria-hidden="true">${ICONS[name] || ICONS.zap}</svg>`;
 
-const state = { automations: [], teams: [], executions: [], content: null, settings: null, keys: null, problems: [], server: null, route: {}, flow: { zoom: 1, pan: { x: 0, y: 0 } } };
+const state = { automations: [], teams: [], executions: [], content: null, web: null, settings: null, keys: null, problems: [], server: null, route: {}, flow: { zoom: 1, pan: { x: 0, y: 0 } } };
 
 function h(tag, attrs = {}, children = []) {
   const n = document.createElement(tag);
@@ -635,6 +635,7 @@ function parseRoute() {
 const RAIL_KEY = "cc-sidepanel-collapsed", THEME_KEY = "cc-theme";
 const store = { get: (k) => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* private window */ } } };
 const AUTOMATION_LINKS = [["/agent-teams", "Agent Teams", "users"], ["/automations", "Automations", "waypoints"], ["/executions", "Executions", "activity"]];
+const WEB_LINKS = [["/web", "Overview", "layoutGrid"], ["/web/traffic", "Traffic", "trend"], ["/web/pages", "Pages", "barChart2"], ["/web/search", "Search", "search"], ["/web/geography", "Geography", "globe"], ["/web/settings", "Settings", "settings"]];
 const CONTENT_LINKS = [["/content", "Overview", "layoutGrid"], ["/content/calendar", "Calendar", "calendarDays"], ["/content/research", "Research", "search"],
   ...["tiktok", "instagram", "twitter", "threads", "youtube", "skool", "linkedin"].map((p) => [`/content/${p}`, PLATFORM_LABEL[p], null, p])];
 function railLink(path, label, ic, platform, active, collapsed) {
@@ -648,7 +649,7 @@ function renderShell() {
   const collapsed = store.get(RAIL_KEY) === "1" && !matchMedia("(max-width: 767px)").matches;
   const rail = $("#rail");
   rail.classList.toggle("collapsed", collapsed);
-  const isOn = (href) => href === "/content" ? path === "/content" : path === href || path.startsWith(href + "/");
+  const isOn = (href) => href === "/content" || href === "/web" ? path === href : path === href || path.startsWith(href + "/");
   let inner;
   if (inSettings) {
     const a = (state.settings && state.settings.account) || {};
@@ -664,13 +665,14 @@ function renderShell() {
         h("button", { type: "button", class: "rail-toggle", "aria-label": collapsed ? "Pin side panel open" : "Collapse side panel", onclick: () => { if (document.body.classList.contains("drawer-open")) { document.body.classList.remove("drawer-open"); return; } store.set(RAIL_KEY, collapsed ? "0" : "1"); renderShell(); }, html: lineIcon(collapsed ? "panelOpen" : "panelClose") })]),
       h("nav", { class: "rail-nav", "aria-label": "Dashboard sections" }, [
         h("div", { class: "rail-sec" }, [collapsed ? h("div", { class: "rail-rule" }) : h("p", { class: "rail-group" }, "Automations"), ...AUTOMATION_LINKS.map(([href, l, ic]) => railLink(href, l, ic, null, isOn(href), collapsed))]),
-        h("div", { class: "rail-sec" }, [collapsed ? h("div", { class: "rail-rule" }) : h("p", { class: "rail-group" }, "Content"), ...CONTENT_LINKS.map(([href, l, ic, pl]) => railLink(href, l, ic, pl, isOn(href), collapsed))])
+        h("div", { class: "rail-sec" }, [collapsed ? h("div", { class: "rail-rule" }) : h("p", { class: "rail-group" }, "Content"), ...CONTENT_LINKS.map(([href, l, ic, pl]) => railLink(href, l, ic, pl, isOn(href), collapsed))]),
+        h("div", { class: "rail-sec" }, [collapsed ? h("div", { class: "rail-rule" }) : h("p", { class: "rail-group" }, "Web"), ...WEB_LINKS.map(([href, l, ic]) => railLink(href, l, ic, null, isOn(href), collapsed))])
       ])
     ];
   }
   if (!inSettings) inner.push(h("div", { class: "rail-bottom" }, railLink("/settings/account", "Settings", "settings", null, false, collapsed)));
   rail.replaceChildren(h("div", { class: "dash-rail" }, inner));
-  const title = inSettings ? "Settings" : p[0] === "content" ? "Content" : "Automations";
+  const title = inSettings ? "Settings" : p[0] === "content" ? "Content" : p[0] === "web" ? "Web & Analytics" : "Automations";
   $("#headerTitle").textContent = title;
   $("#modePill").textContent = state.server ? "Editing on" : "From your repo";
   $("#modePill").title = state.server ? "tools/serve.py is running: saves land in your files" : "Read-only. Run python3 tools/serve.py to edit from here";
@@ -693,6 +695,7 @@ function render() {
   else if (p[0] === "automations" && p[1]) view = renderAutomationDetail(p[1], p[2] === "executions" ? "executions" : "editor");
   else if (p[0] === "content") view = renderContent(p);
   else if (p[0] === "settings") view = renderSettings(p);
+  else if (p[0] === "web") view = renderWeb(p);
   else view = renderAutomations();
   renderShell();
   document.body.classList.remove("drawer-open");
@@ -705,6 +708,7 @@ function applyState(s) {
   state.content = s.content || state.content;
   state.settings = s.settings || state.settings;
   state.keys = s.keys || null;
+  state.web = s.web || null;
   state.problems = s.problems || [];
   state.server = s.server || null;
 }
@@ -718,6 +722,7 @@ async function boot() {
     state.content = window.CC_DATA.content || { posts: [], research: {} };
     state.settings = window.CC_DATA.settings || {};
   }
+  state.web = window.CC_WEB || null; // tools/pull_web.py writes data/web.js; it stays on this computer
   // Served by tools/serve.py? Then read the live files and turn editing on.
   if (location.protocol.startsWith("http")) {
     try {
