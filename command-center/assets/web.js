@@ -1046,7 +1046,7 @@ function renderLandingPages() {
     h("p", { class: "tiny-sub" }, [
       "From ",
       h("code", {}, "knowledge/landing-pages.json"),
-      ", which the Website Team's build-a-page and ship-a-page keep up to date. ",
+      ", which the Website Team's build-a-page (once its lesson builds the team) and the Dev Team's ship-a-page keep up to date. ",
       snap
         ? "Views are from your last Google Analytics pull, matched by each page's route."
         : "Connect Google Analytics in Settings → Web connections to see views.",

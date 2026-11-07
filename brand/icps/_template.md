@@ -1,6 +1,6 @@
 # ICP: <name>
 
-**Filled by:** the lock-your-icp skill (Lock In Your ICP lesson), run once for each extra buyer group. Kept by the ICP & Offer Owner on the Strategy Team.
+**Filled by:** the Lock In Your ICP lesson, run once for each extra buyer group. Kept by the ICP & Offer Owner on the Strategy Team, once the Strategy Team's lesson builds it.
 
 Another group you sell to, in the same shape as `brand/icp.md`. `brand/icp.md` stays your main ICP, the one every writer, page and offer reads first; this one only gets used when a job names it.
 

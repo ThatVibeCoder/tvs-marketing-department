@@ -1,6 +1,6 @@
 # Topics
 
-**Filled by:** the Social Manager's content-brain skill. Read by every content skill before it drafts.
+**Filled by:** the Pick Your Platforms lesson (the Content Team's Social Manager). Read by every content skill before it drafts.
 
 What your content is about: the topics your buyer cares about, pulled from your own brand files. A used topic moves to Used, so nothing gets posted twice by accident.
 

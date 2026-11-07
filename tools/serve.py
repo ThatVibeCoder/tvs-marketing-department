@@ -189,7 +189,7 @@ def update_post(pid, data):
 
 def create_post(data):
     if not os.path.isfile(os.path.join(os.path.dirname(os.path.dirname(sync.POSTS_DIR)), "team.md")):
-        raise ValueError("Posts belong to the Content Team, and it isn't in your department yet. Ask your AI: add the content team.")
+        raise ValueError("Posts belong to the Content Team, and it isn't in your folder yet: the Content Team lesson builds it.")
     data = {k: v for k, v in data.items() if v not in (None,)}
     if data.get("platform") not in sync.PLATFORMS:
         raise ValueError("Pick a platform first.")

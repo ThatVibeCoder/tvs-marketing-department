@@ -5,8 +5,8 @@ This is your company, built as files instead of headcount. Open your AI (Claude 
 ## Start here
 
 1. Open your AI in this folder: Claude Code, Codex, Gemini CLI, Cursor or Grok Build all work (the Command Center's Settings → AI Agents shows how for each).
-2. Say "show me around." The Example Team shows you what's in your department and the full teams waiting in the team library. The classroom adds them one at a time: "add the website team".
-3. Open `command-center/index.html` in your browser to see your whole company: your agent teams, and your content on every platform.
+2. Say "set up my code base." Your Dev Team (the one team that ships in your folder) connects GitHub, your keys and your hosting. From then on, say "save my work" at the end of every session.
+3. Open `command-center/index.html` in your browser to see your whole company: your agent teams, and your content on every platform as those teams arrive.
 4. When you want to approve and edit posts from there, run `python3 tools/serve.py` (Windows: `py tools/serve.py`) and open the link it prints.
 
 Works on Mac, Windows and Linux. On Windows, your AI may ask to install Python once (one command, two minutes), because that's what keeps your skills and your Command Center in sync. On a Mac it's already there.
@@ -35,24 +35,13 @@ CHANGELOG.md              what's new since your copy was made
 
 ## Your teams
 
-Your department starts with one demo, the **Example Team**, so you can see how a team is built. Every full team waits in the team library (`library/teams/`) until the classroom gets to it. Say "add the website team" to your AI (or run `python3 tools/add_team.py website-team`), and the whole team, every team member, skill and workflow, lands in `departments/` and shows up in the Command Center. `python3 tools/add_team.py` on its own lists them all.
+Your folder starts as a skeleton with one team in it, the **Dev Team** (`departments/it-systems/dev-team/`). It's the plumbing every other team needs: it saves your work to GitHub, keeps your keys in `.env`, connects your tools and ships your pages. Summon it with `/dev-team`, or just say what you want ("save my work", "set up my code base", "ship my landing page").
 
-Once a team is added, type its command to summon it, say one of its workflows out loud (like "build my landing page"), or run one skill on its own. In Claude Code, Gemini CLI, Cursor and Grok Build commands start with a slash (`/website-team`, `/build-a-page`). In Codex they start with a dollar sign (`$website-team`), or pick them from the `/skills` menu.
+Every other team comes from the classroom. At the bottom of each lesson is a skill doc you give your AI, and that doc builds the team in `departments/` from your own answers. It shows up as a command and in the Command Center as soon as it's built. Marketing, Sales and Operations start empty, waiting for their lessons.
 
-Don't know which team does what? Say "set up my company strategist" (it adds the Strategy Team for you), then talk to your **Company Strategist** (`/company-strategist`, or just say "talk to my company strategist"). It reads which teams you have and hands each ask to the one that owns it.
+Once a team is built, type its command to summon it, say one of its workflows out loud, or run one skill on its own. In Claude Code, Gemini CLI, Cursor and Grok Build commands start with a slash (`/dev-team`, `/save-work`). In Codex they start with a dollar sign (`$dev-team`), or pick them from the `/skills` menu.
 
-| Department | Team | Add it with | In the library |
-|---|---|---|---|
-| Marketing | Content Team | "add the content team" | Ready |
-| Marketing | Editing Team | "add the editing team" | Ready |
-| Marketing | Website Team | "add the website team" | Ready |
-| Marketing | Follow-Up Team | "add the follow-up team" | Ready |
-| Marketing | Ads Team | "add the ads team" | Ready |
-| Marketing | Research Team | "add the research team" | Ready |
-| Marketing | Newsletter Team | "add the newsletter team" | Not ready yet |
-| Sales | Sales Team | "add the sales team" | Ready |
-| IT / Systems | Dev Team | "add the dev team" | Ready (its Payments Agent isn't yet) |
-| Operations | Strategy Team | "add the strategy team" | Not ready yet |
+When the Strategy Team's lesson builds your **Company Strategist** (`/company-strategist`, or "talk to my company strategist"), it becomes your front door: it reads which teams you have and hands each ask to the one that owns it.
 
 ## How the company is built
 

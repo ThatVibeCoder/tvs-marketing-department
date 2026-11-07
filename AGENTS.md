@@ -2,7 +2,7 @@
 
 These are the rules for any AI working in this repo. Codex, Cursor and Grok Build read this file directly, Claude Code reads it through `CLAUDE.md` and Gemini CLI through `GEMINI.md`, so every agent follows the same rules. `tools/sync.py` writes those pointer files; this is the only place the rules are written.
 
-This is the owner's company, built as files. It starts nearly empty on purpose: `departments/` holds one demo, the Example Team, and every full team (its team members, skills and workflows) waits in the team library, `library/teams/<department>/<team>/`, until the classroom gets to it. Teams get added one at a time, and the classroom fills them in, one lesson at a time. Nothing gets made up in a random place.
+This is the owner's company, built as files. It starts as a skeleton on purpose: `departments/` holds one team, the Dev Team (`departments/it-systems/dev-team/`), because it's the plumbing every other team needs: saving work to GitHub, keys, connecting tools, shipping pages. Every other team comes from the classroom. At the bottom of each lesson is a skill doc the owner gives their AI, and that doc builds one team (or adds to one) in `departments/` from the owner's own answers. Teams arrive one lesson at a time. Nothing gets made up in a random place.
 
 ## Read first, every session
 
@@ -10,19 +10,18 @@ Before any writing, planning or building, read `business.md` and everything in `
 
 **A file or section that still says `_Not filled in yet._` counts as missing.** So does a file that's only the template's own explanation with nothing filled in. Stop, name what's missing and the lesson that fills it (by the lesson's title, never a day number), and ask. Generic work written around a missing file is worse than a question. **The one exception:** when the skill you're running says what to do with a missing or empty file (set-up-your-company-strategist and the brain-dump skills do, and so does any skill with its own "If ... still says `_Not filled in yet._`" line), follow the skill for that file instead of stopping. It was written knowing the file might be empty.
 
-## The front door: your Company Strategist
+## The front door: your Company Strategist (once its lesson builds it)
 
-When the owner asks for something without naming a team, a workflow or a skill, or says "talk to my company strategist", the Company Strategist takes it. It reads which teams are in `departments/` right now, hands the ask to the one that owns it by that team's own front door, and says which library team to add when none fits. It never does a team's job itself.
+The Company Strategist is on the Strategy Team, and the Strategy Team's lesson builds it. Until then there's no front door: when the owner asks for something without naming a team, a workflow or a skill, check which teams are in `departments/` right now. If one owns the ask, run it by that team's own front door (its `team.md`). If none does, say in one line which lesson builds the team that would (by the lesson's title, never a day number; if you don't know the title, say "the <Team Name> lesson"), and help with what's here.
 
-- **If `departments/operations/strategy-team/company-strategist/skills/company-strategist/SKILL.md` is there,** read the strategist's file next to it (`company-strategist.md`), then that skill, and follow it.
-- **If it isn't there yet** (the Strategy Team hasn't been added), read the same skill from the library, `library/teams/operations/strategy-team/company-strategist/skills/company-strategist/SKILL.md`, and route by it. Then offer to set the strategist up: that's `library/teams/operations/strategy-team/company-strategist/skills/set-up-your-company-strategist/SKILL.md` (the Set Up Your Company Strategist lesson).
-- **If the owner says "set up my company strategist"** (or names that lesson), read and run that same setup skill: from `departments/operations/strategy-team/company-strategist/skills/` if the team is there, from the library path above if it isn't. Its command (`/set-up-your-company-strategist`) only exists once the Strategy Team is added, so before that the typed words are the way in, on every AI.
+- **Once `departments/operations/strategy-team/company-strategist/skills/company-strategist/SKILL.md` is there,** start there instead: read the strategist's file next to it (`company-strategist.md`), then that skill, and follow it. It reads which teams are in `departments/`, hands the ask to the one that owns it, and says which lesson builds the team when none fits. It never does a team's job itself.
+- **If the owner says "set up my company strategist"** (or names that lesson) and the Strategy Team isn't there yet, say in one line that the Set Up Your Company Strategist lesson builds it, and point them at that lesson's skill doc.
 
 When the owner names a team, a workflow or a skill, skip the front door and run what they named.
 
 ## Where everything goes
 
-Every piece of information has exactly one home. Find it in this table and add to it. Never make a second copy somewhere else, because copies drift.
+Every piece of information has exactly one home. Find it in this table and add to it. Never make a second copy somewhere else, because copies drift. "Kept by" names the team member who keeps it once its team's lesson builds that team; until then, the owner and their AI keep it, in the same home.
 
 | What it is | Its one home | Kept by |
 |---|---|---|
@@ -58,7 +57,6 @@ Every piece of information has exactly one home. Find it in this table and add t
 | Booking messages | `output/` next to the Calendar Agent (`<date>-book-<lead>.md`) | Calendar Agent |
 | Reply drafts and follow-up nudges | `output/` next to the Reply Agent (`<date>-<lead>.md`) and the Nurture Agent (`<date>-<lead>.md`, `<date>-quiet-list.md`) | Reply Agent, Nurture Agent |
 | Scheduled work | `routines/<name>/README.md` | the team that owns it |
-| Teams you haven't added yet: full teams, ready to copy in | `library/teams/<department>/<team>/` (a `NOT-READY.md` inside says what's still missing) | the template; never edit a library team, add it and edit your copy |
 
 If something truly has no home in this table, ask the owner before making one, then add the new home to this table in the same change.
 
@@ -94,11 +92,11 @@ departments/<department>/                 a department (marketing, sales, it-sys
 `.claude/skills/` (Claude Code) and `.agents/skills/` (Codex) hold shortcuts, `.gemini/commands/` (Gemini CLI) and `.cursor/commands/` (Cursor) hold the same ones as commands, and `tools/sync.py` builds every one of them from the folders above. Never write a skill straight into those folders and never edit a shortcut. Put the real skill inside its team member, then run sync. Grok Build reads the same shortcuts from `.agents/skills/` and `.claude/skills/`, so it needs no folder of its own.
 
 After sync, the owner can call:
-- a whole team (for example `content-team`): it shows that team's workflows and skills and runs the one they pick;
-- a workflow, by saying its words (for example "build my landing page") or by its shortcut (`build-my-landing-page`), to run it start to finish;
-- one skill on its own (for example `draft-post`).
+- a whole team (for example `dev-team`): it shows that team's workflows and skills and runs the one they pick;
+- a workflow, by saying its words (for example "ship my landing page") or by its shortcut (`ship-my-landing-page`), to run it start to finish;
+- one skill on its own (for example `save-work`).
 
-In Claude Code, Gemini CLI, Cursor and Grok Build, type them with a slash: `/content-team` (Grok Build loads them only once you've said yes to trusting this folder). In Codex, type them with a dollar sign, `$content-team`, or pick them from the `/skills` menu. In any other agent, say it: "run my content team". Saying what you want in plain words works everywhere. The Command Center's Settings → AI Agents page shows each one.
+In Claude Code, Gemini CLI, Cursor and Grok Build, type them with a slash: `/dev-team` (Grok Build loads them only once you've said yes to trusting this folder). In Codex, type them with a dollar sign, `$dev-team`, or pick them from the `/skills` menu. In any other agent, say it: "run my dev team". Saying what you want in plain words works everywhere. The Command Center's Settings → AI Agents page shows each one.
 
 ## Running a workflow
 
@@ -147,7 +145,7 @@ To make its buttons work (Save changes, Approve, Reject, Settings), run `python3
 
 ## Adding something new
 
-- **A team from the library:** when the owner says "add the website team" (or names any team), run `python3 tools/add_team.py <team-folder>` (Windows: `py tools/add_team.py <team-folder>`). It copies the WHOLE team from `library/teams/` into `departments/<department>/`, every team member, skill and workflow, then runs sync. `python3 tools/add_team.py` on its own lists what's added and what's waiting. If the folder is already in `departments/`, it stops and changes nothing: tell the owner what's there and ask before doing anything else. A team or team member marked not ready only goes in after the owner hears what's missing and says yes (`--anyway`). It never touches `business.md` or `brand/`. If this copy has no `tools/add_team.py` yet (made before the library), fetch it with the GitHub Agent's add-from-template first. Sync, the shortcuts, the command files and the Command Center only ever read `departments/`; the library is invisible until a team is added.
+- **A team from a classroom lesson:** the lesson's skill doc (the Google Drive doc at the bottom of the lesson) says which department and team it builds. Follow it exactly: make `departments/<department>/<team>/team.md` and its team members in the shape above, fill them from the owner's answers, write what it gathers into the homes in the table above, then run sync. If the team's folder is already in `departments/`, build onto it: never replace a team member file or skill that's there without showing the owner what would change and getting a yes. Never touch `business.md` or `brand/` except where the doc says to fill them.
 - **A skill from a classroom lesson:** the lesson's doc says which team member it belongs to. Save it to that member's `skills/<skill-name>/SKILL.md`, write the information it gathers into the home from the table above, then run sync.
 - **Setting up a seeded team member:** fill in its job in its own file, change `**Status:** seeded` to `**Status:** live`, then run sync.
 - **A new team:** make `departments/<department>/<team>/team.md` in the shape above (copy another team's file), one folder per team member with its file, then run sync.
@@ -180,7 +178,7 @@ If the owner tracks their team in Notion, mirror new team members there too. If 
 
 ## Saving
 
-Save with the GitHub Agent's save-work skill (it comes with the Dev Team): it runs `python3 tools/sync.py --check`, then saves one checkpoint and sends it to GitHub. Before the Dev Team is added, do the same by hand: run the check, then commit everything that changed with a one-line message and push. Tell the owner in one line what changed.
+The owner can save from Day 1: the Dev Team ships in the folder, and its GitHub Agent's save-work skill is the way. When the owner says "save my work" (or types `/save-work`, `$save-work` in Codex), read `departments/it-systems/dev-team/github-agent/github-agent.md`, then run `departments/it-systems/dev-team/github-agent/skills/save-work/SKILL.md`: it runs `python3 tools/sync.py --check`, then saves one checkpoint and sends it to GitHub. If the folder isn't connected to GitHub yet, run the GitHub Agent's set-up-repo first (part of "set up my code base"). Offer to save at the end of every session, and tell the owner in one line what changed.
 
 ## The classroom
 

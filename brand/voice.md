@@ -1,6 +1,6 @@
 # Voice
 
-**Filled by:** build-your-voice (Round Up Your Own Words lesson: the first pass, from your writing) then voice-profile (Build Your Voice Profile lesson: the deeper pass, from your long-form material). Kept by the Editor on the Content Team.
+**Filled by:** the Round Up Your Own Words lesson (the first pass, from your writing), then the Build Your Voice Profile lesson (the deeper pass, from your long-form material). Kept by the Editor on the Content Team, once the Content Team lesson builds it.
 
 How you actually sound, built from your real sentences, not a list of brand adjectives. Every writer reads this before writing anything. It's the single source of truth: other files point here, never copy it.
 

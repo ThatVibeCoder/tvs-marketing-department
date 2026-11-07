@@ -558,7 +558,7 @@ function renderContentOverview() {
       labels: [],
       series: [],
       empty:
-        "Follower counts aren't kept in your files yet. The read-the-stats skill saves your numbers to knowledge/reports/ each week.",
+        "Follower counts aren't kept in your files yet. Once the Content Team lesson builds your Content Team, its weekly stats read saves your numbers to knowledge/reports/.",
     },
   ];
   const profiles = PLATFORM_ORDER.filter(
@@ -1796,9 +1796,9 @@ function renderResearch() {
         ]);
   let body;
   if (tab === "topics")
-    body = docCard(r.topics, "No topics file", "Run content-brain to fill <code>knowledge/topics.md</code>.");
+    body = docCard(r.topics, "No topics file", "The Pick Your Platforms lesson fills <code>knowledge/topics.md</code>.");
   else if (tab === "openers")
-    body = docCard(r.hooks, "No openers file", "write-hooks and read-the-stats keep <code>knowledge/hooks.md</code>.");
+    body = docCard(r.hooks, "No openers file", "The Content Team keeps <code>knowledge/hooks.md</code>, once the Content Team lesson builds it.");
   else if (tab === "competitors" || tab === "swipes") {
     const list = r[tab] || [];
     body = list.length

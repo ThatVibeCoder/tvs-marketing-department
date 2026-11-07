@@ -4,16 +4,16 @@ Your marketing brain on disk: everything your department has learned, filed so a
 
 | What | Where | Filled by |
 |---|---|---|
-| Your business audit: tools, hours, what to cut, what to hand off first | `business-audit.md` | cut-what-you-dont-need (Cut What You Don't Need lesson) |
-| Your goals: what you're going after next, crossed off as they land | `goals.md` | the Company Strategist (Future Achievements lesson) |
-| Your content topics and the 4 questions every post answers | `topics.md` | the Social Manager's content-brain |
-| Your openers, the winners and the ones to try | `hooks.md` | the Copywriter's write-hooks, scored by read-the-stats |
-| One file per competitor, plus the summary | `competitors/` | the Researcher's scan-my-competitors and competitor-check |
-| Marketing that works, one file per swipe | `swipes/` | the Researcher's collect-swipes |
-| Posts beating their own channel size | `outliers.md` | the Researcher's find-outliers |
+| Your business audit: tools, hours, what to cut, what to hand off first | `business-audit.md` | the Cut What You Don't Need lesson |
+| Your goals: what you're going after next, crossed off as they land | `goals.md` | the Future Achievements lesson |
+| Your content topics and the 4 questions every post answers | `topics.md` | the Pick Your Platforms lesson |
+| Your openers, the winners and the ones to try | `hooks.md` | the Content Team lesson |
+| One file per competitor, plus the summary | `competitors/` | the Research Team lesson |
+| Marketing that works, one file per swipe | `swipes/` | the Research Team lesson |
+| Posts beating their own channel size | `outliers.md` | the Research Team lesson |
 | Every report: site audits, marketing checkups, traffic reads | `reports/` | the team workflows that make them |
 | Packs from the community, one folder per team they feed | `packs/` | you, when a pack arrives |
-| Every landing page you have and the pages under it (forms, thank-you pages, upsells, product pages, on any domain) | `landing-pages.json` (shape below) | the Page Builder's build-a-page registers each page; the Vercel Agent's ship-a-page marks it live |
+| Every landing page you have and the pages under it (forms, thank-you pages, upsells, product pages, on any domain) | `landing-pages.json` (shape below) | the Website Team lesson's Page Builder registers each page; the Dev Team's Vercel Agent (ship-a-page) marks it live |
 
 Rules: file new findings in the folder above that fits; never loose files at the top of `knowledge/`. If nothing fits, ask before making a new folder. Team members read their team's packs and the files above before big builds, the same way they read `brand/` before writing.
 
