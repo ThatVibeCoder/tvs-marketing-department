@@ -685,6 +685,7 @@ DEFAULT_SETTINGS = {
     "skoolCategories": ["General discussion", "Announcements", "Wins"],
     "web": {"siteDomain": ""},
     "payments": {"provider": ""},
+    "hiddenPlatforms": [],  # platforms left out of the sidebar (Settings → Connected Accounts)
 }
 
 

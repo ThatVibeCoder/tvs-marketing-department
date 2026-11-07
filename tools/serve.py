@@ -229,7 +229,7 @@ def strings_in(value):
             yield from strings_in(v)
 
 
-SETTING_KEYS = ("account", "workspace", "brands", "accounts", "poster", "cadence", "skoolCategories", "web", "payments")
+SETTING_KEYS = ("account", "workspace", "brands", "accounts", "poster", "cadence", "skoolCategories", "web", "payments", "hiddenPlatforms")
 
 
 def merge3(current, base, new):
@@ -265,6 +265,9 @@ def save_settings(data):
         if KEY_SHAPE.search(v) or named.search(v):
             raise ValueError("That looks like a key. Keys never go in settings.json (it's saved to GitHub): paste it under "
                              "Connected Accounts, Payments or Web connections, which keep it in .env.")
+    hidden = data.get("hiddenPlatforms")
+    if hidden is not None and not (isinstance(hidden, list) and all(p in sync.PLATFORMS for p in hidden)):
+        raise ValueError("Hidden platforms must be a list of the seven platforms.")
     base = data.get("_base") if isinstance(data.get("_base"), dict) else None  # what the page had when it changed it
     current = sync.load_settings()
     for k in SETTING_KEYS:

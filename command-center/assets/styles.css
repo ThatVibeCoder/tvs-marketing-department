@@ -1301,3 +1301,5 @@ p.kpi-note { margin-left: 0; }
 .agent-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; }
 .agent-chip { display: inline-flex; align-items: center; gap: .4rem; border: 1px solid var(--color-border); border-radius: 9999px; background: transparent; color: var(--color-fg); padding: .4rem .8rem; font-size: .8125rem; cursor: not-allowed; }
 @media (max-width: 640px) { .agent-h1 { font-size: 1.5rem; } .agent-page { padding: 1rem; } }
+.nav-toggle { display: inline-flex; flex-direction: row; align-items: center; gap: .5rem; width: auto; padding: .5rem .875rem; }
+.nav-toggle:not(.on) { opacity: .55; }

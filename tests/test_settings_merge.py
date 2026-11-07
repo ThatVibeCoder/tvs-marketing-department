@@ -79,3 +79,29 @@ class StaleTab(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class HiddenPlatforms(unittest.TestCase):
+    """Settings → Connected Accounts → Show in the sidebar: the platforms a member turned off."""
+
+    def setUp(self):
+        self.tmp = os.path.realpath(tempfile.mkdtemp())
+        self._old = sync.SETTINGS_FILE, serve.files.ROOT
+        sync.SETTINGS_FILE = os.path.join(self.tmp, "settings.json")
+        serve.files.ROOT = self.tmp
+
+    def tearDown(self):
+        sync.SETTINGS_FILE, serve.files.ROOT = self._old
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def test_hide_and_show(self):
+        self.assertEqual(sync.load_settings()["hiddenPlatforms"], [])
+        serve.save_settings({"hiddenPlatforms": ["tiktok", "linkedin"], "_base": {"hiddenPlatforms": []}})
+        self.assertEqual(sync.load_settings()["hiddenPlatforms"], ["tiktok", "linkedin"])
+        serve.save_settings({"hiddenPlatforms": ["linkedin"], "_base": {"hiddenPlatforms": ["tiktok", "linkedin"]}})
+        self.assertEqual(sync.load_settings()["hiddenPlatforms"], ["linkedin"])
+
+    def test_only_the_seven_platforms(self):
+        for bad in ("tiktok", ["myspace"], [1]):
+            with self.assertRaises(ValueError):
+                serve.save_settings({"hiddenPlatforms": bad})

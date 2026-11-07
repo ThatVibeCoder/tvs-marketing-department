@@ -738,6 +738,36 @@ function renderConnectedAccounts() {
         PROVIDERS.filter((p) => p.kind === "api").map(providerCard),
       ),
       settingsSection(
+        "sidebar",
+        "Show in the sidebar",
+        "Turn off the platforms you don't use, and they leave the sidebar under Content. Nothing is deleted; turn one back on any time.",
+        [
+          h(
+            "div",
+            { class: "row wrap gap2" },
+            PLATFORM_ORDER.map((pl) => {
+              const hidden = s.hiddenPlatforms || [],
+                on = !hidden.includes(pl);
+              return h(
+                "button",
+                {
+                  type: "button",
+                  class: cls("poster-opt nav-toggle", on && "on"),
+                  "aria-pressed": on ? "true" : "false",
+                  disabled: state.server ? null : "",
+                  onclick: () =>
+                    saveSettings(
+                      { hiddenPlatforms: on ? [...hidden, pl] : hidden.filter((x) => x !== pl) },
+                      `${PLATFORM_LABEL[pl]} ${on ? "hidden from" : "back in"} the sidebar.`,
+                    ),
+                },
+                [markIcon(pl), h("span", { class: "b" }, PLATFORM_LABEL[pl]), h("span", { class: "set-hint" }, on ? "Shown" : "Hidden")],
+              );
+            }),
+          ),
+        ],
+      ),
+      settingsSection(
         "handles",
         "Your accounts",
         "The handle each platform's preview shows, and which connection posts there.",

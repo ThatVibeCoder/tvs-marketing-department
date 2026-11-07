@@ -1185,7 +1185,9 @@ function renderShell() {
           ? h(
               "ul",
               { class: "rail-children" },
-              m.children.map(([href, label, ic, platform, exact]) => {
+              m.children
+                .filter(([, , , platform]) => !platform || !((state.settings || {}).hiddenPlatforms || []).includes(platform))
+                .map(([href, label, ic, platform, exact]) => {
                 const on = exact ? path === href : under(href);
                 return h(
                   "li",
