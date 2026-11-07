@@ -116,6 +116,38 @@ class AgentsFrontDoorTest(unittest.TestCase):
         self.assertNotIn("no command folder we could confirm", read(os.path.join(ROOT, "AGENTS.md")))
 
 
+class FormOwnerTest(unittest.TestCase):
+    """"My contact form isn't sending" failed the cold test: no skill owned it. fix-my-form owns it now."""
+    SKILL = "library/teams/it-systems/dev-team/api-manager/skills/fix-my-form/SKILL.md"
+
+    def test_fix_my_form_is_a_full_skill_on_free_tools(self):
+        text = read(os.path.join(ROOT, self.SKILL))
+        meta, body = sync.frontmatter(text)
+        self.assertEqual(meta.get("name"), "fix-my-form")
+        self.assertLess(len(meta["description"]), sync.MAX_DESC)
+        self.assertTrue(sync.yaml_safe(meta["__raw__"]["description"]))
+        for words in ("form isn't sending", "leads aren't coming in"):
+            self.assertIn(words, meta["description"])
+        for part in ("## Read first", "## Say this first", "## Steps", "## Worked example", "## The ending", "## Rules"):
+            self.assertIn(part, body, part)
+        self.assertIn("never a menu", body)
+        self.assertIn("No paid tools", body)
+        self.assertIn("Any AI", body)
+        self.assertIn("add-a-key", body)  # a key never goes in the page
+
+    def test_exactly_one_library_skill_owns_a_form_that_isnt_sending(self):
+        owners = [s for t in routing_index(ROOT, "library").values() for s, d in t["skills"].items()
+                  if "form isn't sending" in d]
+        self.assertEqual(owners, ["fix-my-form"])
+
+    def test_the_strategist_tie_break_points_at_it(self):
+        body = read(os.path.join(ROOT, LIB_MEMBER, "skills/company-strategist/SKILL.md"))
+        rule2 = [l for l in body.splitlines() if l.startswith("2. **One symptom")][0]
+        self.assertIn("fix-my-form", rule2)
+        self.assertIn("fix-my-form", read(os.path.join(ROOT, "library/teams/it-systems/dev-team/team.md")) +
+                      read(os.path.join(ROOT, "library/teams/it-systems/dev-team/api-manager/api-manager.md")))
+
+
 @unittest.skipUnless(AS_SHIPPED, WHY)
 class AddTheStrategistTest(unittest.TestCase):
     def setUp(self):

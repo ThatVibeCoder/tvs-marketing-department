@@ -14,7 +14,7 @@ This team comes pre-built. You don't design it, you summon it. Each team member 
 ## Members
 - **Planner** (`planner/`): writes a one-page plan before anything gets built.
 - **GitHub Agent** (`github-agent/`): saves your work with history you can undo to.
-- **API Manager** (`api-manager/`): picks the right connection for every tool.
+- **API Manager** (`api-manager/`): picks the right connection for every tool, and fixes a form on your site that isn't sending.
 - **Keys Agent** (`keys-agent/`): keeps every key in the `.env` file, off GitHub.
 - **Supabase Agent** (`supabase-agent/`): your online storage, when something needs it.
 - **Vercel Agent** (`vercel-agent/`): puts pages on the live internet.
