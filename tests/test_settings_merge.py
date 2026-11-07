@@ -40,12 +40,12 @@ class StaleTab(unittest.TestCase):
     def setUp(self):
         self.tmp = os.path.realpath(tempfile.mkdtemp())
         self.file = os.path.join(self.tmp, "settings.json")
-        self._old = sync.SETTINGS_FILE, serve.business.ROOT
+        self._old = sync.SETTINGS_FILE, serve.files.ROOT
         sync.SETTINGS_FILE = self.file
-        serve.business.ROOT = self.tmp  # writes are only allowed inside the repo; this throwaway folder stands in for it
+        serve.files.ROOT = self.tmp  # writes are only allowed inside the repo; this throwaway folder stands in for it
 
     def tearDown(self):
-        sync.SETTINGS_FILE, serve.business.ROOT = self._old
+        sync.SETTINGS_FILE, serve.files.ROOT = self._old
         shutil.rmtree(self.tmp, ignore_errors=True)
 
     def write(self, d):

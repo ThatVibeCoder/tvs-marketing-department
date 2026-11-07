@@ -879,13 +879,6 @@ def landing_pages():
     return {"pages": out, "registry": True}
 
 
-def business_files():
-    """The My Business pages: brand/ ICPs, offers, buyers, friction, contrarian take, competitors (tools/business.py)."""
-    sys.path.insert(0, os.path.join(ROOT, "tools"))
-    import business
-    return business.build()
-
-
 def sync_cc(data, check):
     stale = []
     ex = os.path.join(CC_DATA, "executions.json")
@@ -897,7 +890,7 @@ def sync_cc(data, check):
                         "window.CC_DATA = " + json.dumps({"teams": data["teams.json"], "automations": data["automations.json"],
                                                           "executions": executions, "content": data["content.json"],
                                                           "settings": load_settings(), "agents": detect_agents(),
-                                                          "library": library_index(), "business": business_files(),
+                                                          "library": library_index(),
                                                           "landingPages": landing_pages()},
                                                          ensure_ascii=False) + ";\n")
 

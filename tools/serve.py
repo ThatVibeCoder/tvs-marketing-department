@@ -43,7 +43,7 @@ ROOT = os.path.realpath(os.path.dirname(os.path.dirname(os.path.abspath(__file__
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import sync  # noqa: E402  (the same readers the folder view uses)
 import pull_web  # noqa: E402  (the Web pages' Google pull)
-import business  # noqa: E402  (the My Business pages' files)
+import files  # noqa: E402  (every write: inside the repo, no links, all at once)
 
 CC = os.path.join(ROOT, "command-center")
 ENV_FILE = os.path.join(ROOT, ".env")
@@ -105,7 +105,7 @@ def write_key(name, value):
     lines = [ln for ln in lines if not pat.match(ln)]
     if value:
         lines.append(f"{name}={value}")
-    business.atomic_write(ENV_FILE, "\n".join(lines) + ("\n" if lines else ""), mode=0o600)  # .env: yours only, never half-written
+    files.atomic_write(ENV_FILE, "\n".join(lines) + ("\n" if lines else ""), mode=0o600)  # .env: yours only, never half-written
 
 
 # ---------- post files ----------
@@ -131,7 +131,7 @@ def write_post(pid, meta, body):
     lines.append("---")
     text = "\n".join(lines) + "\n" + body.replace("\r\n", "\n").rstrip("\n") + "\n"
     os.makedirs(sync.POSTS_DIR, exist_ok=True)
-    business.atomic_write(post_path(pid), text)
+    files.atomic_write(post_path(pid), text)
 
 
 def load_post_meta(pid):
@@ -141,26 +141,6 @@ def load_post_meta(pid):
     meta, body = sync.frontmatter(sync.read(p))
     meta = {k: v for k, v in meta.items() if k != "__raw__"}
     return meta, body
-
-
-def check_changes(changes):
-    """A business save's changes, checked at the edge: every value plain text, every group the right shape."""
-    bad = ValueError("Those changes aren't in a shape this page sends. Reload and try again.")
-    if not isinstance(changes, dict):
-        raise bad
-    for k in ("glance", "sections"):
-        if k in changes and not (isinstance(changes[k], dict) and all(isinstance(v, str) for v in changes[k].values())):
-            raise bad
-    if "fields" in changes and not (isinstance(changes["fields"], dict) and all(
-            isinstance(fs, dict) and all(isinstance(v, str) for v in fs.values()) for fs in changes["fields"].values())):
-        raise bad
-    if "sectionsAt" in changes and not (isinstance(changes["sectionsAt"], list) and all(
-            isinstance(a, dict) and isinstance(a.get("title"), str) and isinstance(a.get("text"), str) and isinstance(a.get("n", 1), int)
-            for a in changes["sectionsAt"])):
-        raise bad
-    if "title" in changes and not isinstance(changes["title"], str):
-        raise bad
-    return changes
 
 
 def check_fields(data):
@@ -193,8 +173,8 @@ def new_id(platform, date, body):
 def update_post(pid, data):
     check_fields(data)
     meta, body = load_post_meta(pid)
-    if data.get("hash") and business.content_hash(sync.read(post_path(pid))) != data["hash"]:
-        raise business.Stale(business.STALE)
+    if data.get("hash") and files.content_hash(sync.read(post_path(pid))) != data["hash"]:
+        raise files.Stale(files.STALE)
     for k in EDITABLE:
         if k in data:
             meta[k] = data[k]
@@ -290,7 +270,7 @@ def save_settings(data):
     for k in SETTING_KEYS:
         if k in data:
             current[k] = merge3(current.get(k), base[k], data[k]) if base is not None and k in base else data[k]
-    business.atomic_write(sync.SETTINGS_FILE, json.dumps(current, indent=2, ensure_ascii=False) + "\n")
+    files.atomic_write(sync.SETTINGS_FILE, json.dumps(current, indent=2, ensure_ascii=False) + "\n")
     return current
 
 
@@ -339,10 +319,6 @@ def clean_key(name, value):
     return value
 
 
-def short(key):
-    return business.short_key(key)
-
-
 def state():
     sync.errors.clear()
     content = sync.build_content()
@@ -350,7 +326,7 @@ def state():
     sync.errors.clear()
     sync.warnings.clear()  # notes are for the terminal; the server would only pile them up
     return {"content": content, "settings": sync.load_settings(), "keys": key_presence(), "problems": problems, "web": web_snapshot(),
-            "payments": sync.load_payments()[0], "business": business.build(), "landingPages": sync.landing_pages(),
+            "payments": sync.load_payments()[0], "landingPages": sync.landing_pages(),
             "server": {"python": sys.version.split()[0], "root": os.path.basename(ROOT),
                        "envFile": os.path.isfile(ENV_FILE), "version": read_version()}}
 
@@ -466,18 +442,6 @@ class Handler(BaseHTTPRequestHandler):
                         raise ValueError("That key name isn't on the list.")
                     write_key(name, clean_key(name, value))
                     result, what = {}, f"{'saved' if value else 'removed'} {name} in .env"
-                elif path == "/api/business/save":
-                    rel = str(data.get("path", ""))
-                    changes = check_changes(data.get("changes") or {})
-                    clean = {k: changes[k] for k in ("title", "glance", "sections", "sectionsAt", "fields") if k in changes}
-                    what_changed = [*(clean.get("glance") or {}), *(clean.get("sections") or {}), *[str(a.get("title")) for a in clean.get("sectionsAt") or [] if isinstance(a, dict)],
-                                    *[f for fs in (clean.get("fields") or {}).values() for f in fs]]
-                    clean["update"] = "edited in the Command Center: " + ", ".join(dict.fromkeys(short(x) for x in what_changed))[:300] if what_changed else None
-                    business.save(rel, clean, expect=str(data.get("hash") or ""))
-                    result, what = {"path": rel}, f"saved {rel}"
-                elif path == "/api/business/new":
-                    rel = business.create(str(data.get("kind", "")), str(data.get("name", "")))
-                    result, what = {"path": rel}, f"made {rel}"
                 elif path == "/api/web/test":
                     result = {"test": pull_web.test_connection()}
                     print(f"  {datetime.datetime.now():%H:%M:%S}  tested the Google connection", flush=True)
@@ -485,7 +449,7 @@ class Handler(BaseHTTPRequestHandler):
                     return self.send_json(200, result)
                 elif path == "/api/web/pull":
                     try:
-                        business.writable(os.path.join(sync.CC_DATA, "web.json"))
+                        files.writable(os.path.join(sync.CC_DATA, "web.json"))
                         pull_web.write(pull_web.pull())
                     except pull_web.WebPullError as e:
                         raise ValueError(str(e))
@@ -493,7 +457,7 @@ class Handler(BaseHTTPRequestHandler):
                 else:
                     return self.send_json(404, {"error": "Not found"})
                 synced = resync()
-        except business.Stale as e:
+        except files.Stale as e:
             return self.send_json(409, {"error": str(e)})
         except FileNotFoundError as e:
             return self.send_json(404, {"error": str(e)})

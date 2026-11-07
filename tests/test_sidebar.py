@@ -19,14 +19,14 @@ PROBE = """<!doctype html><meta charset="utf-8"><body><iframe id="f" src="index.
 <script>
 const f = document.getElementById("f");
 const doc = () => f.contentDocument;
-const lit = () => [...doc().querySelectorAll("button.rail-mod-btn")].filter((b) => b.classList.contains("in-section")).map((b) => b.title).join(",");
+const lit = () => [...doc().querySelectorAll("button.rail-mod-btn.in-section, a.rail-link[aria-current=page]")].map((b) => b.dataset.label || b.textContent.trim()).join(",");
 const cur = () => [...doc().querySelectorAll(".rail-child[aria-current=page]")].map((a) => a.textContent).join(",");
 const steps = %(steps)s, out = [];
 f.addEventListener("load", () => setTimeout(function next() {
   out.push(lit() + "/" + cur());
   const s = steps.shift();
   if (!s) { const r = document.createElement("pre"); r.id = "result"; r.textContent = out.join("|"); document.body.append(r); return; }
-  if (s.startsWith("#")) f.contentWindow.location.hash = s; else doc().querySelector('button.rail-mod-btn[title="' + s + '"]').click();
+  if (s.startsWith("#")) f.contentWindow.location.hash = s; else doc().querySelector('button.rail-mod-btn[data-label="' + s + '"]').click();
   setTimeout(next, 250);
 }, 800));
 </script>"""
@@ -53,18 +53,26 @@ class SidebarHighlight(unittest.TestCase):
         return m.group(1).replace("&amp;", "&").split("|")
 
     def test_opening_another_section_moves_the_pill(self):
-        start, business, closed = self.run_probe("/web/traffic", ["My Business", "My Business"])
+        start, content, closed = self.run_probe("/web/traffic", ["Content", "Content"])
         self.assertEqual(start, "Web & Analytics/Traffic")      # on a Web page: Web is lit, Traffic is the current page
-        self.assertEqual(business, "My Business/")             # Brian's click: the pill moves; no My Business page is current
+        self.assertEqual(content, "Content/")                  # Brian's click: the pill moves; no Content page is current
         self.assertEqual(closed, "Web & Analytics/")           # every section closed: back to the page's own section
 
     def test_every_section(self):
-        out = self.run_probe("/dashboard", ["My Business", "Content", "Web & Analytics", "Automations"])
-        self.assertEqual(out, ["/", "My Business/", "Content/", "Web & Analytics/", "Automations/"])
+        out = self.run_probe("/dashboard", ["Content", "Web & Analytics", "Automations"])
+        self.assertEqual(out, ["Dashboard/", "Content/", "Web & Analytics/", "Automations/"])
 
     def test_a_section_left_open_isnt_lit_on_another_page(self):
         # on a Web page Web is open; go to the Dashboard: Web stays open (remembered) but nothing is lit
         start, dash, opened = self.run_probe("/web/traffic", ["#/dashboard", "Content"])
         self.assertEqual(start, "Web & Analytics/Traffic")
-        self.assertEqual(dash, "/")
+        self.assertEqual(dash, "Dashboard/")
         self.assertEqual(opened, "Content/")
+
+    def test_one_pill_only(self):
+        # Brian's 2:16 screenshot: on the Dashboard, opening a section lit Dashboard AND the section
+        start, opened, closed = self.run_probe("/dashboard", ["Content", "Content"])
+        self.assertEqual(start, "Dashboard/")
+        self.assertEqual(opened, "Content/")       # the section has the pill; Dashboard gave it up
+        self.assertEqual(closed, "Dashboard/")     # closed again: back on the page you're on
+

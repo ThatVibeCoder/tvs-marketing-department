@@ -47,7 +47,7 @@ const ICONS = {
 };
 const icon = (name, cls = "") => `<svg viewBox="0 0 24 24" class="${cls}" aria-hidden="true">${ICONS[name] || ICONS.zap}</svg>`;
 
-const state = { automations: [], teams: [], executions: [], content: null, web: null, payments: null, business: null, settings: null, keys: null, problems: [], server: null, route: {}, flow: { zoom: 1, pan: { x: 0, y: 0 } } };
+const state = { automations: [], teams: [], executions: [], content: null, web: null, payments: null, settings: null, keys: null, problems: [], server: null, route: {}, flow: { zoom: 1, pan: { x: 0, y: 0 } } };
 
 function h(tag, attrs = {}, children = []) {
   const n = document.createElement(tag);
@@ -555,15 +555,13 @@ function parseRoute() {
   state.route = { parts, query: new URLSearchParams(queryRaw) };
 }
 
-// ---- The shell: the Command Center's side panel (Dashboard · Overview · WORKSPACE: My Business, Content, Web & Analytics,
+// ---- The shell: the Command Center's side panel (Dashboard · Overview · WORKSPACE: Content, Web & Analytics,
 // Automations · Settings at the bottom) and the floating top bar. A module's sub-items drop down under it: always
 // when you're inside it, or when you open it with its arrow (remembered on this computer).
 const RAIL_KEY = "cc-sidepanel-collapsed", THEME_KEY = "cc-theme", OPEN_KEY = "cc-sidepanel-open";
 const store = { get: (k) => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* private window */ } } };
 const UTILITY = [["/dashboard", "Dashboard", "gauge"], ["/overview", "Overview", "layoutGrid"]];
 const MODULES = [
-  { key: "business", label: "My Business", href: "/business", icon: "briefcase", description: "Who you serve, what you sell, and who else they could pick.",
-    children: [["/business", "Overview", "layoutGrid", null, true], ["/business/icps", "ICPs", "user"], ["/business/buyers", "Buyers", "users"], ["/business/friction", "Friction Points", "alert"], ["/business/offers", "Offers", "tag"], ["/business/competitors", "Competitors", "search"]] },
   { key: "content", label: "Content", href: "/content", icon: "radio", description: "Plan, schedule, and review posts for every platform you're on.",
     children: [["/content", "Overview", "layoutGrid", null, true], ["/content/calendar", "Calendar", "calendarDays"], ["/content/research", "Research", "search"],
       ...["tiktok", "instagram", "twitter", "threads", "youtube", "skool", "linkedin"].map((p) => [`/content/${p}`, PLATFORM_LABEL[p], null, p])] },
@@ -576,8 +574,8 @@ const MODULES = [
 let clickedSection = null; // { key, path }: the section opened by a click on this page (the pill moves to it)
 let lastSection = null; // the section the previous screen was in (reset on every page load = first load opens it)
 function sectionPrefs() { try { const v = JSON.parse(store.get(OPEN_KEY) || "{}"); return v && typeof v === "object" && !Array.isArray(v) ? v : {}; } catch { return {}; } }
-function railLink(path, label, ic, active, extraCls) {
-  return h("a", { href: `#${path}`, class: cls("rail-link", extraCls), "aria-current": active ? "page" : null, title: label }, [
+function railLink(path, label, ic, active, extraCls, tip = true) {
+  return h("a", { href: `#${path}`, class: cls("rail-link", extraCls), "aria-current": active ? "page" : null, title: tip ? label : null }, [
     h("span", { class: "rail-ic", html: lineIcon(ic) }), h("span", { class: "rail-label truncate" }, label)
   ]);
 }
@@ -613,7 +611,7 @@ function renderShell() {
       const open = isOpen(m);
       const lit = openMod ? openMod.key === m.key : active;
       return h("li", {}, [
-        h("button", { type: "button", class: cls("rail-link mod rail-mod-btn", lit && "in-section"), "aria-current": active ? "true" : null, "aria-expanded": open ? "true" : "false", title: m.label,
+        h("button", { type: "button", class: cls("rail-link mod rail-mod-btn", lit && "in-section"), "aria-current": active ? "true" : null, "aria-expanded": open ? "true" : "false", "data-label": m.label, title: collapsed ? m.label : null,
           onclick: () => { const pr = sectionPrefs(); pr[m.key] = open ? "closed" : "open"; clickedSection = open ? null : { key: m.key, path }; if (!open) for (const o of MODULES) if (o.key !== m.key) pr[o.key] = "closed"; /* accordion: one open at a time */ store.set(OPEN_KEY, JSON.stringify(pr)); if (store.get(RAIL_KEY) === "1" && !open) { /* icons-only: opening goes to the section */ location.hash = `#${m.href}`; } renderShell(); } }, [
           h("span", { class: "rail-ic", html: lineIcon(m.icon) }), h("span", { class: "rail-label truncate" }, m.label), h("span", { class: cls("rail-caret", open && "open"), html: lineIcon("chevronDown"), "aria-hidden": "true" })]),
         open ? h("ul", { class: "rail-children" }, m.children.map(([href, label, ic, platform, exact]) => {
@@ -627,14 +625,14 @@ function renderShell() {
       h("div", { class: "rail-top" }, [h("a", { href: "#/dashboard", class: "rail-brand rail-label" }, [h("span", { class: "rail-ic", html: lineIcon("layoutGrid") }), h("span", { class: "truncate" }, "Command Center")]),
         h("button", { type: "button", class: "rail-toggle", "aria-pressed": collapsed ? "true" : "false", "aria-label": collapsed ? "Pin side panel open" : "Collapse side panel", onclick: () => { if (document.body.classList.contains("drawer-open")) { document.body.classList.remove("drawer-open"); return; } store.set(RAIL_KEY, collapsed ? "0" : "1"); renderShell(); }, html: lineIcon(collapsed ? "panelOpen" : "panelClose") })]),
       h("nav", { class: "rail-nav", "aria-label": "Dashboard sections" }, [
-        h("ul", { class: "rail-sec" }, UTILITY.map(([href, l, ic]) => h("li", {}, railLink(href, l, ic, under(href))))),
+        h("ul", { class: "rail-sec" }, UTILITY.map(([href, l, ic]) => h("li", {}, railLink(href, l, ic, under(href) && !openMod, null, collapsed)))),
         h("div", { class: "rail-sec" }, [h("p", { class: "rail-group" }, "Workspace"), h("div", { class: "rail-rule" }), h("ul", { class: "rail-mods" }, MODULES.map(modBlock))])
       ]),
       h("div", { class: "rail-bottom" }, railLink("/settings/account", "Settings", "settings", false, "settings-link"))
     ];
   }
   rail.replaceChildren(h("div", { class: "dash-rail" }, inner));
-  const titles = { business: "My Business", dashboard: "Dashboard", overview: "Overview", settings: "Settings", content: "Content", web: "Web & Analytics" };
+  const titles = { dashboard: "Dashboard", overview: "Overview", settings: "Settings", content: "Content", web: "Web & Analytics" };
   const title = titles[p[0]] || "Automations";
   $("#headerTitle").textContent = title;
   $("#modePill").textContent = state.server ? "Editing on" : "From your repo";
@@ -659,7 +657,6 @@ function render() {
   else if (p[0] === "content") view = renderContent(p);
   else if (p[0] === "settings") view = renderSettings(p);
   else if (p[0] === "web") view = renderWeb(p);
-  else if (p[0] === "business") view = renderBusiness(p);
   else if (p[0] === "dashboard") view = renderDashboard();
   else if (p[0] === "overview") view = renderGlance();
   else view = renderAutomations();
@@ -676,7 +673,6 @@ function applyState(s) {
   state.keys = s.keys || null;
   state.web = s.web || null;
   state.payments = s.payments || null;
-  state.business = s.business || state.business;
   state.landingPages = s.landingPages || state.landingPages;
   state.problems = s.problems || [];
   state.server = s.server || null;
@@ -690,7 +686,6 @@ async function boot() {
     state.executions = window.CC_DATA.executions || [];
     state.content = window.CC_DATA.content || { posts: [], research: {} };
     state.settings = window.CC_DATA.settings || {};
-    state.business = window.CC_DATA.business || null;
     state.landingPages = window.CC_DATA.landingPages || null;
   }
   state.web = window.CC_WEB || null; // tools/pull_web.py writes data/web.js; it stays on this computer

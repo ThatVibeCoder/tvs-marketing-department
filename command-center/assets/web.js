@@ -280,8 +280,6 @@ function pageVisits(p, snap) {
 }
 function offerLabel(path) {
   if (!path) return "No offer named";
-  const o = ((state.business || {}).offers || []).find((d) => d.path === path);
-  if (o) return o.main ? (gv(o, "Name") || "Main offer") : docName(o, "Offer");
   return path.replace(/^brand\/offers\//, "").replace(/\.md$/, "").replace(/^brand\/offer$/, "Main offer");
 }
 function renderLandingPages() {

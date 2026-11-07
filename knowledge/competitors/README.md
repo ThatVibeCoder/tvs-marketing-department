@@ -1,6 +1,6 @@
 # Competitors
 
-**Filled by:** the Researcher's scan-my-competitors skill (the first look: website and where they post) and competitor-check (the deeper read: reviews, prices, complaints), or the My Business → Competitors page in the Command Center. The names to check start in `business.md` under Who Else They Could Pick.
+**Filled by:** the Researcher's scan-my-competitors skill (the first look: website and where they post) and competitor-check (the deeper read: reviews, prices, complaints). The names to check start in `business.md` under Who Else They Could Pick.
 
 One file per competitor: `<competitor-name>.md` (copy `_template.md`). The summary below lists all of them by tier.
 

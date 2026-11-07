@@ -79,7 +79,7 @@ Tell the owner, in a few lines:
 
 Then offer exactly one next step. Either the deeper competitor-check (reviews, complaints and pricing), or, if the owner has the Website Team, a look at their own headline next to the competitors' headlines. One offer, never a menu.
 
-The files show up in the Command Center under **My Business → Competitors** the next time `python3 tools/sync.py` runs (the dashboard runs it after every save).
+The files stay in `knowledge/competitors/`, where every team that needs them reads them.
 
 ## Rules
 - Every claim carries where you saw it. A platform count with no link doesn't go in.
