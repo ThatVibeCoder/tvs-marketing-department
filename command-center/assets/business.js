@@ -96,8 +96,10 @@ function bizOverview() {
 const slugifyName = (n) => n.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 // ---------- saving ----------
+function bizDocAt(path) { const b = biz(); return [...(b.icps || []), ...(b.offers || []), ...(b.personas || []), ...(b.competitors || []), b.friction, b.contrarian].find((d) => d && d.path === path) || {}; }
 async function bizSave(path, changes, msg) {
-  const r = await api("/api/business/save", { path, changes });
+  const doc = bizDocAt(path);
+  const r = await api("/api/business/save", { path, hash: doc.hash, changes }); // a 409 if the file changed since this page loaded it
   if (r) { toast(msg || `Saved to ${path}.`); render(); }
   return r;
 }

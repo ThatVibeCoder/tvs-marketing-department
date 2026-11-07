@@ -171,6 +171,8 @@ def new_id(platform, date, body):
 def update_post(pid, data):
     check_fields(data)
     meta, body = load_post_meta(pid)
+    if data.get("hash") and business.content_hash(sync.read(post_path(pid))) != data["hash"]:
+        raise business.Stale(business.STALE)
     for k in EDITABLE:
         if k in data:
             meta[k] = data[k]
@@ -417,7 +419,7 @@ class Handler(BaseHTTPRequestHandler):
                     clean = {k: changes[k] for k in ("title", "glance", "sections", "fields") if k in changes}
                     what_changed = [*(clean.get("glance") or {}), *(clean.get("sections") or {}), *[f for fs in (clean.get("fields") or {}).values() for f in fs]]
                     clean["update"] = "edited in the Command Center: " + ", ".join(dict.fromkeys(short(x) for x in what_changed))[:300] if what_changed else None
-                    business.save(rel, clean)
+                    business.save(rel, clean, expect=str(data.get("hash") or ""))
                     result, what = {"path": rel}, f"saved {rel}"
                 elif path == "/api/business/new":
                     rel = business.create(str(data.get("kind", "")), str(data.get("name", "")))
@@ -436,6 +438,8 @@ class Handler(BaseHTTPRequestHandler):
                 else:
                     return self.send_json(404, {"error": "Not found"})
                 synced = resync()
+        except business.Stale as e:
+            return self.send_json(409, {"error": str(e)})
         except FileNotFoundError as e:
             return self.send_json(404, {"error": str(e)})
         except ValueError as e:

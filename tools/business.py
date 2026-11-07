@@ -9,6 +9,7 @@ character as it was, so the skills that read these files keep working.
 Standard library only.
 """
 import datetime
+import hashlib
 import os
 import re
 
@@ -27,6 +28,19 @@ KINDS = {
 SINGLE = {"friction": "brand/friction-points.md", "contrarian": "brand/contrarian-take.md", "business": "business.md"}
 SKIP = ("_template.md", "README.md")
 SLUG = re.compile(r"^[a-z0-9][a-z0-9-]{0,60}$")
+
+
+class Stale(ValueError):
+    """The file changed after the page loaded it (an AI, another tab). serve.py answers 409."""
+
+
+STALE = ("This file changed since you opened it (your AI may have edited it). Reload the page to see the new "
+         "version, then make your change again.")
+
+
+def content_hash(text):
+    """What the page sends back with a save, so a save can tell the file changed under it."""
+    return hashlib.sha1(text.encode("utf-8")).hexdigest()[:16]
 
 
 def read(rel):
@@ -334,8 +348,9 @@ def docs(kind):
     if os.path.isdir(folder):
         paths += [f"{k['folder']}/{n}" for n in sorted(os.listdir(folder)) if n.endswith(".md") and n not in SKIP]
     for p in paths:
-        d = parse(read(p), g)
-        d.update({"path": p, "slug": "main" if p == k["main"] else os.path.basename(p)[:-3], "main": p == k["main"]})
+        text = read(p)
+        d = parse(text, g)
+        d.update({"hash": content_hash(text), "path": p, "slug": "main" if p == k["main"] else os.path.basename(p)[:-3], "main": p == k["main"]})
         out.append(d)
     return out
 
@@ -370,10 +385,11 @@ def build():
     """Everything the My Business pages need. Missing files show as empty, never an error."""
     def single(rel, guides=None):
         try:
-            d = parse(read(rel), guides)
+            text = read(rel)
         except OSError:
             return None
-        d["path"] = rel
+        d = parse(text, guides)
+        d.update({"path": rel, "hash": content_hash(text)})
         return d
     business = single(SINGLE["business"], BUSINESS_GUIDES)
     return {
@@ -405,14 +421,17 @@ def kind_of(rel):
     return None
 
 
-def save(rel, changes, today=None):
+def save(rel, changes, today=None, expect=None):
     if not allowed(rel):
         raise ValueError("That file isn't one of your business files.")
     p = os.path.join(ROOT, rel)
     if not os.path.isfile(p):
         raise FileNotFoundError(f"{rel} isn't there.")
     kind = kind_of(rel)
-    text = apply(read(rel), changes, guides_for(kind) if kind else None, today)
+    current = read(rel)
+    if expect and content_hash(current) != expect:
+        raise Stale(STALE)
+    text = apply(current, changes, guides_for(kind) if kind else None, today)
     with open(p, "w", encoding="utf-8") as f:
         f.write(text)
     return rel

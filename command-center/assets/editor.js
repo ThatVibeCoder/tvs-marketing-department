@@ -68,7 +68,7 @@ async function saveComposer(statusOverride) {
   if (comp.source !== "review" || comp.mode === "create") Object.assign(fields, { date: comp.date, time: comp.time });
   let r;
   if (comp.mode === "create") r = await api("/api/posts", { ...fields, platform: comp.platform, status: statusOverride || "draft" });
-  else r = await api(`/api/posts/${comp.postId}`, fields);
+  else r = await api(`/api/posts/${comp.postId}`, { ...fields, hash: (posts().find((p) => p.id === comp.postId) || {}).hash }); // 409 if the file changed meanwhile
   if (!comp) return;
   comp.saving = false;
   if (r) { toast(comp.mode === "create" ? `Saved to ${POSTS_HOME}/${r.id}.md` : "Saved."); closeComposer(true); }

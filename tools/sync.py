@@ -21,7 +21,7 @@ and before every save. From the real folders, it:
 
 Standard library only. Works the same for Claude Code and Codex.
 """
-import json, os, re, sys, datetime
+import datetime, hashlib, json, os, re, sys
 
 # Windows consoles often can't print every character; never crash over that
 for _s in (sys.stdout, sys.stderr):
@@ -693,7 +693,8 @@ def load_settings():
 
 
 def read_post(path):
-    meta, body = frontmatter(read(path))
+    raw = read(path)
+    meta, body = frontmatter(raw)
     pid = os.path.splitext(os.path.basename(path))[0]
     platform = str(meta.get("platform", "")).strip().lower()
     status = str(meta.get("status", "draft")).strip().lower() or "draft"
@@ -717,7 +718,8 @@ def read_post(path):
         mtype = "video" if media.lower().split("?")[0].endswith(VIDEO_EXT) else "image"
     post = {"id": pid, "path": rel(path), "platform": platform, "status": status, "date": date,
             "time": time.zfill(5) if time else "", "body": body.rstrip("\n"), "media": media,
-            "mediaType": mtype if media else ""}
+            "mediaType": mtype if media else "",
+            "hash": hashlib.sha1(raw.encode("utf-8")).hexdigest()[:16]}  # sent back with a save: a 409 if the file changed
     for k in ("title", "category", "account", "job", "posted_at", "link", "notes", "created", "updated"):
         post[{"posted_at": "postedAt"}.get(k, k)] = str(meta.get(k, "")).strip() if k != "notes" else str(meta.get(k, ""))
     return post
