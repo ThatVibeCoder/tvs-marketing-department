@@ -1,5 +1,7 @@
 # Colors
 
+**Filled by:** the colors and fonts step in the Build Your Landing Page lesson (no skill writes it yet: your AI reads the colors from your site or logo, or picks them with you), before the Page Builder's build-a-page runs. Kept by the Designer on the Content Team.
+
 This gets filled before your first page gets built, worked out with your AI when you get there. Your palette, written down so every visual any team member makes uses the same few colors on purpose.
 
 How it gets filled: if you already have a site or a logo, your AI pulls the real colors from it. If you don't, you pick with your AI: one ink for text, one paper for backgrounds, ONE accent that says your brand, and that's enough to start.

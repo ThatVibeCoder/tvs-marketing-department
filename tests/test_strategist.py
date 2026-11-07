@@ -125,6 +125,18 @@ class AgentsFrontDoorTest(unittest.TestCase):
         self.assertNotIn("no command folder we could confirm", read(os.path.join(ROOT, "AGENTS.md")))
 
 
+class FilledByTest(unittest.TestCase):
+    def test_every_brand_file_waiting_to_be_filled_names_what_fills_it(self):
+        # set-up-your-company-strategist's Watching list names the lesson from each empty file's Filled by line
+        for p in glob.glob(os.path.join(ROOT, "brand", "**", "*.md"), recursive=True):
+            text = read(p)
+            if "_Not filled in yet._" not in text:
+                continue
+            line = [l for l in text.splitlines()[:5] if l.startswith("**Filled by:**")]
+            self.assertTrue(line, os.path.relpath(p, ROOT))
+            self.assertRegex(line[0], r"(skill|lesson)", os.path.relpath(p, ROOT))
+
+
 class FormOwnerTest(unittest.TestCase):
     """"My contact form isn't sending" failed the cold test: no skill owned it. fix-my-form owns it now."""
     SKILL = "library/teams/it-systems/dev-team/api-manager/skills/fix-my-form/SKILL.md"
