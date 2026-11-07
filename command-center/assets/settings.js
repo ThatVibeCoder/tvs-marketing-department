@@ -8,6 +8,7 @@ const SETTINGS_SECTIONS = [
   { slug: "brands", label: "Brands", icon: "layers" },
   { slug: "accounts", label: "Connected Accounts", icon: "radio" },
   { slug: "cadence", label: "Posting Cadence", icon: "calendarClock" },
+  { slug: "agents", label: "AI Agents", icon: "sparkle" },
   { slug: "developer", label: "Developer", icon: "terminal" }
 ];
 const POSTERS = [
@@ -206,6 +207,37 @@ function renderDeveloperSettings() {
     ])])
   ]);
 }
+// The coding agents this department runs on. AGENTS.md is the one rules file; tools/sync.py writes each
+// agent's pointer and command folder from it. Every one of these signs in with its own account: no key here.
+const AI_AGENTS = [
+  { id: "claude", name: "Claude Code", by: "Anthropic", install: "https://docs.anthropic.com/en/docs/claude-code/overview", open: "claude", summon: "/content-team",
+    files: ["CLAUDE.md (points at AGENTS.md)", ".claude/skills/ (every team, workflow and skill)"], note: "Also in the Claude desktop app and VS Code: open this folder there." },
+  { id: "codex", name: "Codex", by: "OpenAI", install: "https://developers.openai.com/codex/cli", open: "codex", summon: "$content-team",
+    files: ["AGENTS.md (read directly)", ".agents/skills/ (every team, workflow and skill)"], note: "Or pick a skill from Codex's /skills menu." },
+  { id: "gemini", name: "Gemini CLI", by: "Google", install: "https://geminicli.com/docs/", open: "gemini", summon: "/content-team",
+    files: ["GEMINI.md (imports AGENTS.md)", ".gemini/commands/ (every team, workflow and skill as a / command)"], note: "Signing in with a Google account is enough; an API key is optional and goes in your terminal, not here." },
+  { id: "cursor", name: "Cursor", by: "Anysphere", install: "https://cursor.com/downloads", open: "cursor .", summon: "/content-team",
+    files: ["AGENTS.md (read directly)", ".cursor/rules/agents.mdc (always on, points at AGENTS.md)", ".cursor/commands/ (every team, workflow and skill as a / command)"], note: "Or open the folder from Cursor's File menu, then use the chat in Agent mode." },
+  { id: "grok", name: "Grok Build", by: "xAI", install: "https://x.ai/", open: "grok", summon: "say \"run my content team\"",
+    files: ["AGENTS.md (read directly)"], note: "Early beta. It reads AGENTS.md; it has no command folder we could confirm, so ask for a team in plain words. Install: curl -fsSL https://x.ai/cli/install.sh | bash (Mac, Linux) or irm https://x.ai/cli/install.ps1 | iex (Windows PowerShell). Run grok inspect to see what it picked up." }
+];
+function renderAgentSettings() {
+  const found = (state.settings && window.CC_DATA && window.CC_DATA.agents) || (state.agents) || {};
+  return settingsPane("AI Agents", "Your agent teams run on whichever AI you like. AGENTS.md holds the rules once, and tools/sync.py sets up each agent below from it. Open this folder in one, sign in with your own account, and summon a team.", [
+    ...AI_AGENTS.map((a) => settingsSection(`agent-${a.id}`, null, null, [
+      h("div", { class: "row gap2 wrap" }, [h("span", { class: "set-value b" }, a.name), h("span", { class: "tiny-sub" }, a.by), found[a.id] ? h("span", { class: "status-pill ok" }, "set up in this folder") : h("span", { class: "status-pill warn" }, "run sync to set it up"), h("a", { class: "accent-link row gap15 ml-auto", href: a.install, target: "_blank", rel: "noreferrer" }, [svgIcon("external"), "Install"])]),
+      h("div", { class: "agent-grid mt3" }, [
+        h("div", {}, [h("p", { class: "overline mb15" }, "Open your department"), h("p", { class: "set-hint" }, "In a terminal, inside this folder:"), h("code", { class: "agent-cmd" }, a.open)]),
+        h("div", {}, [h("p", { class: "overline mb15" }, "Summon a team"), h("p", { class: "set-hint" }, "For example the Content Team:"), h("code", { class: "agent-cmd" }, a.summon)])
+      ]),
+      h("p", { class: "overline mt4 mb15" }, "What's in this folder for it"),
+      h("ul", { class: "agent-files" }, a.files.map((f) => h("li", {}, h("code", {}, f)))),
+      h("p", { class: "set-hint mt2" }, a.note),
+      h("p", { class: "set-hint" }, "No key to paste here: it signs in with your own account the first time it opens.")
+    ])),
+    settingsSection("agent-other", "Any other agent", null, [h("p", { class: "set-hint" }, "Point it at AGENTS.md (most agents read it on their own) and ask for a team by name, like \"run my content team\". Every team's steps live in its team.md, so any agent that reads files can follow them.")])
+  ]);
+}
 function renderSettings(parts) {
   switch (parts[1] || "account") {
     case "account": return renderAccountSettings();
@@ -214,6 +246,7 @@ function renderSettings(parts) {
     case "accounts": return renderConnectedAccounts();
     case "cadence": return renderCadenceSettings();
     case "developer": return renderDeveloperSettings();
+    case "agents": return renderAgentSettings();
     default: return notFound("That settings page doesn't exist");
   }
 }

@@ -1,6 +1,6 @@
 # How to work in this repo
 
-These are the rules for any AI working in this repo. Codex reads this file directly, and Claude Code reads it through `CLAUDE.md`, so both follow the same rules.
+These are the rules for any AI working in this repo. Codex, Cursor and Grok Build read this file directly, Claude Code reads it through `CLAUDE.md` and Gemini CLI through `GEMINI.md`, so every agent follows the same rules. `tools/sync.py` writes those pointer files; this is the only place the rules are written.
 
 This is the owner's company, built as files. Every department, team, team member and skill has a folder waiting for it, so nothing ever gets made up in a random place. The classroom fills these folders in, one lesson at a time.
 
@@ -78,14 +78,14 @@ departments/<department>/                 a department (marketing, sales, it-sys
 
 ## Commands: every team and every skill can be summoned
 
-`.claude/skills/` (Claude Code) and `.agents/skills/` (Codex) hold shortcuts, and `tools/sync.py` builds every one of them from the folders above. Never write a skill straight into those two folders and never edit a shortcut. Put the real skill inside its team member, then run sync.
+`.claude/skills/` (Claude Code) and `.agents/skills/` (Codex) hold shortcuts, `.gemini/commands/` (Gemini CLI) and `.cursor/commands/` (Cursor) hold the same ones as commands, and `tools/sync.py` builds every one of them from the folders above. Never write a skill straight into those folders and never edit a shortcut. Put the real skill inside its team member, then run sync. Grok Build has no command folder we could confirm, so on Grok ask for a team or a skill by name.
 
 After sync, the owner can call:
 - a whole team (for example `content-team`): it shows that team's workflows and skills and runs the one they pick;
 - a workflow, by saying its words (for example "build my landing page") or by its shortcut (`build-my-landing-page`), to run it start to finish;
 - one skill on its own (for example `draft-post`).
 
-In Claude Code, type them with a slash: `/content-team`. In Codex, type them with a dollar sign, `$content-team`, or pick them from the `/skills` menu. In both, saying what you want in plain words works too.
+In Claude Code, Gemini CLI and Cursor, type them with a slash: `/content-team`. In Codex, type them with a dollar sign, `$content-team`, or pick them from the `/skills` menu. In Grok Build (or any other agent), say it: "run my content team". Saying what you want in plain words works everywhere. The Command Center's Settings → AI Agents page shows each one.
 
 ## Running a workflow
 
@@ -97,7 +97,7 @@ In Claude Code, type them with a slash: `/content-team`. In Codex, type them wit
 
 ## Keep it in sync: run the sync command
 
-Run it any time a team, team member, skill, workflow or routine is added, renamed or removed, and before every save. It checks the structure, rebuilds the shortcuts in both skill folders, and refreshes the Command Center. If it prints a line starting with FIX, fix that first. Adding `--check` changes nothing and fails if anything is out of date, and the GitHub Agent's save-work runs it before every save.
+Run it any time a team, team member, skill, workflow or routine is added, renamed or removed, and before every save. It checks the structure, rebuilds every agent's shortcuts and commands (and the CLAUDE.md, GEMINI.md and Cursor pointers), and refreshes the Command Center. If it prints a line starting with FIX, fix that first. Adding `--check` changes nothing and fails if anything is out of date, and the GitHub Agent's save-work runs it before every save.
 
 **Which command, by computer** (check which one the owner is on first):
 - **Mac or Linux:** `python3 tools/sync.py`
@@ -122,11 +122,11 @@ Run it any time a team, team member, skill, workflow or routine is added, rename
    2. Read `departments/<department>/<team>/<member>/skills/<skill>/SKILL.md` and follow it exactly. That file is the real skill.
    ```
 2. A team member going from seeded to live, or a brand file changing, needs nothing by hand.
-3. Tell the owner in one line that the Command Center picture will catch up the next time sync runs with Python. The next time it does run, it rebuilds everything exactly, including anything done by hand.
+3. The Gemini and Cursor command files and the pointer files catch up on the next real sync; skip them by hand. Tell the owner in one line that the Command Center picture will catch up the next time sync runs with Python. The next time it does run, it rebuilds everything exactly, including anything done by hand.
 
 ## The Command Center
 
-`command-center/index.html` is the picture of this whole company. Its sidebar starts with **Dashboard** (the business at a glance: posts out, what's waiting, website visitors, your teams) and **Overview** (one card per section), then the Workspace sections, each opening into its pages: **Content**, **Web & Analytics** and **Automations**. **Automations**: every team, its workflow drawn in phases, its team members and skills, and every routine. **Content**: an Overview of what went out and what's waiting, a Calendar, Research (from `knowledge/`), and one page per platform (TikTok, Instagram, X, Threads, YouTube, Skool, LinkedIn) with its review queue and an editor that shows exactly how the post looks on that platform. **Web & Analytics**: your website's visitors, traffic sources, pages, searches and a visitor map, from Google Analytics and Search Console (connect them once in Web → Settings, then `python3 tools/pull_web.py` or its Pull now button brings the numbers in, read-only). **Settings** sits at the bottom left: account, workspace, brands, connected accounts, posting cadence and developer info.
+`command-center/index.html` is the picture of this whole company. Its sidebar starts with **Dashboard** (the business at a glance: posts out, what's waiting, website visitors, your teams) and **Overview** (one card per section), then the Workspace sections, each opening into its pages: **Content**, **Web & Analytics** and **Automations**. **Automations**: every team, its workflow drawn in phases, its team members and skills, and every routine. **Content**: an Overview of what went out and what's waiting, a Calendar, Research (from `knowledge/`), and one page per platform (TikTok, Instagram, X, Threads, YouTube, Skool, LinkedIn) with its review queue and an editor that shows exactly how the post looks on that platform. **Web & Analytics**: your website's visitors, traffic sources, pages, searches and a visitor map, from Google Analytics and Search Console (connect them once in Web → Settings, then `python3 tools/pull_web.py` or its Pull now button brings the numbers in, read-only). **Settings** sits at the bottom left: account, workspace, brands, connected accounts, posting cadence, AI agents (how to run your teams on each one) and developer info.
 
 Open it straight from the folder, no server needed: everything shows, read-only. It's rebuilt from the folders by `tools/sync.py`, so never edit `command-center/data/` by hand. If the owner asks to "see my team", "see my company" or "update the Command Center", run sync and open that file. (`org-chart.html` just forwards there.)
 

@@ -1,10 +1,10 @@
 # Your Marketing Department
 
-This is your company, built as files instead of headcount. Open Claude Code or Codex in this folder, talk to it like someone new on your team, and it reads and fills in these files as you go through the classroom.
+This is your company, built as files instead of headcount. Open your AI (Claude Code, Codex, Gemini CLI, Cursor or Grok) in this folder, talk to it like someone new on your team, and it reads and fills in these files as you go through the classroom.
 
 ## Start here
 
-1. Open Claude Code or Codex in this folder.
+1. Open your AI in this folder: Claude Code, Codex, Gemini CLI, Cursor or Grok Build all work (the Command Center's Settings → AI Agents shows how for each).
 2. Say "brain dump my business."
 3. Open `command-center/index.html` in your browser to see your whole company: your agent teams, and your content on every platform.
 4. When you want to approve and edit posts from there, run `python3 tools/serve.py` (Windows: `py tools/serve.py`) and open the link it prints.
@@ -29,13 +29,13 @@ departments/              the company itself
         skills/<skill>/        one thing that team member knows how to do
 routines/                 work that runs on a schedule
 command-center/index.html  the picture of all of it (python3 tools/serve.py turns editing on)
-AGENTS.md                 the rules every AI follows in this repo
+AGENTS.md                 the rules every AI follows in this repo (CLAUDE.md, GEMINI.md and .cursor/rules point here)
 CHANGELOG.md              what's new since your copy was made
 ```
 
 ## Your teams
 
-Type a team's command to summon it, say one of its workflows out loud (like "build my landing page"), or run one skill on its own. In Claude Code commands start with a slash (`/content-team`, `/draft-post`). In Codex they start with a dollar sign (`$content-team`, `$draft-post`), or pick them from the `/skills` menu. The classroom tells you which one each lesson uses.
+Type a team's command to summon it, say one of its workflows out loud (like "build my landing page"), or run one skill on its own. In Claude Code, Gemini CLI and Cursor commands start with a slash (`/content-team`, `/draft-post`). In Codex they start with a dollar sign (`$content-team`, `$draft-post`), or pick them from the `/skills` menu. In Grok Build, say it: "run my content team". The classroom tells you which one each lesson uses.
 
 **Ready** means the team already knows its job and just needs your accounts connected. **Waiting** means it's set up by a classroom lesson before you use it.
 
