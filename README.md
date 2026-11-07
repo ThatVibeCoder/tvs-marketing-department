@@ -5,7 +5,7 @@ This is your company, built as files instead of headcount. Open your AI (Claude 
 ## Start here
 
 1. Open your AI in this folder: Claude Code, Codex, Gemini CLI, Cursor or Grok Build all work (the Command Center's Settings → AI Agents shows how for each).
-2. Say "brain dump my business."
+2. Say "show me around." The Example Team shows you what's in your department and the full teams waiting in the team library. The classroom adds them one at a time: "add the website team".
 3. Open `command-center/index.html` in your browser to see your whole company: your agent teams, and your content on every platform.
 4. When you want to approve and edit posts from there, run `python3 tools/serve.py` (Windows: `py tools/serve.py`) and open the link it prints.
 
@@ -35,21 +35,22 @@ CHANGELOG.md              what's new since your copy was made
 
 ## Your teams
 
-Type a team's command to summon it, say one of its workflows out loud (like "build my landing page"), or run one skill on its own. In Claude Code, Gemini CLI and Cursor commands start with a slash (`/content-team`, `/draft-post`). In Codex they start with a dollar sign (`$content-team`, `$draft-post`), or pick them from the `/skills` menu. In Grok Build, say it: "run my content team". The classroom tells you which one each lesson uses.
+Your department starts with one demo, the **Example Team**, so you can see how a team is built. Every full team waits in the team library (`library/teams/`) until the classroom gets to it. Say "add the website team" to your AI (or run `python3 tools/add_team.py website-team`), and the whole team, every team member, skill and workflow, lands in `departments/` and shows up in the Command Center. `python3 tools/add_team.py` on its own lists them all.
 
-**Ready** means the team already knows its job and just needs your accounts connected. **Waiting** means it's set up by a classroom lesson before you use it.
+Once a team is added, type its command to summon it, say one of its workflows out loud (like "build my landing page"), or run one skill on its own. In Claude Code, Gemini CLI and Cursor commands start with a slash (`/website-team`, `/build-a-page`). In Codex they start with a dollar sign (`$website-team`), or pick them from the `/skills` menu. In Grok Build, say it: "run my website team".
 
-| Department | Team | Command | Status |
+| Department | Team | Add it with | In the library |
 |---|---|---|---|
-| Marketing | Content Team | `/content-team` | Waiting |
-| Marketing | Website Team | `/website-team` | Ready |
-| Marketing | Research Team | `/research-team` | Waiting |
-| Marketing | Newsletter Team | `/newsletter-team` | Waiting |
-| Marketing | Follow-Up Team | `/follow-up-team` | Waiting |
-| Marketing | Ads Team | `/ads-team` | Waiting |
-| Sales | Sales Team | `/sales-team` | Waiting |
-| IT / Systems | Dev Team | `/dev-team` | Ready |
-| Operations | Strategy Team | `/strategy-team` | Waiting |
+| Marketing | Content Team | "add the content team" | Ready |
+| Marketing | Editing Team | "add the editing team" | Ready |
+| Marketing | Website Team | "add the website team" | Ready |
+| Marketing | Follow-Up Team | "add the follow-up team" | Ready |
+| Marketing | Ads Team | "add the ads team" | Ready |
+| Marketing | Research Team | "add the research team" | Not ready yet |
+| Marketing | Newsletter Team | "add the newsletter team" | Not ready yet |
+| Sales | Sales Team | "add the sales team" | Ready |
+| IT / Systems | Dev Team | "add the dev team" | Ready (its Payments Agent isn't yet) |
+| Operations | Strategy Team | "add the strategy team" | Not ready yet |
 
 ## How the company is built
 

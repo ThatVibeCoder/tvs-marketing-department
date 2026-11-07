@@ -2,7 +2,7 @@
 
 These are the rules for any AI working in this repo. Codex, Cursor and Grok Build read this file directly, Claude Code reads it through `CLAUDE.md` and Gemini CLI through `GEMINI.md`, so every agent follows the same rules. `tools/sync.py` writes those pointer files; this is the only place the rules are written.
 
-This is the owner's company, built as files. Every department, team, team member and skill has a folder waiting for it, so nothing ever gets made up in a random place. The classroom fills these folders in, one lesson at a time.
+This is the owner's company, built as files. It starts nearly empty on purpose: `departments/` holds one demo, the Example Team, and every full team (its team members, skills and workflows) waits in the team library, `library/teams/<department>/<team>/`, until the classroom gets to it. Teams get added one at a time, and the classroom fills them in, one lesson at a time. Nothing gets made up in a random place.
 
 ## Read first, every session
 
@@ -46,6 +46,7 @@ Every piece of information has exactly one home. Find it in this table and add t
 | Booking messages | `output/` next to the Calendar Agent (`<date>-book-<lead>.md`) | Calendar Agent |
 | Reply drafts and follow-up nudges | `output/` next to the Reply Agent (`<date>-<lead>.md`) and the Nurture Agent (`<date>-<lead>.md`, `<date>-quiet-list.md`) | Reply Agent, Nurture Agent |
 | Scheduled work | `routines/<name>/README.md` | the team that owns it |
+| Teams you haven't added yet: full teams, ready to copy in | `library/teams/<department>/<team>/` (a `NOT-READY.md` inside says what's still missing) | the template; never edit a library team, add it and edit your copy |
 
 If something truly has no home in this table, ask the owner before making one, then add the new home to this table in the same change.
 
@@ -134,6 +135,7 @@ To make its buttons work (Save changes, Approve, Reject, Settings), run `python3
 
 ## Adding something new
 
+- **A team from the library:** when the owner says "add the website team" (or names any team), run `python3 tools/add_team.py <team-folder>` (Windows: `py tools/add_team.py <team-folder>`). It copies the WHOLE team from `library/teams/` into `departments/<department>/`, every team member, skill and workflow, then runs sync. `python3 tools/add_team.py` on its own lists what's added and what's waiting. If the folder is already in `departments/`, it stops and changes nothing: tell the owner what's there and ask before doing anything else. A team or team member marked not ready only goes in after the owner hears what's missing and says yes (`--anyway`). It never touches `business.md` or `brand/`. If this copy has no `tools/add_team.py` yet (made before the library), fetch it with the GitHub Agent's add-from-template first. Sync, the shortcuts, the command files and the Command Center only ever read `departments/`; the library is invisible until a team is added.
 - **A skill from a classroom lesson:** the lesson's doc says which team member it belongs to. Save it to that member's `skills/<skill-name>/SKILL.md`, write the information it gathers into the home from the table above, then run sync.
 - **Setting up a seeded team member:** fill in its job in its own file, change `**Status:** seeded` to `**Status:** live`, then run sync.
 - **A new team:** make `departments/<department>/<team>/team.md` in the shape above (copy another team's file), one folder per team member with its file, then run sync.
@@ -166,7 +168,7 @@ If the owner tracks their team in Notion, mirror new team members there too. If 
 
 ## Saving
 
-Save with the GitHub Agent's save-work skill: it runs `python3 tools/sync.py --check`, then saves one checkpoint and sends it to GitHub. Tell the owner in one line what changed.
+Save with the GitHub Agent's save-work skill (it comes with the Dev Team): it runs `python3 tools/sync.py --check`, then saves one checkpoint and sends it to GitHub. Before the Dev Team is added, do the same by hand: run the check, then commit everything that changed with a one-line message and push. Tell the owner in one line what changed.
 
 ## The classroom
 
