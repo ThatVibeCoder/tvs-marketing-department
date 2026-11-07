@@ -98,6 +98,15 @@ class AgentsFrontDoorTest(unittest.TestCase):
         for p in (f"{LIB_MEMBER}/skills/company-strategist/SKILL.md", f"{LIB_MEMBER}/skills/set-up-your-company-strategist/SKILL.md"):
             self.assertTrue(os.path.isfile(os.path.join(ROOT, p)), p)
 
+    def test_a_skill_that_handles_a_missing_file_outranks_the_stop_rule(self):
+        # cold test A1: a strict AI stopped at "stop if anything's missing" and never ran the setup skill
+        text = read(os.path.join(ROOT, "AGENTS.md"))
+        rule = [l for l in text.splitlines() if l.startswith("**A file or section that still says")][0]
+        self.assertIn("The one exception", rule)
+        self.assertIn("set-up-your-company-strategist", rule)
+        setup = read(os.path.join(ROOT, LIB_MEMBER, "skills/set-up-your-company-strategist/SKILL.md"))
+        self.assertIn("keep going", setup)
+
     def test_agents_md_fits_codex(self):
         # Codex stops reading project instructions at project_doc_max_bytes, 32 KiB by default
         self.assertLess(os.path.getsize(os.path.join(ROOT, "AGENTS.md")), 32 * 1024)

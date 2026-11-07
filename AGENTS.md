@@ -8,7 +8,7 @@ This is the owner's company, built as files. It starts nearly empty on purpose: 
 
 Before any writing, planning or building, read `business.md` and everything in `brand/`. That's the shared brain, and everything you make has to match it.
 
-**A file or section that still says `_Not filled in yet._` counts as missing.** So does a file that's only the template's own explanation with nothing filled in. Stop, name what's missing and the lesson that fills it (by the lesson's title, never a day number), and ask. Generic work written around a missing file is worse than a question.
+**A file or section that still says `_Not filled in yet._` counts as missing.** So does a file that's only the template's own explanation with nothing filled in. Stop, name what's missing and the lesson that fills it (by the lesson's title, never a day number), and ask. Generic work written around a missing file is worse than a question. **The one exception:** when the skill you're running says what to do with a missing or empty file (set-up-your-company-strategist and the brain-dump skills do, and so does any skill with its own "If ... still says `_Not filled in yet._`" line), follow the skill for that file instead of stopping. It was written knowing the file might be empty.
 
 ## The front door: your Company Strategist
 
