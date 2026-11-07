@@ -647,7 +647,7 @@ const MODULES = [
     match: ["/agent-teams", "/automations", "/executions"],
     children: [["/agent-teams", "Agent Teams"], ["/automations", "Automations"], ["/executions", "Executions"]] }
 ];
-function openSet() { try { return new Set(JSON.parse(store.get(OPEN_KEY) || "[]")); } catch { return new Set(); } }
+function sectionPrefs() { try { const v = JSON.parse(store.get(OPEN_KEY) || "{}"); return v && typeof v === "object" && !Array.isArray(v) ? v : {}; } catch { return {}; } }
 function railLink(path, label, ic, active, extraCls) {
   return h("a", { href: `#${path}`, class: cls("rail-link", extraCls), "aria-current": active ? "page" : null, title: label }, [
     h("span", { class: "rail-ic", html: lineIcon(ic) }), h("span", { class: "rail-label truncate" }, label)
@@ -669,14 +669,16 @@ function renderShell() {
         ...SETTINGS_SECTIONS.map((s) => railLink(`/settings/${s.slug}`, s.label, s.icon, (p[1] || "account") === s.slug))])
     ];
   } else {
-    const opened = openSet();
+    // A section header is a button: it opens and closes its pages. The section you're in starts open;
+    // what you open or close is remembered on this computer ("open" / "closed" per section).
+    const prefs = sectionPrefs();
     const modBlock = (m) => {
       const active = (m.match || [m.href]).some(under);
-      const open = active || opened.has(m.key);
-      const toggle = h("button", { type: "button", class: cls("rail-caret", open && "open"), "aria-expanded": open ? "true" : "false", "aria-label": `${open ? "Hide" : "Show"} ${m.label} pages`,
-        onclick: (e) => { e.preventDefault(); const s2 = openSet(); if (s2.has(m.key) || active) s2.delete(m.key); else s2.add(m.key); if (!active) store.set(OPEN_KEY, JSON.stringify([...s2])); renderShell(); }, html: lineIcon("chevronDown") });
+      const open = prefs[m.key] ? prefs[m.key] === "open" : active;
       return h("li", {}, [
-        h("div", { class: "rail-mod-row" }, [railLink(m.href, m.label, m.icon, active, "mod"), active ? null : toggle]),
+        h("button", { type: "button", class: cls("rail-link mod rail-mod-btn", active && "in-section"), "aria-expanded": open ? "true" : "false", title: m.label,
+          onclick: () => { const pr = sectionPrefs(); pr[m.key] = open ? "closed" : "open"; store.set(OPEN_KEY, JSON.stringify(pr)); if (store.get(RAIL_KEY) === "1" && !open) { /* icons-only: opening goes to the section */ location.hash = `#${m.href}`; } renderShell(); } }, [
+          h("span", { class: "rail-ic", html: lineIcon(m.icon) }), h("span", { class: "rail-label truncate" }, m.label), h("span", { class: cls("rail-caret", open && "open"), html: lineIcon("chevronDown"), "aria-hidden": "true" })]),
         open ? h("ul", { class: "rail-children" }, m.children.map(([href, label, ic, platform, exact]) => {
           const on = exact ? path === href : under(href);
           return h("li", {}, h("a", { href: `#${href}`, class: "rail-child", "aria-current": on ? "page" : null }, [
