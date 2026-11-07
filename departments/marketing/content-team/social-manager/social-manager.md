@@ -10,6 +10,6 @@ One person for all of social. Knows where you post, what each platform wants, an
 Start with one manager for everything. When a single platform earns a specialist, tell your AI "stand up my [platform] specialist" and it joins the Content Team as its own team member, working from your plan (the pattern is in `../platform-specialists.md`).
 
 ## Output
-Finished work goes in `output/` next to this file.
+Finished work goes in `output/` next to this file. Every post, one file each, goes in `posts/` next to this file (its README shows the header); the Command Center's Content pages read and edit those files.
 
 ## Memory

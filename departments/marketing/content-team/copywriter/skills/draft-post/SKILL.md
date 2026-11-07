@@ -68,4 +68,6 @@ Made-up businesses from the other lessons, shown so the owner sees the shape lan
 
 Give one post, not three options. Then, under a divider, one line on why it's shaped that way.
 
+Save it as its own file in `departments/marketing/content-team/social-manager/posts/`, named `<date>-<platform>-<a-few-words>.md`, with the header from the README in that folder (`platform`, `status: draft`, and the `date` and `time` from the plan if there is one; on Skool also `title` and `category`, on YouTube the `title`). The file holds the post exactly as it goes out, nothing else. That's what puts it on the platform's Review page in the Command Center, where the owner sees exactly how it looks there. A Threads or X chain splits its posts with a line that holds only `---`. Then run the sync command so the Command Center catches up.
+
 If they say it's off, ask what specifically, then, if the miss was about how it sounds, offer the rule to the Editor for `brand/voice.md` and add it only once the owner confirms, marked (owner confirmed). A correction that only lives in the chat helps once. A correction in the file helps every post after it.

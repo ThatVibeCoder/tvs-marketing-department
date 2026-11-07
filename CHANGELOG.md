@@ -10,6 +10,21 @@ The `VERSION` file at the root holds one number: the generation your repo was cl
 
 ---
 
+## Version 4, 2026-11-07
+
+**What's new.** The Command Center got a new look and a whole content system.
+
+- **A new look.** Dark glass by default, a warm light mode (the sun and moon button in the top bar), and a sidebar on the left: **Automations** (Agent Teams, Automations, Executions, the same pages as before) and **Content**, with **Settings** at the bottom.
+- **Content.** An Overview (posts out, what's waiting on you, every platform, when posts go out), a Calendar (month and list, your open posting times, drag a post to move it), Research (your outliers, topics, openers, competitors and swipes from `knowledge/`), and one page per platform: TikTok, Instagram, X, Threads, YouTube, Skool and LinkedIn. Each has an Overview, a Review queue (Approve, Reject, or the A and R keys) and its Calendar.
+- **An editor that shows exactly what it looks like.** Open any post and edit it next to a live preview drawn the way that platform draws it, on a phone or a desktop, with its character counter, Threads and X chains, the Skool title and category, and the YouTube title.
+- **Posts are files.** Each post is one file in `departments/marketing/content-team/social-manager/posts/`. The Content Team's draft-post, plan-the-week and post-content skills write and read them, and the Command Center edits them.
+- **Settings.** Account, Workspace, Brands (and your Skool categories), Connected Accounts (connect Blotato, Metricool or Ayrshare, or your own platform keys, with the steps for each), Posting Cadence and Developer. Keys go into `.env` only.
+- **Editing turns on with one command:** `python3 tools/serve.py`. Opened straight from the folder, everything still shows, read-only.
+
+**Who it's for.** Everyone who posts. Say "update my department to version 4" to take it. It adds `tools/serve.py`, the new `command-center/` files and the `posts/` folder, and changes three content skills; it doesn't touch `business.md`, `brand/` or anything you wrote.
+
+---
+
 ## Version 3, 2026-10-23
 
 **What's new.** Every piece of your department now has a spot waiting for it, every team can be summoned with one command, and you can see your whole company in the Command Center.

@@ -8,7 +8,7 @@ description: Read how the week's content performed and say it plainly, score eve
 The numbers only help if they change what gets made next week. This reads the week, keeps a running score on every opener and topic against the owner's OWN usual numbers (never someone else's), and hands back one thing to make more of.
 
 ## Read first
-- `departments/marketing/content-team/social-manager/output/post-log.md`: what actually went out, with the final wording and the time. Score the published version, not the draft.
+- `departments/marketing/content-team/social-manager/output/post-log.md`: what actually went out, with the final wording and the time. Score the published version, not the draft. The post files in `departments/marketing/content-team/social-manager/posts/` marked `status: posted` carry the same posts with their `link`, so use them to find each one.
 - `knowledge/hooks.md` (which openers are being tested) and `knowledge/topics.md` (which topics were used).
 - The last few `knowledge/reports/content-stats-*.md`, so this week is compared to the owner's own run, not to a guess.
 - `brand/channels.md` for which platforms count.

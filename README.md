@@ -6,7 +6,8 @@ This is your company, built as files instead of headcount. Open Claude Code or C
 
 1. Open Claude Code or Codex in this folder.
 2. Say "brain dump my business."
-3. Open `command-center/index.html` in your browser to see your whole company.
+3. Open `command-center/index.html` in your browser to see your whole company: your agent teams, and your content on every platform.
+4. When you want to approve and edit posts from there, run `python3 tools/serve.py` (Windows: `py tools/serve.py`) and open the link it prints.
 
 Works on Mac, Windows and Linux. On Windows, your AI may ask to install Python once (one command, two minutes), because that's what keeps your skills and your Command Center in sync. On a Mac it's already there.
 
@@ -27,7 +28,7 @@ departments/              the company itself
       <team-member>/<name>.md  a team member: its job, status, memory
         skills/<skill>/        one thing that team member knows how to do
 routines/                 work that runs on a schedule
-command-center/index.html  the picture of all of it
+command-center/index.html  the picture of all of it (python3 tools/serve.py turns editing on)
 AGENTS.md                 the rules every AI follows in this repo
 CHANGELOG.md              what's new since your copy was made
 ```

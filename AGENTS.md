@@ -25,6 +25,8 @@ Every piece of information has exactly one home. Find it in this table and add t
 | How you sound | `brand/voice.md` | Editor |
 | Your content mix and where you post | `brand/channels.md` | Social Manager |
 | Your content topics, and the 4 questions every post answers | `knowledge/topics.md` | Social Manager |
+| Every post: one file each, with its platform, status (draft, approved, rejected, posted), day and time | `departments/marketing/content-team/social-manager/posts/<date>-<platform>-<words>.md` (the README there shows the header) | Copywriter writes it, Social Manager dates and posts it; the owner approves and edits it in the Command Center |
+| Command Center settings: brands, handles, how posts go out, posting cadence (never a key) | `command-center/settings.json` | the owner, in the Command Center's Settings |
 | Your openers: the ones that won, and the ones to try next | `knowledge/hooks.md` | Copywriter (read-the-stats marks the winners) |
 | Banned words, formatting, never-do calls | `brand/guidelines.md` | whoever was corrected |
 | Colors, fonts, logos | `brand/colors.md`, `brand/typography.md`, `brand/assets/` | Designer |
@@ -123,7 +125,11 @@ Run it any time a team, team member, skill, workflow or routine is added, rename
 
 ## The Command Center
 
-`command-center/index.html` is the picture of this whole company: every team, its workflow drawn in phases, its team members and skills, and every routine. Open it straight from the folder, no server needed. It's rebuilt from the folders by `tools/sync.py`, so never edit `command-center/data/` by hand. If the owner asks to "see my team", "see my company" or "update the Command Center", run sync and open that file. (`org-chart.html` just forwards there.)
+`command-center/index.html` is the picture of this whole company. Its sidebar has two sections. **Automations**: every team, its workflow drawn in phases, its team members and skills, and every routine. **Content**: an Overview of what went out and what's waiting, a Calendar, Research (from `knowledge/`), and one page per platform (TikTok, Instagram, X, Threads, YouTube, Skool, LinkedIn) with its review queue and an editor that shows exactly how the post looks on that platform. **Settings** sits at the bottom left: account, workspace, brands, connected accounts, posting cadence and developer info.
+
+Open it straight from the folder, no server needed: everything shows, read-only. It's rebuilt from the folders by `tools/sync.py`, so never edit `command-center/data/` by hand. If the owner asks to "see my team", "see my company" or "update the Command Center", run sync and open that file. (`org-chart.html` just forwards there.)
+
+To make its buttons work (Save changes, Approve, Reject, Settings), run `python3 tools/serve.py` (Windows: `py tools/serve.py`) and open the link it prints. It runs on the owner's computer only, writes every change to the files above, keeps API keys in `.env` only, and runs sync after each change. It never posts anything: posting stays with the post-content skill.
 
 ## Adding something new
 

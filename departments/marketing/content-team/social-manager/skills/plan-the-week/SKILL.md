@@ -23,7 +23,7 @@ Tell the owner in your own plain words: "I'm going to pick this week's posts fro
 4. **Spread the platforms** the way Where You Show Up ranks them: most posts on platform 1. If last week's report names a winning opener or topic, give it one slot.
 5. **One goes out today.** The plan starts today, not next Monday: date the easiest post with today's date, and lay the rest over the next 6 days, so the week starts with a post sent, not a plan.
 
-Show the plan on one screen, one line per post: day · platform · topic · job · reader · walks away with. Their yes locks the plan.
+Show the plan on one screen, one line per post: day · platform · topic · job · reader · walks away with. Their yes locks the plan. The owner can also approve, move or reject the drafts later on each platform's Review page and the Calendar in the Command Center; read the post files again before Part 2, because those clicks change them.
 
 Three examples (made-up businesses from the other lessons; never copy them into the owner's files):
 - **Marcus, the roofer** (Facebook first, 2 hours): Mon (today) Facebook, "Repair or replace? The 40-photo check", give, homeowners · Wed Facebook, "A 600 dollar repair quoted as a new roof", prove · Fri Google Business Profile, "What a roof check looks like", give.
@@ -35,5 +35,6 @@ Three examples (made-up businesses from the other lessons; never copy them into 
 2. List what content exists and is approved. Never schedule drafts.
 3. Lay out the week: what goes where, which day. One post per platform per day at most, unless channels.md says otherwise. Count the mix against the funnel split in brand/channels.md before showing it, and flag any two invitation pieces landing back-to-back.
 4. Show the owner the week on one screen. Their yes locks it, and it's saved as `departments/marketing/content-team/social-manager/output/calendar-<YYYY-MM-DD>.md` (the Monday of that week).
+5. Put each post's day on its own file in `departments/marketing/content-team/social-manager/posts/`: set `date`, `time` and `status: approved` in its header (the README in that folder shows the shape). That's what puts it on the Command Center calendar. If the owner set a Posting Cadence in the Command Center's Settings (saved in `command-center/settings.json` under `cadence`), use those weekday times first. Then run the sync command.
 
 When a topic gets used, move its line in `knowledge/topics.md` from Topics to Used with the date and the platform, and add one dated line to that file's Updates.
