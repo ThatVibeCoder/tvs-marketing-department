@@ -134,6 +134,17 @@ class AgentsFrontDoorTest(unittest.TestCase):
         meta, _ = sync.frontmatter(read(os.path.join(ROOT, LIB_MEMBER, "skills/set-up-your-company-strategist/SKILL.md")))
         self.assertIn("set up my company strategist", meta["description"])
 
+    def test_the_price_has_one_home(self):
+        # cold test B8: AGENTS.md gave the price two homes (business.md "the money" and offer.md "the price")
+        rows = [l for l in read(os.path.join(ROOT, "AGENTS.md")).splitlines() if l.startswith("| What ")]
+        biz = [r for r in rows if "`business.md` |" in r][0]
+        offer = [r for r in rows if r.startswith("| What you sell, the price")][0]
+        self.assertIn("the price itself lives in `brand/offer.md`", biz)
+        self.assertIn("one home", offer)
+        self.assertIn("brand/offer.md", read(os.path.join(ROOT, "business.md")).split("## The Economics")[1].split("##")[0])
+        dump, _ = sync.frontmatter(read(os.path.join(ROOT, LIB_MEMBER, "skills/company-brain-dump/SKILL.md")))
+        self.assertIn("change my price", dump["description"])
+
     def test_agents_md_fits_codex(self):
         # Codex stops reading project instructions at project_doc_max_bytes, 32 KiB by default
         self.assertLess(os.path.getsize(os.path.join(ROOT, "AGENTS.md")), 32 * 1024)

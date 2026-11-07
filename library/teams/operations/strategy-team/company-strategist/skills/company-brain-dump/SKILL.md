@@ -1,6 +1,6 @@
 ---
 name: company-brain-dump
-description: Capture anything the owner just learned about their business and file it where it belongs. Use any time they want to talk something out, after a sales call, when they say they have something to add, or when they ask where something should go.
+description: Capture anything the owner just learned about their business and file it where it belongs. Use any time they want to talk something out, after a sales call, when they say they have something to add, when they change a fact ("change my price to $99", "I raised my price"), or when they ask where something should go.
 ---
 
 # Company Brain Dump
@@ -36,7 +36,7 @@ This is the routing map. Match what they said to the file, then write it in that
 | A doubt or objection a buyer raised | `brand/friction-points.md` | The doubt in their words, under the friction it matches, or under Extras. |
 | A phrase they always use, something that sounded wrong, how they talk | `brand/voice.md` | A rule that changes how a sentence gets written, under its matching heading, added only once they confirm. |
 | Something their industry gets wrong, a belief they hold quietly | `brand/contrarian-take.md` | Their exact phrasing, under Raw Material From the Brain Dump. Do not smooth it. |
-| What they sell, what it costs, what is included | `brand/offer.md` | Under its matching heading. |
+| What they sell, what it costs, what is included | `brand/offer.md` | Under its matching heading. The price lives only here, under What It Costs; `business.md` points at it. |
 | A correction, a banned word, a never-do-that-again | `brand/guidelines.md` | One line per rule, dated, in their words. |
 | Where they post, where customers actually come from | `brand/channels.md` | The channel, and an honest share of their real hours. |
 | A tool they pay for, a change in where the hours go | `business.md` (What You Run On, The Week) and `knowledge/business-audit.md` | Under the matching heading. |

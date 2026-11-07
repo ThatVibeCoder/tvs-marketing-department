@@ -57,7 +57,7 @@ These are made-up examples to show the level of detail. Never write them into bu
 ## Fill in business.md
 `business.md` already has every heading waiting, each with a `_Not filled in yet._` line. Write their answers under the matching heading, replacing that line, and keep the headings, the top note and the `## Updates` section. Fill the `## At a Glance` block too. Leave `What You Run On` for the walk-your-business skill, which fills it next. The headings, mapped to the questions above:
 - **What You Sell** (Q1): what they sell, and who actually buys it.
-- **The Economics** (Q2): first-sale price, whether customers come back and how many times, and monthly capacity before they're underwater.
+- **The Economics** (Q2): what a first sale comes to, whether customers come back and how many times, and monthly capacity before they're underwater. The price itself goes in `brand/offer.md` under What It Costs (replace its `_Not filled in yet._` line and add a dated line to its `## Updates`), and The Economics points there ("price: see `brand/offer.md`, What It Costs"), never copies it.
 - **How Customers Find You** (Q3): how the last three customers actually heard of them, in their own words, one at a time.
 - **The Week** (Q4): where the hours really go.
 - **What You Hate Doing** (Q5): the work they'd hand off first.

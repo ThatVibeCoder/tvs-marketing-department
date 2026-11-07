@@ -26,12 +26,12 @@ Every piece of information has exactly one home. Find it in this table and add t
 
 | What it is | Its one home | Kept by |
 |---|---|---|
-| What the business is: what you sell, the money, the week, the tools | `business.md` | Company Strategist |
+| What the business is: what you sell, the money (what a customer is worth, whether they come back, how many more you could take; the price itself lives in `brand/offer.md`, and `business.md` points there), the week, the tools | `business.md` | Company Strategist |
 | Who you serve | `brand/icp.md` (your main ICP, read first); another kind of buyer gets `brand/icps/<name>.md` in the same shape, used only when a job names it | ICP & Offer Owner |
 | Buyer personas, one file each | `brand/personas/<name>.md` | ICP & Offer Owner |
 | The five things that stop a buyer | `brand/friction-points.md` | ICP & Offer Owner |
 | What you believe that your industry gets wrong | `brand/contrarian-take.md` | ICP & Offer Owner |
-| What you sell, the price, and the headline | `brand/offer.md` (your main offer, the one the landing page reads); anything else you sell gets `brand/offers/<name>.md` in the same shape | ICP & Offer Owner (headline by the Page Builder) |
+| What you sell, the price (`brand/offer.md` What It Costs is the price's one home), and the headline | `brand/offer.md` (your main offer, the one the landing page reads); anything else you sell gets `brand/offers/<name>.md` in the same shape | ICP & Offer Owner (headline by the Page Builder) |
 | How you sound | `brand/voice.md` | Editor |
 | Your content mix and where you post | `brand/channels.md` | Social Manager |
 | Your content topics, and the 4 questions every post answers | `knowledge/topics.md` | Social Manager |

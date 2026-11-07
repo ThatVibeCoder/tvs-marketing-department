@@ -22,7 +22,7 @@ What you sell, and who actually buys it.
 _Not filled in yet._
 
 ## The Economics
-What a customer pays the first time, whether they come back and how often, and how many more you could take on this month before you'd be underwater.
+What a first sale comes to, whether they come back and how often, and how many more you could take on this month before you'd be underwater. The price itself has one home, `brand/offer.md` under What It Costs: point at it here, never copy it.
 
 _Not filled in yet._
 
