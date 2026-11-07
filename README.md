@@ -9,7 +9,7 @@ This is your company, built as files instead of headcount. Open your AI (Claude 
 3. Open `command-center/index.html` in your browser to see your whole company: your agent teams, and your content on every platform as those teams arrive.
 4. When you want to approve and edit posts from there, run `python3 tools/serve.py` (Windows: `py tools/serve.py`) and open the link it prints.
 
-Works on Mac, Windows and Linux. On Windows, your AI may ask to install Python once (one command, two minutes), because that's what keeps your skills and your Command Center in sync. On a Mac it's already there.
+Works on Mac, Windows and Linux. On Windows, your AI may give you one command to install Python once (two minutes), because that's what keeps your skills and your Command Center in sync. On a Mac it's already there.
 
 If you're an AI reading this, read `AGENTS.md` next. It says which files each job reads; nothing else needs reading up front.
 
