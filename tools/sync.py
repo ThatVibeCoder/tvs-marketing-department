@@ -12,6 +12,8 @@ and before every save. From the real folders, it:
      skill (/draft-post). The real files stay inside departments/.
   3. Rebuilds the Command Center data (command-center/data/) so the dashboard shows every team,
      workflow, team member, skill and routine.
+  4. If command-center/data/payments.json is there (the Payments Agent fills it), checks it and copies it to
+     payments.js so the Dashboard can show your revenue. Both files stay on this computer.
 
   python3 tools/sync.py           rebuild everything (Mac and Linux)
   py tools/sync.py                the same on Windows (or: python tools/sync.py)
@@ -669,6 +671,7 @@ DEFAULT_SETTINGS = {
     "cadence": [],
     "skoolCategories": ["General discussion", "Announcements", "Wins"],
     "web": {"siteDomain": ""},
+    "payments": {"provider": ""},
 }
 
 
@@ -751,6 +754,71 @@ def build_content():
             "postsDir": rel(POSTS_DIR)}
 
 
+# ---------- payments (command-center/data/payments.json, filled by the Payments Agent, never saved to GitHub) ----------
+PAYMENTS_FILE = os.path.join(CC_DATA, "payments.json")
+PAY_STATUS = ("paid", "refunded", "failed")
+INVOICE_STATUS = ("open", "paid", "void")
+DAY = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
+def real_day(s):
+    try:
+        return bool(DAY.match(s)) and bool(datetime.date.fromisoformat(s))
+    except ValueError:
+        return False
+
+
+def load_payments():
+    """The payments file, checked and cleaned: (data or None, problems). A bad row is skipped and named, never guessed."""
+    if not os.path.isfile(PAYMENTS_FILE):
+        return None, []
+    try:
+        raw = json.loads(read(PAYMENTS_FILE))
+    except ValueError as e:
+        return None, [f"command-center/data/payments.json isn't valid JSON ({e}). The Dashboard shows no revenue until it is."]
+    if not isinstance(raw, dict):
+        return None, ["command-center/data/payments.json should be one object (see command-center/data/README.md)."]
+    problems = []
+    money = lambda v: isinstance(v, (int, float)) and not isinstance(v, bool)  # noqa: E731
+
+    def rows(key, status_ok, date_key, need):
+        out = []
+        for i, r in enumerate(raw.get(key) or []):
+            bad = [f for f in need if f not in r] if isinstance(r, dict) else ["the whole row"]
+            if not bad and not money(r["amount"]):
+                bad = ["amount (a number, like 49.00)"]
+            if not bad and r.get(date_key) and not real_day(str(r[date_key])):
+                bad = [f"{date_key} (YYYY-MM-DD)"]
+            if not bad and str(r.get("status", "")) not in status_ok:
+                bad = ["status (one of " + ", ".join(status_ok) + ")"]
+            if bad:
+                problems.append(f"payments.json {key}[{i}] skipped: check {', '.join(bad)}.")
+                continue
+            out.append({k: r[k] for k in r if k in ("id", "date", "dueDate", "amount", "customer", "description", "status")})
+        return out
+    out = {"provider": str(raw.get("provider") or ""), "currency": str(raw.get("currency") or "USD").upper()[:3],
+           "capturedAt": raw.get("capturedAt"), "mrr": raw["mrr"] if money(raw.get("mrr")) else None,
+           "activeSubscriptions": raw.get("activeSubscriptions") if isinstance(raw.get("activeSubscriptions"), int) else None,
+           "payments": rows("payments", PAY_STATUS, "date", ("date", "amount", "status")),
+           "invoices": rows("invoices", INVOICE_STATUS, "dueDate", ("amount", "status"))}
+    return out, problems
+
+
+def sync_payments():
+    """Copy payments.json to payments.js for the page (or remove a payments.js left behind). Not part of --check:
+    both files are gitignored, so they never make a fresh copy look out of date."""
+    data, problems = load_payments()
+    js = os.path.join(CC_DATA, "payments.js")
+    for p in problems:
+        warnings.append(p)
+    if data is None:
+        if os.path.exists(js):
+            os.remove(js)  # no file (or a broken one): show the empty state, never yesterday's numbers
+        return
+    write(js, "// written by tools/sync.py from payments.json so the Dashboard opens straight from the folder. Stays on this computer.\n"
+              "window.CC_PAYMENTS = " + json.dumps(data, ensure_ascii=False) + ";\n")
+
+
 def sync_cc(data, check):
     stale = []
     ex = os.path.join(CC_DATA, "executions.json")
@@ -788,6 +856,8 @@ def main():
     stale = sync_shortcuts(shortcuts, check=True) + sync_agent_files(check=True) + sync_cc(data, check=True)
     if not check and not errors:
         stale = sync_shortcuts(shortcuts, check=False) + sync_agent_files(check=False) + sync_cc(data, check=False)
+    if not check:
+        sync_payments()
     n_t = sum(len(d["teams"]) for d in depts)
     n_m = sum(len(t["members"]) for d in depts for t in d["teams"])
     n_w = sum(len(t["workflows"]) for d in depts for t in d["teams"])

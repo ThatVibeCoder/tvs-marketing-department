@@ -59,6 +59,13 @@ KEYS = {
     "youtube": ["YOUTUBE_CLIENT_ID", "YOUTUBE_CLIENT_SECRET"],
     "tiktok": ["TIKTOK_CLIENT_KEY", "TIKTOK_CLIENT_SECRET"],
     "web": ["GA_SERVICE_ACCOUNT_KEY", "GA_PROPERTY_ID", "GSC_SITE"],
+    # payments: saved here for the Payments Agent; nothing in this repo calls a payment provider
+    "stripe": ["STRIPE_RESTRICTED_KEY"],
+    "square": ["SQUARE_ACCESS_TOKEN"],
+    "paypal": ["PAYPAL_CLIENT_ID", "PAYPAL_CLIENT_SECRET"],
+    "lemonsqueezy": ["LEMONSQUEEZY_API_KEY"],
+    "shopify": ["SHOPIFY_STORE_DOMAIN", "SHOPIFY_CLIENT_ID", "SHOPIFY_CLIENT_SECRET"],
+    "otherpay": ["PAYMENTS_API_KEY"],
 }
 ALL_KEYS = [k for v in KEYS.values() for k in v]
 EDITABLE = ["status", "date", "time", "title", "category", "account", "media", "media_type", "job",
@@ -203,7 +210,7 @@ def save_settings(data):
         if k in blob:
             raise ValueError("Keys never go in settings.json. Save them under Connected Accounts instead.")
     current = sync.load_settings()
-    for k in ("account", "workspace", "brands", "accounts", "poster", "cadence", "skoolCategories", "web"):
+    for k in ("account", "workspace", "brands", "accounts", "poster", "cadence", "skoolCategories", "web", "payments"):
         if k in data:
             current[k] = data[k]
     with open(sync.SETTINGS_FILE, "w", encoding="utf-8") as f:
@@ -241,6 +248,12 @@ def clean_key(name, value):
         raise ValueError("The GA4 property id is a number only, from Admin → Property details (not the G- measurement id).")
     if name == "GSC_SITE" and value and not re.match(r"^(sc-domain:[a-z0-9.-]+|https?://\S+/)$", value):
         raise ValueError("Write it the way Search Console shows it: sc-domain:yoursite.com, or https://www.yoursite.com/ with the last slash.")
+    if name == "STRIPE_RESTRICTED_KEY" and value and not value.startswith("rk_"):
+        if value.startswith("sk_"):
+            raise ValueError("That's a secret key, which can move money. Make a restricted key (it starts with rk_) with Read access only, and paste that.")
+        raise ValueError("A Stripe restricted key starts with rk_live_ (or rk_test_ for test mode).")
+    if name == "SHOPIFY_STORE_DOMAIN" and value and not re.match(r"^[a-z0-9][a-z0-9-]*\.myshopify\.com$", value):
+        raise ValueError("Write the store's myshopify address, like your-store.myshopify.com (no https://).")
     if re.search(r"[\r\n]", value):
         raise ValueError("A key is one line.")
     return value
@@ -252,6 +265,7 @@ def state():
     problems = list(dict.fromkeys(sync.errors))
     sync.errors.clear()
     return {"content": content, "settings": sync.load_settings(), "keys": key_presence(), "problems": problems, "web": web_snapshot(),
+            "payments": sync.load_payments()[0],
             "server": {"python": sys.version.split()[0], "root": os.path.basename(ROOT),
                        "envFile": os.path.isfile(ENV_FILE), "version": read_version()}}
 
