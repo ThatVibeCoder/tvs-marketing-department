@@ -1,6 +1,6 @@
 # How to work in this repo
 
-These are the rules for any AI working in this repo. Codex, Cursor and Grok Build read this file directly, Claude Code reads it through `CLAUDE.md` and Gemini CLI through `GEMINI.md`, so every agent follows the same rules. `tools/sync.py` writes those pointer files; this is the only place the rules are written.
+The rules for every AI in this repo. Codex, Cursor and Grok Build load this file on their own; Claude Code loads it through `CLAUDE.md` and Gemini CLI through `GEMINI.md`, two pointers `tools/sync.py` writes. The rules are written only here.
 
 This is the owner's company, built as files. It starts as a skeleton on purpose: `departments/` holds one team, the Dev Team (`departments/it-systems/dev-team/`), because it's the plumbing every other team needs: saving work to GitHub, keys, connecting tools, shipping pages. Every other team comes from the classroom. At the bottom of each lesson is a skill doc the owner gives their AI, and that doc builds one team (or adds to one) in `departments/` from the owner's own answers. Teams arrive one lesson at a time. Nothing gets made up in a random place.
 
