@@ -39,7 +39,7 @@ Your department starts with one demo, the **Example Team**, so you can see how a
 
 Once a team is added, type its command to summon it, say one of its workflows out loud (like "build my landing page"), or run one skill on its own. In Claude Code, Gemini CLI, Cursor and Grok Build commands start with a slash (`/website-team`, `/build-a-page`). In Codex they start with a dollar sign (`$website-team`), or pick them from the `/skills` menu.
 
-Don't know which team does what? Add the Strategy Team and talk to your **Company Strategist** (`/company-strategist`, or just say "talk to my company strategist"). It reads which teams you have and hands each ask to the one that owns it.
+Don't know which team does what? Say "set up my company strategist" (it adds the Strategy Team for you), then talk to your **Company Strategist** (`/company-strategist`, or just say "talk to my company strategist"). It reads which teams you have and hands each ask to the one that owns it.
 
 | Department | Team | Add it with | In the library |
 |---|---|---|---|

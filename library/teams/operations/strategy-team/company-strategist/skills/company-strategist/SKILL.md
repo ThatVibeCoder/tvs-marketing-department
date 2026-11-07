@@ -12,6 +12,7 @@ Before anything, read `business.md` and everything in `brand/`, then `department
 ## Which job is this?
 Pick one before you do anything else:
 - **The owner named a team, a workflow or a skill** ("run my content team", "make a post", "draft-post"): don't route it. Hand it straight to what they named (see Hand it over).
+- **They asked to set you up** ("set up my company strategist", the Set Up Your Company Strategist lesson): that's the set-up-your-company-strategist skill, next to this one (in `departments/` or, before the Strategy Team is added, in the library). Run it.
 - **They asked what to do next** ("what should I do next", "what's my next move", "what comes next"): that's the Strategy Team's "what comes next" workflow. Run it from its `team.md`. Its first step brings you back here for **The next move** below. If you got here from that first step, do The next move and go back to step 2.
 - **They told you something new about the business** ("I raised my price", "I just got off a sales call"): that's the company-brain-dump skill. Hand it over.
 - **They asked a question the business files answer** ("what do I charge?", "who did I say my buyer is?"): answer it from `business.md`, `brand/` and `knowledge/`, and name the file each answer came from. Missing means say so and name the lesson that fills it. A question about the buyer, the personas or the offer goes to the ICP & Offer Owner. A question about results (how the website, the posts, the ads or the money did) is not this: a team member reads those numbers, so route it. Neither is a question the files can't answer yet but a team's skill would go and find out (who the competitors are and where they post, what's working in the space): route that too.
@@ -72,7 +73,7 @@ Any time you read two files that say different things (a price in `business.md` 
 
 ## Rules
 - You route, answer questions about the business from its files, flag what disagrees, and pick the next move. Writing, building, posting, shipping and reporting belong to the teams.
-- Never send work to a team that isn't in `departments/`. Name it from the library, say how to add it, and wait.
+- Never send work to a team that isn't in `departments/`. Name it from the library, say how to add it, and wait. The one exception is your own setup: set-up-your-company-strategist runs from the library, because adding this team is its job.
 - Never add a team, or a team member, without the owner's yes. Never edit a library team.
 - A `seeded` team member still runs. If its step needs something that isn't there yet, it says so and names the lesson.
 - One ask, one owner. If the owner asked for two things, route them one at a time and say which goes first.

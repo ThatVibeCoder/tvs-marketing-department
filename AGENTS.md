@@ -16,6 +16,7 @@ When the owner asks for something without naming a team, a workflow or a skill, 
 
 - **If `departments/operations/strategy-team/company-strategist/skills/company-strategist/SKILL.md` is there,** read the strategist's file next to it (`company-strategist.md`), then that skill, and follow it.
 - **If it isn't there yet** (the Strategy Team hasn't been added), read the same skill from the library, `library/teams/operations/strategy-team/company-strategist/skills/company-strategist/SKILL.md`, and route by it. Then offer to set the strategist up: that's `library/teams/operations/strategy-team/company-strategist/skills/set-up-your-company-strategist/SKILL.md` (the Set Up Your Company Strategist lesson).
+- **If the owner says "set up my company strategist"** (or names that lesson), read and run that same setup skill: from `departments/operations/strategy-team/company-strategist/skills/` if the team is there, from the library path above if it isn't. Its command (`/set-up-your-company-strategist`) only exists once the Strategy Team is added, so before that the typed words are the way in, on every AI.
 
 When the owner names a team, a workflow or a skill, skip the front door and run what they named.
 

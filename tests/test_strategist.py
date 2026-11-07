@@ -107,6 +107,17 @@ class AgentsFrontDoorTest(unittest.TestCase):
         setup = read(os.path.join(ROOT, LIB_MEMBER, "skills/set-up-your-company-strategist/SKILL.md"))
         self.assertIn("keep going", setup)
 
+    def test_setup_runs_from_typed_words_before_the_team_is_added(self):
+        # cold test A4: /set-up-your-company-strategist doesn't exist until the team is added
+        text = read(os.path.join(ROOT, "AGENTS.md"))
+        self.assertIn('says "set up my company strategist"', text)
+        body = read(os.path.join(ROOT, LIB_MEMBER, "skills/company-strategist/SKILL.md"))
+        self.assertIn("set up my company strategist", body)
+        rule = [l for l in body.splitlines() if l.startswith("- Never send work to a team that isn't in")][0]
+        self.assertIn("set-up-your-company-strategist", rule)
+        meta, _ = sync.frontmatter(read(os.path.join(ROOT, LIB_MEMBER, "skills/set-up-your-company-strategist/SKILL.md")))
+        self.assertIn("set up my company strategist", meta["description"])
+
     def test_agents_md_fits_codex(self):
         # Codex stops reading project instructions at project_doc_max_bytes, 32 KiB by default
         self.assertLess(os.path.getsize(os.path.join(ROOT, "AGENTS.md")), 32 * 1024)
