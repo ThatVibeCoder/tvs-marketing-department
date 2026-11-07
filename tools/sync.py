@@ -664,7 +664,7 @@ POST_FIELDS = ["platform", "status", "date", "time", "title", "category", "accou
 VIDEO_EXT = (".mp4", ".mov", ".webm", ".m4v")
 DEFAULT_SETTINGS = {
     "account": {"name": "", "role": "Owner"},
-    "workspace": {"name": "Your Department", "timezone": "America/New_York"},
+    "workspace": {"name": "Your Department", "timezone": "America/New_York", "revenueTarget": 25000},
     "brands": [{"id": "your-brand", "name": "Your Brand", "handle": "@yourhandle", "active": True}],
     "accounts": {p: {"handle": "", "connectedVia": "manual"} for p in PLATFORMS},
     "poster": "manual",

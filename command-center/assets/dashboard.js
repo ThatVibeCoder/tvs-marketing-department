@@ -31,7 +31,7 @@ function kpiCard({ label, value, delta, caption, spark, footnote }) {
 }
 
 // The LED board: every cell dim, the lit skyline in the accent with a gray echo outline (as in the original).
-function dotMatrix(segments, xLabels, labelKind, fmtValue = (v) => Math.round(v).toLocaleString("en-US")) {
+function dotMatrix(segments, xLabels, labelKind, fmtValue = (v) => Math.round(v).toLocaleString("en-US"), yFloor = 0) {
   const W = 760, H = 260, PAD_L = 40, PAD_R = 8, PAD_TOP = 6, PAD_BOTTOM = 28, TARGET_COLS = 72;
   const niceTight = (v) => { if (v <= 4) return 4; const mag = 10 ** Math.floor(Math.log10(v)); for (const m of [1, 1.2, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]) if (v <= m * mag) return m * mag; return 10 * mag; };
   const real = segments.filter((s) => !s.decorative);
@@ -40,7 +40,9 @@ function dotMatrix(segments, xLabels, labelKind, fmtValue = (v) => Math.round(v)
   const exp = segments.map((s) => ({ ...s, values: expand(s.values) }));
   const expTotals = Array.from({ length: cols }, (_, i) => exp.reduce((s, g) => s + (g.values[i] || 0), 0));
   const dayTotals = xLabels.map((_, i) => real.reduce((s, g) => s + (g.values[i] || 0), 0));
-  const yMax = niceTight(Math.max(1, ...dayTotals) * 1.08);
+  // A floor (the revenue target) fixes the top of the scale so the bars sit low against the board, as in the
+  // Command Center; real data above it stretches the scale.
+  const yMax = Math.max(niceTight(Math.max(1, ...dayTotals) * 1.08), yFloor || 0);
   const plotW = W - PAD_L - PAD_R, plotH = H - PAD_TOP - PAD_BOTTOM, colW = plotW / cols;
   const ROWS = Math.max(6, Math.floor(plotH / colW)), cellH = plotH / ROWS, cell = Math.max(1.2, colW * 0.78), baseY = PAD_TOP + plotH;
   const filled = (i) => {
@@ -48,7 +50,7 @@ function dotMatrix(segments, xLabels, labelKind, fmtValue = (v) => Math.round(v)
     exp.forEach((g, s) => { const v = g.values[i] || 0, outline = s === exp.length - 1 && exp.length > 1; let rows = Math.round((v / yMax) * ROWS * (outline ? 3 : 1)); if (v > 0 && rows === 0) rows = 1; rows = Math.min(rows, ROWS - used); if (rows > 0) out.push({ color: g.color, rows, s }); used += rows; });
     return out;
   };
-  const ticks = [0, ...(yMax % 4 === 0 ? [0.25, 0.5, 0.75, 1] : [0.5, 1])];
+  const ticks = [0, ...(yFloor && yMax % 5 === 0 ? [0.2, 0.4, 0.6, 0.8, 1] : yMax % 4 === 0 ? [0.25, 0.5, 0.75, 1] : [0.5, 1])]; // a floored scale gets fifths ($5k steps at $25k)
   let svg = "";
   for (const f of ticks) {
     const y = PAD_TOP + plotH * (1 - f);
@@ -89,6 +91,13 @@ function moneyFmt(currency, compact) {
   catch { f = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }); }
   return (v) => f.format(v || 0);
 }
+// Axis ticks the way the Command Center writes them: $0, $5k, $12.5k.
+function tickFmt(currency) {
+  const whole = moneyFmt(currency);
+  return (v) => { if (v < 1000) return whole(v); const k = v / 1000; return whole(0).replace(/0(\.0+)?$/, "") + (Number.isInteger(k) ? k : k.toFixed(1)) + "k"; };
+}
+// The revenue target sets the chart's scale: Settings → Workspace, $25,000 unless you change it.
+const revenueTarget = () => { const t = Number((settings().workspace || {}).revenueTarget); return Number.isFinite(t) && t > 0 ? t : 25000; };
 function revenueSummary(pay, todayKey, period) {
   const paid = (pay.payments || []).filter((p) => p.status === "paid"); // refunded and failed never count as revenue
   const onDay = (k) => paid.filter((p) => p.date === k).reduce((s, p) => s + p.amount, 0);
@@ -123,7 +132,7 @@ function renderDashboard() {
   const pct = (cur, prev) => (prev > 0 ? ((cur - prev) / prev) * 100 : null);
   const snap = webSnap(), w30 = snap && snap.ranges["30d"];
   const r = pay ? revenueSummary(pay, now.key, period) : null;
-  const money = moneyFmt(pay && pay.currency), tick = moneyFmt(pay && pay.currency, true);
+  const money = moneyFmt(pay && pay.currency), tick = tickFmt(pay && pay.currency);
   const provider = pay && pay.provider ? (PAYMENT_PROVIDERS.find((p) => p.id === pay.provider) || { name: titleCase(pay.provider) }).name : "payments.json";
   const stamp = pay && pay.capturedAt ? `${provider} · ${new Date(pay.capturedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: tzName() })}` : pay ? provider : null;
   const trend = r ? r.trend : { keys: Array.from({ length: period === "weekly" ? 7 : 30 }, (_, i) => addDays(now.key, i - (period === "weekly" ? 6 : 29))), values: [], labelKind: "day" };
@@ -147,10 +156,10 @@ function renderDashboard() {
         h("div", { class: "dash-strip" }, h("div", { class: "dash-strip-title" }, ["Sales Trend", h("span", { html: '<svg viewBox="0 0 14 14" width="13" height="13" aria-hidden="true"><circle cx="7" cy="7" r="7" fill="currentColor" opacity="0.4"/><path d="M7 3.8v5.4M4.7 7 7 9.4 9.3 7" style="stroke:var(--color-surface-solid)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' })])),
         h("div", { class: "dash-bar" }, [
           h("div", { class: "row gap25" }, [h("span", { class: "dash-hero-l" }, "Total Revenue :"), h("span", { class: "dash-hero-v" }, r ? money(vals.reduce((s, v) => s + v, 0)) : "—")]),
-          h("div", { class: "row gap3" }, [h("span", { class: "row gap15 tiny-sub dash-legend" }, [h("span", { class: "web-dot sm" }), "Revenue"]),
+          h("div", { class: "row gap3" }, [h("span", { class: "row gap15 tiny-sub dash-legend" }, [h("span", { class: "web-dot sm" }), "Revenue"]), h("a", { href: "#/settings/workspace", class: "tiny-sub dash-legend", title: "Change it in Settings → Workspace" }, `Target ${tick(revenueTarget())}`),
             h("nav", { class: "dash-periods", "aria-label": "Chart period" }, TREND_PERIODS.map(([k, l]) => h("a", { href: `#/dashboard${k === "monthly" ? "" : `?trend=${k}`}`, "aria-current": k === period ? "page" : null }, l)))])
         ]),
-        h("div", { class: "dash-chart" }, [h("div", { class: "rel" }, [dotMatrix(segments, trend.keys, trend.labelKind, (v, axis) => (!r && axis ? "" : axis ? tick(v) : money(v))),
+        h("div", { class: "dash-chart" }, [h("div", { class: "rel" }, [dotMatrix(segments, trend.keys, trend.labelKind, (v, axis) => (axis ? tick(v) : money(v)), revenueTarget()),
           !r ? h("div", { class: "dash-nodata col" }, [h("span", {}, "No revenue yet. Your payments show up here once they're connected."), connect("mt2")])
             : vals.every((v) => v === 0) ? h("p", { class: "dash-nodata" }, "No payments in this range.") : null]),
           h("p", { class: "kpi-note mt2" }, r ? `Paid payments in command-center/data/payments.json${stamp ? ` (${stamp})` : ""}. Refunds and failed payments don't count.` : "Read from command-center/data/payments.json, which the Payments Agent fills. It stays on this computer.")])

@@ -107,12 +107,15 @@ function renderWorkspaceSettings() {
   const w = settings().workspace || {};
   const nameIn = fieldInput({ value: w.name || "", placeholder: "Your Department", maxlength: "120" });
   const tz = w.timezone || "America/New_York";
+  const targetIn = fieldInput({ type: "number", min: "1", step: "1000", value: String(w.revenueTarget || 25000), "aria-label": "Revenue target" });
   const tzSel = h("select", { class: "field", disabled: state.server ? null : "" }, [...new Set([tz, ...COMMON_TZ])].map((z) => { const o = h("option", { value: z }, z); if (z === tz) o.selected = true; return o; }));
-  return settingsPane("Workspace", "The department as a whole: its name and the timezone every post time is in.", [
+  return settingsPane("Workspace", "The department as a whole: its name, the timezone every post time is in, and your revenue target.", [
     settingsSection("workspace", null, null, [
       h("div", { class: "form-grid" }, [h("label", { class: "pf-field" }, [h("span", { class: "pf-label" }, "Workspace name"), nameIn]), h("label", { class: "pf-field" }, [h("span", { class: "pf-label" }, "Timezone"), tzSel])]),
       h("p", { class: "set-hint mt2" }, "Every date and time in your post files, the calendar and your posting cadence is in this timezone."),
-      h("div", { class: "mt3" }, saveBtn(() => saveSettings({ workspace: { ...w, name: nameIn.value.trim() || "Your Department", timezone: tzSel.value } }))),
+      h("div", { class: "form-grid mt3" }, [h("label", { class: "pf-field" }, [h("span", { class: "pf-label" }, "Revenue target"), targetIn])]),
+      h("p", { class: "set-hint mt2" }, "The top of the Dashboard's Total Revenue chart, so your bars show against the goal instead of filling the box. It stretches above it the day you pass it."),
+      h("div", { class: "mt3" }, saveBtn(() => { const t = Math.round(Number(targetIn.value)); if (!(t > 0)) return toast("The revenue target is a number above 0, like 25000."); saveSettings({ workspace: { ...w, name: nameIn.value.trim() || "Your Department", timezone: tzSel.value, revenueTarget: t } }); })),
       h("div", { class: "mt4" }, [settingRow("Agent teams", `${state.teams.length}`, "Rebuilt from departments/ by tools/sync.py."), settingRow("Posts", `${posts().length} files`, POSTS_HOME + "/")])
     ])
   ]);

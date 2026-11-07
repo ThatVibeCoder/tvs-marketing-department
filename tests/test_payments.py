@@ -8,6 +8,7 @@ when Chrome isn't installed.
 """
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -154,6 +155,32 @@ class DashboardDraws(PaymentsCopy):
         self.assertIn("1 past due", html)
         self.assertNotIn("Connect your payments in Settings → Payments", html)
         self.assertNotIn("Connect in Settings → Payments", html)
+
+
+    def axis(self, html):
+        return re.findall(r'text-anchor="end"[^>]*>(\$[0-9.]+k?)</text>', html)
+
+    def test_revenue_target_sets_the_scale(self):
+        import datetime
+        self.write_sample(datetime.date.today().isoformat())
+        self.sync()
+        html = self.dom()
+        self.assertEqual(self.axis(html), ["$0", "$5k", "$10k", "$15k", "$20k", "$25k"])  # $25,000 by default, in fifths
+        self.assertIn("Target $25k", html)
+
+    def test_revenue_above_the_target_stretches_it_and_the_target_is_a_setting(self):
+        import datetime
+        text = json.dumps(SAMPLE).replace("{today}", datetime.date.today().isoformat()).replace("1234.5", "31000")
+        with open(os.path.join(self.data, "payments.json"), "w", encoding="utf-8") as f:
+            f.write(text)
+        self.sync()
+        self.assertEqual(self.axis(self.dom())[-1], "$40k")                 # past the target, the scale grows
+        with open(os.path.join(self.repo, "command-center", "settings.json"), "w", encoding="utf-8") as f:
+            json.dump({"workspace": {"revenueTarget": 50000}}, f)
+        self.sync()
+        html = self.dom()
+        self.assertEqual(self.axis(html)[-1], "$50k")
+        self.assertIn("Target $50k", html)
 
 
 if __name__ == "__main__":
