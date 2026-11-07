@@ -602,11 +602,16 @@ function renderShell() {
     const current = MODULES.find((m) => (m.match || [m.href]).some(under));
     if (current && current.key !== lastSection) { prefs[current.key] = "open"; for (const o of MODULES) if (o.key !== current.key) prefs[o.key] = "closed"; store.set(OPEN_KEY, JSON.stringify(prefs)); } // entering a section opens it
     lastSection = current ? current.key : null;
+    const isOpen = (m) => (prefs[m.key] ? prefs[m.key] === "open" : (m.match || [m.href]).some(under));
+    // The pill follows the section that's open (one at a time). With every section closed, or icons only,
+    // it marks the section of the page you're on.
+    const openMod = collapsed ? null : MODULES.find(isOpen);
     const modBlock = (m) => {
       const active = (m.match || [m.href]).some(under);
-      const open = prefs[m.key] ? prefs[m.key] === "open" : active;
+      const open = isOpen(m);
+      const lit = openMod ? openMod.key === m.key : active;
       return h("li", {}, [
-        h("button", { type: "button", class: cls("rail-link mod rail-mod-btn", active && "in-section"), "aria-expanded": open ? "true" : "false", title: m.label,
+        h("button", { type: "button", class: cls("rail-link mod rail-mod-btn", lit && "in-section"), "aria-current": active ? "true" : null, "aria-expanded": open ? "true" : "false", title: m.label,
           onclick: () => { const pr = sectionPrefs(); pr[m.key] = open ? "closed" : "open"; if (!open) for (const o of MODULES) if (o.key !== m.key) pr[o.key] = "closed"; /* accordion: one open at a time */ store.set(OPEN_KEY, JSON.stringify(pr)); if (store.get(RAIL_KEY) === "1" && !open) { /* icons-only: opening goes to the section */ location.hash = `#${m.href}`; } renderShell(); } }, [
           h("span", { class: "rail-ic", html: lineIcon(m.icon) }), h("span", { class: "rail-label truncate" }, m.label), h("span", { class: cls("rail-caret", open && "open"), html: lineIcon("chevronDown"), "aria-hidden": "true" })]),
         open ? h("ul", { class: "rail-children" }, m.children.map(([href, label, ic, platform, exact]) => {
