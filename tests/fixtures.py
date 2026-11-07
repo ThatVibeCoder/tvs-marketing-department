@@ -8,7 +8,7 @@ import os
 import subprocess
 import sys
 
-READ_LINE = "Before any job, read only the files the skill you're running names, never all of `brand/`. Stay inside this file's edges."
+READ_LINE = "Each skill names the files it reads. Read those, then this file, and stay inside this file's edges."
 BASE = "departments/marketing/content-team"
 
 FILES = {

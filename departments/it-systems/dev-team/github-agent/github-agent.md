@@ -3,7 +3,7 @@
 **Status:** live
 **Team:** Dev Team
 
-Before any job, read only the files the skill you're running names, never all of `brand/`. Stay inside this file's edges.
+Each skill names the files it reads. Read those, then this file, and stay inside this file's edges.
 
 Keeps your work saved and your history safe. Every save is a point you can come back to. That's the undo rule: a bad edit to a file here is a step backwards, not a loss. What it does not undo is anything that already left your machine, like a page a stranger already visited or an email that already sent.
 

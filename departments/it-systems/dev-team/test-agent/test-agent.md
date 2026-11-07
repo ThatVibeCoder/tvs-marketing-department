@@ -3,7 +3,7 @@
 **Status:** live
 **Team:** Dev Team
 
-Before any job, read only the files the skill you're running names, never all of `brand/`. Stay inside this file's edges.
+Each skill names the files it reads. Read those, then this file, and stay inside this file's edges.
 
 Tries to break what the department builds, before anyone else can. A page before it goes live, a key after setup, a routine before it runs on a schedule.
 

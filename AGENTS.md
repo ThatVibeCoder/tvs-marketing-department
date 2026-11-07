@@ -84,7 +84,7 @@ departments/<department>/                 a department (marketing, sales, it-sys
   4. **Page Builder** hands it to the next team, with no skill named.
   ```
   Phases are `###` headings. A step is numbered `1. **Team member** · skill-name · what happens` when it runs a skill, or `1. **Team member** what happens` when that member does it without a skill. `[you approve]` marks a stop where the owner has to say yes. `Also say:` lists other ways the owner might ask for it.
-- **A team member's file** starts with `**Status:** seeded` (its folder is waiting; a lesson sets it up) or `**Status:** live` (set up and working), then `**Team:**`, then this exact line: "Before any job, read only the files the skill you're running names, never all of `brand/`. Stay inside this file's edges." When asked to act as a team member, read its file first and stay inside its edges.
+- **A team member's file** starts with `**Status:** seeded` (its folder is waiting; a lesson sets it up) or `**Status:** live` (set up and working), then `**Team:**`, then this exact line: "Each skill names the files it reads. Read those, then this file, and stay inside this file's edges." When asked to act as a team member, read its file first and stay inside its edges.
 - **A skill** is a folder inside the team member that owns it, with one `SKILL.md` that starts with `name:` (the same as its folder) and `description:` (what it does and the words that should trigger it). Skill names are unique across the whole repo.
 
 ## Commands: every team and every skill can be summoned

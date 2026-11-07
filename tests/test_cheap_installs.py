@@ -66,6 +66,24 @@ class OldReadLineTest(unittest.TestCase):
                            encoding="utf-8")
         return r.returncode, r.stdout + r.stderr
 
+    def test_the_drive_docs_line_passes_with_no_fix(self):
+        # the classroom's Drive skill docs ship this exact sentence in every team member file they write
+        self.assertEqual(sync.READ_LINE, "Each skill names the files it reads. Read those, then this file, and stay "
+                                         "inside this file's edges.")
+        member = os.path.join(self.repo, "departments/it-systems/dev-team/drive-test/drive-test.md")
+        os.makedirs(os.path.dirname(member))
+        with open(member, "w", encoding="utf-8") as f:
+            f.write(f"# Drive Test\n\n**Status:** live\n**Team:** Dev Team\n\n{sync.READ_LINE}\n\nA member a Drive doc wrote.\n")
+        team = os.path.join(self.repo, "departments/it-systems/dev-team/team.md")
+        text = read(team).replace("## Members\n", "## Members\n- **Drive Test** (`drive-test/`): a member a Drive doc wrote.\n", 1)
+        with open(team, "w", encoding="utf-8") as f:
+            f.write(text)
+        code, out = self.run_sync()
+        self.assertEqual(code, 0, out)
+        self.assertNotIn("FIX:", out)
+        code, out = self.run_sync("--check")
+        self.assertEqual(code, 0, out)
+
     def test_an_old_read_line_is_rewritten_not_a_fix(self):
         p = os.path.join(self.repo, "departments/it-systems/dev-team/planner/planner.md")
         text = read(p).replace(sync.READ_LINE, sync.OLD_READ_LINES[0])
