@@ -43,6 +43,10 @@ const postMedia = (p) => (p.media ? { url: mediaUrl(p), type: p.mediaType === "v
 function cls(...a) { return a.filter(Boolean).join(" "); }
 function svgIcon(name, c = "") { return h("span", { class: cls("ic-wrap", c), html: lineIcon(name) }); }
 function markIcon(platform, c = "") { return h("span", { class: cls("ic-wrap", c), html: platformMark(platform) }); }
+function contentTeamNote() {
+  if ((state.teams || []).some((t) => t.id === "content-team")) return null;
+  return h("p", { class: "ro-note" }, ["Your posts come from the Content Team, and it isn't in your department yet. Ask your AI: ", h("code", {}, "add the content team"), " (or run ", h("code", {}, "python3 tools/add_team.py content-team"), "). Until then these pages stay empty."]);
+}
 function readOnlyNote() {
   return state.server ? null : h("p", { class: "ro-note" }, ["Read-only view. To approve, edit or schedule from here, run ", h("code", {}, "python3 tools/serve.py"), " (Windows: ", h("code", {}, "py tools/serve.py"), ") and open the link it prints."]);
 }
@@ -269,7 +273,7 @@ function renderContentOverview() {
         h("button", { type: "button", class: "btn-accent-outline", onclick: () => openComposer({ create: { platform: account || "instagram", date: now.key } }) }, [svgIcon("plus", "accent"), "New post"])
       ])
     ]),
-    readOnlyNote(),
+    contentTeamNote() || readOnlyNote(),
     h("div", { class: "ov-stack" }, [
       h("div", { class: "ov-grid-top" }, [
         kpiSegments(kpis),
@@ -325,7 +329,7 @@ function platformHeader(platform, active) {
 }
 function renderPlatform(platform, tab) {
   const body = tab === "review" ? renderReview(platform) : tab === "calendar" ? renderCalendar(platform) : renderPlatformOverview(platform);
-  return h("div", { class: "dash-container content-page" }, [platformHeader(platform, tab || "overview"), readOnlyNote(), body]);
+  return h("div", { class: "dash-container content-page" }, [platformHeader(platform, tab || "overview"), contentTeamNote() || readOnlyNote(), body]);
 }
 function sectionHead(title, href, label) { return h("div", { class: "sec-head" }, [h("h2", { class: "overline" }, title), href ? h("a", { href, class: "sec-link" }, `${label} →`) : null]); }
 function renderPlatformOverview(platform) {
@@ -516,7 +520,7 @@ function calPill(p) {
 function renderContentCalendar() {
   return h("div", {}, [
     h("div", { class: "dash-gutter pt8" }, [h("h1", { class: "h1-2xl" }, "Calendar"), h("p", { class: "lede" }, "Every platform's posts on their days, and your open posting times. Click a day to write one, drag a post to move it.")]),
-    h("div", { class: "dash-container" }, [readOnlyNote(), renderCalendar(null)])
+    h("div", { class: "dash-container" }, [contentTeamNote() || readOnlyNote(), renderCalendar(null)])
   ]);
 }
 
