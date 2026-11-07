@@ -14,6 +14,9 @@ Not tricks. Just making the page legible to machines that send strangers.
 4. **Name the images** in plain words (what the image shows), so they're findable and the page still makes sense if they fail.
 5. **One page, one topic.** A page about two things ranks for neither. Split it instead.
 
+## After it ships
+Once the owner's Search Console is connected (Web → Settings in the Command Center), the Web → Search page shows what people searched to find the page, how often it showed and where it ranked. Read it a few weeks after a page ships, never the first day: Search Console runs about three days behind and new pages take time to show up.
+
 ## Rules
 - Write for the person, tune for the machine, in that order. A page shaped for robots reads wrong to humans and loses both.
 - Never stuff words in unnaturally. If it reads like SEO, it's bad SEO.

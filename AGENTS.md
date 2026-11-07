@@ -26,6 +26,7 @@ Every piece of information has exactly one home. Find it in this table and add t
 | Your content mix and where you post | `brand/channels.md` | Social Manager |
 | Your content topics, and the 4 questions every post answers | `knowledge/topics.md` | Social Manager |
 | Every post: one file each, with its platform, status (draft, approved, rejected, posted), day and time | `departments/marketing/content-team/social-manager/posts/<date>-<platform>-<words>.md` (the README there shows the header) | Copywriter writes it, Social Manager dates and posts it; the owner approves and edits it in the Command Center |
+| Your website's numbers from Google Analytics and Search Console (stays on your computer, skipped by every save) | `command-center/data/web.json`, written by `tools/pull_web.py` | Traffic Agent |
 | Command Center settings: brands, handles, how posts go out, posting cadence (never a key) | `command-center/settings.json` | the owner, in the Command Center's Settings |
 | Your openers: the ones that won, and the ones to try next | `knowledge/hooks.md` | Copywriter (read-the-stats marks the winners) |
 | Banned words, formatting, never-do calls | `brand/guidelines.md` | whoever was corrected |
@@ -125,7 +126,7 @@ Run it any time a team, team member, skill, workflow or routine is added, rename
 
 ## The Command Center
 
-`command-center/index.html` is the picture of this whole company. Its sidebar has two sections. **Automations**: every team, its workflow drawn in phases, its team members and skills, and every routine. **Content**: an Overview of what went out and what's waiting, a Calendar, Research (from `knowledge/`), and one page per platform (TikTok, Instagram, X, Threads, YouTube, Skool, LinkedIn) with its review queue and an editor that shows exactly how the post looks on that platform. **Settings** sits at the bottom left: account, workspace, brands, connected accounts, posting cadence and developer info.
+`command-center/index.html` is the picture of this whole company. Its sidebar has three sections. **Automations**: every team, its workflow drawn in phases, its team members and skills, and every routine. **Content**: an Overview of what went out and what's waiting, a Calendar, Research (from `knowledge/`), and one page per platform (TikTok, Instagram, X, Threads, YouTube, Skool, LinkedIn) with its review queue and an editor that shows exactly how the post looks on that platform. **Web**: your website's visitors, traffic sources, pages, searches and a visitor map, from Google Analytics and Search Console (connect them once in Web → Settings, then `python3 tools/pull_web.py` or its Pull now button brings the numbers in, read-only). **Settings** sits at the bottom left: account, workspace, brands, connected accounts, posting cadence and developer info.
 
 Open it straight from the folder, no server needed: everything shows, read-only. It's rebuilt from the folders by `tools/sync.py`, so never edit `command-center/data/` by hand. If the owner asks to "see my team", "see my company" or "update the Command Center", run sync and open that file. (`org-chart.html` just forwards there.)
 
