@@ -8,5 +8,5 @@ description: "Look for leaked keys and anything exposed in the files that change
 
 This skill belongs to the Security Checker on the Dev Team.
 
-1. Read `departments/it-systems/dev-team/security-checker/security-checker.md` first and act as that team member, inside its edges.
-2. Read `departments/it-systems/dev-team/security-checker/skills/security-sweep/SKILL.md` and follow it exactly. That file is the real skill.
+1. Read `departments/it-systems/dev-team/security-checker/security-checker.md` and act as that team member, inside its edges.
+2. Read `departments/it-systems/dev-team/security-checker/skills/security-sweep/SKILL.md` once and follow it exactly. This shortcut is the only pointer to it.

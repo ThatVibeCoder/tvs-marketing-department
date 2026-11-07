@@ -8,5 +8,5 @@ description: "Turn a build request into a one-page plan for the owner's yes. Use
 
 This skill belongs to the Planner on the Dev Team.
 
-1. Read `departments/it-systems/dev-team/planner/planner.md` first and act as that team member, inside its edges.
-2. Read `departments/it-systems/dev-team/planner/skills/one-plan/SKILL.md` and follow it exactly. That file is the real skill.
+1. Read `departments/it-systems/dev-team/planner/planner.md` and act as that team member, inside its edges.
+2. Read `departments/it-systems/dev-team/planner/skills/one-plan/SKILL.md` once and follow it exactly. This shortcut is the only pointer to it.

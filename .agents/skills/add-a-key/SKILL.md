@@ -8,5 +8,5 @@ description: "Put a new API key in the .env file and prove the save skips it, th
 
 This skill belongs to the Keys Agent on the Dev Team.
 
-1. Read `departments/it-systems/dev-team/keys-agent/keys-agent.md` first and act as that team member, inside its edges.
-2. Read `departments/it-systems/dev-team/keys-agent/skills/add-a-key/SKILL.md` and follow it exactly. That file is the real skill.
+1. Read `departments/it-systems/dev-team/keys-agent/keys-agent.md` and act as that team member, inside its edges.
+2. Read `departments/it-systems/dev-team/keys-agent/skills/add-a-key/SKILL.md` once and follow it exactly. This shortcut is the only pointer to it.

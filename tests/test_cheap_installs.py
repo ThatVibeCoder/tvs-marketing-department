@@ -74,6 +74,24 @@ class OneJobPerSkillTest(unittest.TestCase):
         self.assertIn("pre-ship-check", desc("security-checker", "harden-the-basics"))
 
 
+class OnePointerTest(unittest.TestCase):
+    """The shortcut is the one pointer to a skill's SKILL.md; command files and member files don't repeat it."""
+
+    def test_each_command_names_the_skill_file_once(self):
+        real = "departments/it-systems/dev-team/github-agent/skills/save-work/SKILL.md"
+        for rel_path in (".claude/skills/save-work/SKILL.md", ".agents/skills/save-work/SKILL.md"):
+            body = read(os.path.join(ROOT, rel_path)).split("-->", 1)[1]  # after the generated-by comment
+            self.assertEqual(body.count(real), 1, rel_path)
+        for rel_path in (".gemini/commands/save-work.toml", ".cursor/commands/save-work.md"):
+            text = read(os.path.join(ROOT, rel_path))
+            self.assertEqual(text.count(real), 1, rel_path)
+            self.assertNotIn("Follow AGENTS.md", text, rel_path)
+
+    def test_no_shipped_member_file_points_at_its_own_skill_file(self):
+        for p in glob.glob(os.path.join(ROOT, "departments", "*", "*", "*", "*.md")):
+            self.assertNotRegex(read(p), r"skills/[a-z0-9-]+/SKILL\.md", os.path.relpath(p, ROOT))
+
+
 class OldReadLineTest(unittest.TestCase):
     """A lesson doc written before this change still writes the old line; sync swaps it instead of failing."""
 
@@ -107,6 +125,16 @@ class OldReadLineTest(unittest.TestCase):
         self.assertNotIn("FIX:", out)
         code, out = self.run_sync("--check")
         self.assertEqual(code, 0, out)
+
+    def test_a_member_file_that_repeats_its_skill_path_gets_a_note(self):
+        p = os.path.join(self.repo, "departments/it-systems/dev-team/planner/planner.md")
+        text = read(p) + "\nRun `departments/it-systems/dev-team/planner/skills/one-plan/SKILL.md` for every plan.\n"
+        with open(p, "w", encoding="utf-8") as f:
+            f.write(text)
+        code, out = self.run_sync()
+        self.assertEqual(code, 0, out)
+        self.assertIn("NOTE:", out)
+        self.assertIn("reads it twice", out)
 
     def test_an_old_read_line_is_rewritten_not_a_fix(self):
         p = os.path.join(self.repo, "departments/it-systems/dev-team/planner/planner.md")

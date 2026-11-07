@@ -166,7 +166,7 @@ If the owner tracks their team in Notion, mirror new team members there too. If 
 
 ## Saving
 
-The owner can save from Day 1: the Dev Team ships in the folder, and its GitHub Agent's save-work skill is the way. When the owner says "save my work" (or types `/save-work`, `$save-work` in Codex), read `departments/it-systems/dev-team/github-agent/github-agent.md`, then run `departments/it-systems/dev-team/github-agent/skills/save-work/SKILL.md`: it runs `python3 tools/sync.py --check`, then saves one checkpoint and sends it to GitHub. If the folder isn't connected to GitHub yet, run the GitHub Agent's set-up-repo first (part of "set up my code base"). Offer to save at the end of every session, and tell the owner in one line what changed.
+The owner can save from Day 1: the Dev Team ships in the folder, and its GitHub Agent's save-work skill is the way. When the owner says "save my work" (or types `/save-work`, `$save-work` in Codex), run the save-work shortcut (in an agent without shortcuts, `departments/it-systems/dev-team/github-agent/skills/save-work/SKILL.md`): it runs `python3 tools/sync.py --check`, then saves one checkpoint and sends it to GitHub. If the folder isn't connected to GitHub yet, run the GitHub Agent's set-up-repo first (part of "set up my code base"). Offer to save at the end of every session, and tell the owner in one line what changed.
 
 ## The classroom
 

@@ -8,5 +8,5 @@ description: "First-time setup: get the owner's department repo cloned, connecte
 
 This skill belongs to the GitHub Agent on the Dev Team.
 
-1. Read `departments/it-systems/dev-team/github-agent/github-agent.md` first and act as that team member, inside its edges.
-2. Read `departments/it-systems/dev-team/github-agent/skills/set-up-repo/SKILL.md` and follow it exactly. That file is the real skill.
+1. Read `departments/it-systems/dev-team/github-agent/github-agent.md` and act as that team member, inside its edges.
+2. Read `departments/it-systems/dev-team/github-agent/skills/set-up-repo/SKILL.md` once and follow it exactly. This shortcut is the only pointer to it.

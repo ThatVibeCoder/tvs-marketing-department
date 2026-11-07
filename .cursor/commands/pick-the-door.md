@@ -3,7 +3,5 @@
 
 This skill belongs to the API Manager on the Dev Team.
 
-1. Read `departments/it-systems/dev-team/api-manager/api-manager.md` first and act as that team member, inside its edges.
-2. Read `departments/it-systems/dev-team/api-manager/skills/pick-the-door/SKILL.md` and follow it exactly. That file is the real skill.
-
-The real file is `departments/it-systems/dev-team/api-manager/skills/pick-the-door/SKILL.md`. Follow AGENTS.md.
+1. Read `departments/it-systems/dev-team/api-manager/api-manager.md` and act as that team member, inside its edges.
+2. Read `departments/it-systems/dev-team/api-manager/skills/pick-the-door/SKILL.md` once and follow it exactly. This shortcut is the only pointer to it.

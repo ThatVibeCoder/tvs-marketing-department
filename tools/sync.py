@@ -189,6 +189,10 @@ def read_member(team_dir, folder, team):
                 m["skills"].append(read_skill(p, m))
             elif os.path.isdir(os.path.join(sk, s)):
                 errors.append(f"{rel(os.path.join(sk, s))}: a skill folder needs a SKILL.md inside it")
+    for s in m["skills"]:
+        if s["path"] in body or f"skills/{s['name']}/SKILL.md" in body:
+            warnings.append(f"{rel(path)} points at its own skill `{s['name']}`'s SKILL.md. The skill's shortcut already "
+                            f"does, so the AI reads it twice: name the skill in plain words instead of its path.")
     return m
 
 
@@ -370,8 +374,8 @@ def build_shortcuts(depts):
             for m in t["members"]:
                 for s in m["skills"]:
                     body = (f"# {s['name']}\n\nThis skill belongs to the {m['name']} on the {t['name']}.\n\n"
-                            f"1. Read `{m['path']}` first and act as that team member, inside its edges.\n"
-                            f"2. Read `{s['path']}` and follow it exactly. That file is the real skill.")
+                            f"1. Read `{m['path']}` and act as that team member, inside its edges.\n"
+                            f"2. Read `{s['path']}` once and follow it exactly. This shortcut is the only pointer to it.")
                     out[s["name"]] = shortcut(s["name"], s["description"], body, s["path"])
     return out
 
@@ -451,9 +455,9 @@ def toml_str(s):
 def agent_command_files():
     files = {}
     for name, (desc, body, real) in sorted(SHORTCUT_META.items()):
-        prompt = f"{body}\n\nThe real file is `{real}`. Follow AGENTS.md. Anything the owner typed after the command: {{{{args}}}}"
+        prompt = f"{body}\n\nAnything the owner typed after the command: {{{{args}}}}"
         files[f".gemini/commands/{name}.toml"] = f"# {AGENT_MARK}\ndescription = {toml_str(desc)}\nprompt = {toml_str(prompt)}\n"
-        files[f".cursor/commands/{name}.md"] = f"<!-- {AGENT_MARK} -->\n{body}\n\nThe real file is `{real}`. Follow AGENTS.md.\n"
+        files[f".cursor/commands/{name}.md"] = f"<!-- {AGENT_MARK} -->\n{body}\n"
     return files
 
 

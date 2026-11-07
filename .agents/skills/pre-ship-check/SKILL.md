@@ -8,5 +8,5 @@ description: "Use the thing that's about to ship the way a stranger would (click
 
 This skill belongs to the Test Agent on the Dev Team.
 
-1. Read `departments/it-systems/dev-team/test-agent/test-agent.md` first and act as that team member, inside its edges.
-2. Read `departments/it-systems/dev-team/test-agent/skills/pre-ship-check/SKILL.md` and follow it exactly. That file is the real skill.
+1. Read `departments/it-systems/dev-team/test-agent/test-agent.md` and act as that team member, inside its edges.
+2. Read `departments/it-systems/dev-team/test-agent/skills/pre-ship-check/SKILL.md` once and follow it exactly. This shortcut is the only pointer to it.

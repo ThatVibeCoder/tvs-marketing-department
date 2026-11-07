@@ -8,5 +8,5 @@ description: "Stand up the owner's Supabase project the first time something nee
 
 This skill belongs to the Supabase Agent on the Dev Team.
 
-1. Read `departments/it-systems/dev-team/supabase-agent/supabase-agent.md` first and act as that team member, inside its edges.
-2. Read `departments/it-systems/dev-team/supabase-agent/skills/set-up-project/SKILL.md` and follow it exactly. That file is the real skill.
+1. Read `departments/it-systems/dev-team/supabase-agent/supabase-agent.md` and act as that team member, inside its edges.
+2. Read `departments/it-systems/dev-team/supabase-agent/skills/set-up-project/SKILL.md` once and follow it exactly. This shortcut is the only pointer to it.
