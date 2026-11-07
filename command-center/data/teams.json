@@ -9,7 +9,7 @@
     "buildStatus": "active",
     "purpose": "Keeps the machine under everything running: your repo, your live site, your database, your keys, and the checks that keep them safe.",
     "sourceOfTruth": "departments/it-systems/dev-team/team.md",
-    "flowAsOf": "2026-10-24",
+    "flowAsOf": "2026-11-07",
     "seats": [
       {
         "name": "API Manager",
@@ -161,195 +161,336 @@
       }
     ],
     "flow": {
-      "phases": [
-        {
-          "id": "w0-plan",
-          "label": "set up my code base · Plan",
-          "color": "sky"
-        },
-        {
-          "id": "w0-connect",
-          "label": "set up my code base · Connect",
-          "color": "violet"
-        },
-        {
-          "id": "w0-check",
-          "label": "set up my code base · Check",
-          "color": "amber"
-        },
-        {
-          "id": "w1-plan",
-          "label": "ship my landing page · Plan",
-          "color": "violet"
-        },
-        {
-          "id": "w1-save",
-          "label": "ship my landing page · Save",
-          "color": "amber"
-        },
-        {
-          "id": "w1-ship",
-          "label": "ship my landing page · Ship",
-          "color": "rose"
-        },
-        {
-          "id": "w1-check",
-          "label": "ship my landing page · Check",
-          "color": "teal"
-        }
-      ],
       "nodes": [
         {
-          "id": "w0-s1",
-          "phase": "w0-plan",
-          "label": "Planner",
-          "sub": "one-plan",
-          "icon": "check",
-          "badge": "gate",
-          "detail": "writes the one-page plan of what's about to happen. You say go."
+          "id": "entry",
+          "x": 0,
+          "y": 110,
+          "icon": "terminal",
+          "title": "/dev-team",
+          "tone": "accent",
+          "stat": "2 workflows",
+          "hint": "type it, or say a workflow",
+          "detail": "Summon the Dev Team by typing /dev-team (or $dev-team in Codex), or say one of its workflows out loud. It shows its workflows and team members, then runs the one you pick."
         },
         {
-          "id": "w0-s2",
-          "phase": "w0-connect",
-          "label": "GitHub Agent",
-          "sub": "set-up-repo",
+          "id": "w0s1",
+          "x": 300,
+          "y": 0,
+          "icon": "check",
+          "title": "Planner",
+          "stat": "one-plan",
+          "tone": "default",
+          "hint": "writes the one-page plan of what's about to happen. You say go.",
+          "detail": "writes the one-page plan of what's about to happen. You say go.",
+          "pill": {
+            "label": "gate",
+            "tone": "accent"
+          }
+        },
+        {
+          "id": "w0s2",
+          "x": 600,
+          "y": 0,
           "icon": "db",
+          "title": "GitHub Agent",
+          "stat": "set-up-repo",
+          "tone": "default",
+          "hint": "confirms your repo is cloned, connected and saving. save-work is your ",
           "detail": "confirms your repo is cloned, connected and saving. save-work is your end-of-session habit from here on."
         },
         {
-          "id": "w0-s3",
-          "phase": "w0-connect",
-          "label": "API Manager",
-          "sub": "pick-the-door",
+          "id": "w0s3",
+          "x": 900,
+          "y": 0,
           "icon": "shield",
+          "title": "API Manager",
+          "stat": "pick-the-door",
+          "tone": "default",
+          "hint": "picks the right connection for each tool: a connector beats a command ",
           "detail": "picks the right connection for each tool: a connector beats a command line tool beats a key."
         },
         {
-          "id": "w0-s4",
-          "phase": "w0-connect",
-          "label": "Keys Agent",
-          "sub": "add-a-key",
+          "id": "w0s4",
+          "x": 1200,
+          "y": 0,
           "icon": "db",
+          "title": "Keys Agent",
+          "stat": "add-a-key",
+          "tone": "default",
+          "hint": "stores anything secret in the `.env` file and proves the save skips it",
           "detail": "stores anything secret in the `.env` file and proves the save skips it."
         },
         {
-          "id": "w0-s5",
-          "phase": "w0-connect",
-          "label": "Supabase Agent",
-          "sub": "set-up-project",
+          "id": "w0s5",
+          "x": 1500,
+          "y": 0,
           "icon": "search",
+          "title": "Supabase Agent",
+          "stat": "set-up-project",
+          "tone": "default",
+          "hint": "connects your free Supabase account so it's ready the day something ne",
           "detail": "connects your free Supabase account so it's ready the day something needs storing."
         },
         {
-          "id": "w0-s6",
-          "phase": "w0-connect",
-          "label": "Vercel Agent",
-          "sub": "ship-a-page",
+          "id": "w0s6",
+          "x": 1800,
+          "y": 0,
           "icon": "send",
+          "title": "Vercel Agent",
+          "stat": "ship-a-page",
+          "tone": "default",
+          "hint": "connects your free Vercel account to GitHub so shipping is ready.",
           "detail": "connects your free Vercel account to GitHub so shipping is ready."
         },
         {
-          "id": "w0-s7",
-          "phase": "w0-check",
-          "label": "Test Agent",
-          "sub": "pre-ship-check",
+          "id": "w0s7",
+          "x": 2100,
+          "y": 0,
           "icon": "search",
+          "title": "Test Agent",
+          "stat": "pre-ship-check",
+          "tone": "default",
+          "hint": "runs the check on the whole setup and reports in plain words.",
           "detail": "runs the check on the whole setup and reports in plain words."
         },
         {
-          "id": "w1-s1",
-          "phase": "w1-plan",
-          "label": "Planner",
-          "sub": "one-plan",
+          "id": "w1s1",
+          "x": 300,
+          "y": 220,
           "icon": "check",
-          "badge": "gate",
-          "detail": "turns the website team's build into a one-page ship plan. You say go."
+          "title": "Planner",
+          "stat": "one-plan",
+          "tone": "default",
+          "hint": "turns the website team's build into a one-page ship plan. You say go.",
+          "detail": "turns the website team's build into a one-page ship plan. You say go.",
+          "pill": {
+            "label": "gate",
+            "tone": "accent"
+          }
         },
         {
-          "id": "w1-s2",
-          "phase": "w1-save",
-          "label": "Code Reviewer",
-          "sub": "review-changes",
+          "id": "w1s2",
+          "x": 600,
+          "y": 220,
           "icon": "db",
+          "title": "Code Reviewer",
+          "stat": "review-changes",
+          "tone": "default",
+          "hint": "reads every change before it's saved.",
           "detail": "reads every change before it's saved."
         },
         {
-          "id": "w1-s3",
-          "phase": "w1-save",
-          "label": "GitHub Agent",
-          "sub": "save-work",
+          "id": "w1s3",
+          "x": 900,
+          "y": 220,
           "icon": "db",
+          "title": "GitHub Agent",
+          "stat": "save-work",
+          "tone": "default",
+          "hint": "saves it with history you can undo to.",
           "detail": "saves it with history you can undo to."
         },
         {
-          "id": "w1-s4",
-          "phase": "w1-ship",
-          "label": "Vercel Agent",
-          "sub": "ship-a-page",
+          "id": "w1s4",
+          "x": 1200,
+          "y": 220,
           "icon": "send",
+          "title": "Vercel Agent",
+          "stat": "ship-a-page",
+          "tone": "default",
+          "hint": "puts it on the live internet and hands you the URL.",
           "detail": "puts it on the live internet and hands you the URL."
         },
         {
-          "id": "w1-s5",
-          "phase": "w1-check",
-          "label": "Test Agent",
-          "sub": "pre-ship-check",
+          "id": "w1s5",
+          "x": 1500,
+          "y": 220,
           "icon": "log",
+          "title": "Test Agent",
+          "stat": "pre-ship-check",
+          "tone": "default",
+          "hint": "clicks what a stranger would click and reports what broke.",
           "detail": "clicks what a stranger would click and reports what broke."
         },
         {
-          "id": "w1-s6",
-          "phase": "w1-check",
-          "label": "Security Checker",
-          "sub": "security-sweep",
+          "id": "w1s6",
+          "x": 1800,
+          "y": 220,
           "icon": "shield",
+          "title": "Security Checker",
+          "stat": "security-sweep",
+          "tone": "default",
+          "hint": "sweeps for anything leaking (keys, form endpoints) before you share th",
           "detail": "sweeps for anything leaking (keys, form endpoints) before you share the link."
         }
       ],
       "edges": [
         {
-          "from": "w0-s1",
-          "to": "w0-s2"
+          "id": "e-entry-w0s1",
+          "source": "entry",
+          "target": "w0s1",
+          "animated": true
         },
         {
-          "from": "w0-s2",
-          "to": "w0-s3"
+          "id": "e-w0s1-w0s2",
+          "source": "w0s1",
+          "target": "w0s2",
+          "animated": false,
+          "label": "connect"
         },
         {
-          "from": "w0-s3",
-          "to": "w0-s4"
+          "id": "e-w0s2-w0s3",
+          "source": "w0s2",
+          "target": "w0s3",
+          "animated": false
         },
         {
-          "from": "w0-s4",
-          "to": "w0-s5"
+          "id": "e-w0s3-w0s4",
+          "source": "w0s3",
+          "target": "w0s4",
+          "animated": false
         },
         {
-          "from": "w0-s5",
-          "to": "w0-s6"
+          "id": "e-w0s4-w0s5",
+          "source": "w0s4",
+          "target": "w0s5",
+          "animated": false
         },
         {
-          "from": "w0-s6",
-          "to": "w0-s7"
+          "id": "e-w0s5-w0s6",
+          "source": "w0s5",
+          "target": "w0s6",
+          "animated": false
         },
         {
-          "from": "w1-s1",
-          "to": "w1-s2"
+          "id": "e-w0s6-w0s7",
+          "source": "w0s6",
+          "target": "w0s7",
+          "animated": false,
+          "label": "check"
         },
         {
-          "from": "w1-s2",
-          "to": "w1-s3"
+          "id": "e-entry-w1s1",
+          "source": "entry",
+          "target": "w1s1",
+          "animated": true
         },
         {
-          "from": "w1-s3",
-          "to": "w1-s4"
+          "id": "e-w1s1-w1s2",
+          "source": "w1s1",
+          "target": "w1s2",
+          "animated": false,
+          "label": "save"
         },
         {
-          "from": "w1-s4",
-          "to": "w1-s5"
+          "id": "e-w1s2-w1s3",
+          "source": "w1s2",
+          "target": "w1s3",
+          "animated": false
         },
         {
-          "from": "w1-s5",
-          "to": "w1-s6"
+          "id": "e-w1s3-w1s4",
+          "source": "w1s3",
+          "target": "w1s4",
+          "animated": false,
+          "label": "ship"
+        },
+        {
+          "id": "e-w1s4-w1s5",
+          "source": "w1s4",
+          "target": "w1s5",
+          "animated": false,
+          "label": "check"
+        },
+        {
+          "id": "e-w1s5-w1s6",
+          "source": "w1s5",
+          "target": "w1s6",
+          "animated": false
+        }
+      ],
+      "sections": [
+        {
+          "id": "trunk",
+          "title": "Start",
+          "subtitle": "/dev-team",
+          "tone": "runtime",
+          "x": -24,
+          "y": 36,
+          "width": 277,
+          "height": 162,
+          "icon": "terminal"
+        },
+        {
+          "id": "w0-plan",
+          "title": "Plan",
+          "subtitle": "\"set up my code base\"",
+          "tone": "decision",
+          "x": 276,
+          "y": -74,
+          "width": 277,
+          "height": 162
+        },
+        {
+          "id": "w0-connect",
+          "title": "Connect",
+          "subtitle": "5 steps",
+          "tone": "decision",
+          "x": 576,
+          "y": -74,
+          "width": 1477,
+          "height": 162
+        },
+        {
+          "id": "w0-check",
+          "title": "Check",
+          "subtitle": "1 step",
+          "tone": "review",
+          "x": 2076,
+          "y": -74,
+          "width": 277,
+          "height": 162
+        },
+        {
+          "id": "w1-plan",
+          "title": "Plan",
+          "subtitle": "\"ship my landing page\"",
+          "tone": "decision",
+          "x": 276,
+          "y": 146,
+          "width": 277,
+          "height": 162
+        },
+        {
+          "id": "w1-save",
+          "title": "Save",
+          "subtitle": "2 steps",
+          "tone": "decision",
+          "x": 576,
+          "y": 146,
+          "width": 577,
+          "height": 162
+        },
+        {
+          "id": "w1-ship",
+          "title": "Ship",
+          "subtitle": "1 step",
+          "tone": "action",
+          "x": 1176,
+          "y": 146,
+          "width": 277,
+          "height": 162
+        },
+        {
+          "id": "w1-check",
+          "title": "Check",
+          "subtitle": "2 steps",
+          "tone": "review",
+          "x": 1476,
+          "y": 146,
+          "width": 577,
+          "height": 162
         }
       ]
     }
@@ -364,7 +505,7 @@
     "buildStatus": "planning",
     "purpose": "Paid traffic, once your pages and offer are proven without it.",
     "sourceOfTruth": "departments/marketing/ads-team/team.md",
-    "flowAsOf": "2026-10-24",
+    "flowAsOf": "2026-11-07",
     "seats": [
       {
         "name": "Ad Writer",
@@ -439,158 +580,294 @@
       }
     ],
     "flow": {
-      "phases": [
-        {
-          "id": "w0-check",
-          "label": "launch my first ads · Check",
-          "color": "sky"
-        },
-        {
-          "id": "w0-track",
-          "label": "launch my first ads · Track",
-          "color": "violet"
-        },
-        {
-          "id": "w0-write",
-          "label": "launch my first ads · Write",
-          "color": "amber"
-        },
-        {
-          "id": "w0-launch",
-          "label": "launch my first ads · Launch",
-          "color": "rose"
-        },
-        {
-          "id": "w1-read",
-          "label": "read my ads · Read",
-          "color": "violet"
-        },
-        {
-          "id": "w1-act",
-          "label": "read my ads · Act",
-          "color": "amber"
-        }
-      ],
       "nodes": [
         {
-          "id": "w0-s1",
-          "phase": "w0-check",
-          "label": "Growth Lead",
-          "sub": "ads-ready-check",
-          "icon": "check",
-          "badge": "gate",
-          "detail": "confirms the offer, the live page, real customers without ads, and your target cost per lead."
+          "id": "entry",
+          "x": 0,
+          "y": 110,
+          "icon": "terminal",
+          "title": "/ads-team",
+          "tone": "accent",
+          "stat": "2 workflows",
+          "hint": "type it, or say a workflow",
+          "detail": "Summon the Ads Team by typing /ads-team (or $ads-team in Codex), or say one of its workflows out loud. It shows its workflows and team members, then runs the one you pick."
         },
         {
-          "id": "w0-s2",
-          "phase": "w0-track",
-          "label": "Ads Manager",
-          "sub": "set-up-tracking",
+          "id": "w0s1",
+          "x": 300,
+          "y": 0,
           "icon": "check",
+          "title": "Growth Lead",
+          "stat": "ads-ready-check",
+          "tone": "default",
+          "hint": "confirms the offer, the live page, real customers without ads, and you",
+          "detail": "confirms the offer, the live page, real customers without ads, and your target cost per lead.",
+          "pill": {
+            "label": "gate",
+            "tone": "accent"
+          }
+        },
+        {
+          "id": "w0s2",
+          "x": 600,
+          "y": 0,
+          "icon": "check",
+          "title": "Ads Manager",
+          "stat": "set-up-tracking",
+          "tone": "default",
+          "hint": "the pixel and one event, proven with a test lead.",
           "detail": "the pixel and one event, proven with a test lead."
         },
         {
-          "id": "w0-s3",
-          "phase": "w0-write",
-          "label": "Researcher",
-          "sub": "competitor-check",
+          "id": "w0s3",
+          "x": 900,
+          "y": 0,
           "icon": "sparkle",
+          "title": "Researcher",
+          "stat": "competitor-check",
+          "tone": "default",
+          "hint": "what your competitors are running in Meta's Ad Library, and the gap no",
           "detail": "what your competitors are running in Meta's Ad Library, and the gap nobody fills."
         },
         {
-          "id": "w0-s4",
-          "phase": "w0-write",
-          "label": "Page Builder",
-          "sub": "build-a-page",
+          "id": "w0s4",
+          "x": 1200,
+          "y": 0,
           "icon": "sparkle",
+          "title": "Page Builder",
+          "stat": "build-a-page",
+          "tone": "default",
+          "hint": "one page per promise: two or three pages, each locked to one angle fro",
           "detail": "one page per promise: two or three pages, each locked to one angle from your ICP."
         },
         {
-          "id": "w0-s5",
-          "phase": "w0-write",
-          "label": "Ad Writer",
-          "sub": "write-ad-batch",
+          "id": "w0s5",
+          "x": 1500,
+          "y": 0,
           "icon": "check",
-          "badge": "gate",
-          "detail": "three to five really different ads, each pointing at its own page."
+          "title": "Ad Writer",
+          "stat": "write-ad-batch",
+          "tone": "default",
+          "hint": "three to five really different ads, each pointing at its own page.",
+          "detail": "three to five really different ads, each pointing at its own page.",
+          "pill": {
+            "label": "gate",
+            "tone": "accent"
+          }
         },
         {
-          "id": "w0-s6",
-          "phase": "w0-launch",
-          "label": "Growth Lead",
-          "sub": "plan-a-test",
+          "id": "w0s6",
+          "x": 1800,
+          "y": 0,
           "icon": "check",
-          "badge": "gate",
-          "detail": "your budget, the end date, and the winner and stop lines, written before anything runs."
+          "title": "Growth Lead",
+          "stat": "plan-a-test",
+          "tone": "default",
+          "hint": "your budget, the end date, and the winner and stop lines, written befo",
+          "detail": "your budget, the end date, and the winner and stop lines, written before anything runs.",
+          "pill": {
+            "label": "gate",
+            "tone": "accent"
+          }
         },
         {
-          "id": "w0-s7",
-          "phase": "w0-launch",
-          "label": "Ads Manager",
-          "sub": "build-paused-campaign",
+          "id": "w0s7",
+          "x": 2100,
+          "y": 0,
           "icon": "check",
-          "badge": "gate",
-          "detail": "builds it paused, and you turn it on in Ads Manager yourself."
+          "title": "Ads Manager",
+          "stat": "build-paused-campaign",
+          "tone": "default",
+          "hint": "builds it paused, and you turn it on in Ads Manager yourself.",
+          "detail": "builds it paused, and you turn it on in Ads Manager yourself.",
+          "pill": {
+            "label": "gate",
+            "tone": "accent"
+          }
         },
         {
-          "id": "w1-s1",
-          "phase": "w1-read",
-          "label": "Growth Lead",
-          "sub": "weekly-ads-read",
+          "id": "w1s1",
+          "x": 300,
+          "y": 220,
           "icon": "form",
+          "title": "Growth Lead",
+          "stat": "weekly-ads-read",
+          "tone": "default",
+          "hint": "the numbers against your plan, page problem or ad problem, and one rec",
           "detail": "the numbers against your plan, page problem or ad problem, and one recommendation."
         },
         {
-          "id": "w1-s2",
-          "phase": "w1-act",
-          "label": "Ads Manager",
-          "sub": "build-paused-campaign",
+          "id": "w1s2",
+          "x": 600,
+          "y": 220,
           "icon": "check",
-          "badge": "gate",
-          "detail": "drafts the pause or cut the read called for, and acts only on your yes."
+          "title": "Ads Manager",
+          "stat": "build-paused-campaign",
+          "tone": "default",
+          "hint": "drafts the pause or cut the read called for, and acts only on your yes",
+          "detail": "drafts the pause or cut the read called for, and acts only on your yes.",
+          "pill": {
+            "label": "gate",
+            "tone": "accent"
+          }
         },
         {
-          "id": "w1-s3",
-          "phase": "w1-act",
-          "label": "Ad Writer",
-          "sub": "iterate-a-winner",
+          "id": "w1s3",
+          "x": 900,
+          "y": 220,
           "icon": "check",
-          "badge": "gate",
-          "detail": "new versions of the winner for the next test, only if there is a winner."
+          "title": "Ad Writer",
+          "stat": "iterate-a-winner",
+          "tone": "default",
+          "hint": "new versions of the winner for the next test, only if there is a winne",
+          "detail": "new versions of the winner for the next test, only if there is a winner.",
+          "pill": {
+            "label": "gate",
+            "tone": "accent"
+          }
         }
       ],
       "edges": [
         {
-          "from": "w0-s1",
-          "to": "w0-s2"
+          "id": "e-entry-w0s1",
+          "source": "entry",
+          "target": "w0s1",
+          "animated": true
         },
         {
-          "from": "w0-s2",
-          "to": "w0-s3"
+          "id": "e-w0s1-w0s2",
+          "source": "w0s1",
+          "target": "w0s2",
+          "animated": false,
+          "label": "track"
         },
         {
-          "from": "w0-s3",
-          "to": "w0-s4"
+          "id": "e-w0s2-w0s3",
+          "source": "w0s2",
+          "target": "w0s3",
+          "animated": false,
+          "label": "write"
         },
         {
-          "from": "w0-s4",
-          "to": "w0-s5"
+          "id": "e-w0s3-w0s4",
+          "source": "w0s3",
+          "target": "w0s4",
+          "animated": false
         },
         {
-          "from": "w0-s5",
-          "to": "w0-s6"
+          "id": "e-w0s4-w0s5",
+          "source": "w0s4",
+          "target": "w0s5",
+          "animated": false,
+          "label": "approve"
         },
         {
-          "from": "w0-s6",
-          "to": "w0-s7"
+          "id": "e-w0s5-w0s6",
+          "source": "w0s5",
+          "target": "w0s6",
+          "animated": false,
+          "label": "launch"
         },
         {
-          "from": "w1-s1",
-          "to": "w1-s2"
+          "id": "e-w0s6-w0s7",
+          "source": "w0s6",
+          "target": "w0s7",
+          "animated": false,
+          "label": "approve"
         },
         {
-          "from": "w1-s2",
-          "to": "w1-s3"
+          "id": "e-entry-w1s1",
+          "source": "entry",
+          "target": "w1s1",
+          "animated": true,
+          "label": "read my ads"
+        },
+        {
+          "id": "e-w1s1-w1s2",
+          "source": "w1s1",
+          "target": "w1s2",
+          "animated": false,
+          "label": "act"
+        },
+        {
+          "id": "e-w1s2-w1s3",
+          "source": "w1s2",
+          "target": "w1s3",
+          "animated": false,
+          "label": "approve"
+        }
+      ],
+      "sections": [
+        {
+          "id": "trunk",
+          "title": "Start",
+          "subtitle": "/ads-team",
+          "tone": "runtime",
+          "x": -24,
+          "y": 36,
+          "width": 277,
+          "height": 162,
+          "icon": "terminal"
+        },
+        {
+          "id": "w0-check",
+          "title": "Check",
+          "subtitle": "\"launch my first ads\"",
+          "tone": "review",
+          "x": 276,
+          "y": -74,
+          "width": 277,
+          "height": 162
+        },
+        {
+          "id": "w0-track",
+          "title": "Track",
+          "subtitle": "1 step",
+          "tone": "decision",
+          "x": 576,
+          "y": -74,
+          "width": 277,
+          "height": 162
+        },
+        {
+          "id": "w0-write",
+          "title": "Write",
+          "subtitle": "3 steps",
+          "tone": "training",
+          "x": 876,
+          "y": -74,
+          "width": 877,
+          "height": 162
+        },
+        {
+          "id": "w0-launch",
+          "title": "Launch",
+          "subtitle": "2 steps",
+          "tone": "action",
+          "x": 1776,
+          "y": -74,
+          "width": 577,
+          "height": 162
+        },
+        {
+          "id": "w1-read",
+          "title": "Read",
+          "subtitle": "\"read my ads\"",
+          "tone": "knowledge",
+          "x": 276,
+          "y": 146,
+          "width": 277,
+          "height": 162
+        },
+        {
+          "id": "w1-act",
+          "title": "Act",
+          "subtitle": "2 steps",
+          "tone": "decision",
+          "x": 576,
+          "y": 146,
+          "width": 577,
+          "height": 162
         }
       ]
     }
@@ -605,7 +882,7 @@
     "buildStatus": "planning",
     "purpose": "Everything you publish: the words, the visuals, the calendar, and the numbers after.",
     "sourceOfTruth": "departments/marketing/content-team/team.md",
-    "flowAsOf": "2026-10-24",
+    "flowAsOf": "2026-11-07",
     "seats": [
       {
         "name": "Copywriter",
@@ -727,284 +1004,505 @@
       }
     ],
     "flow": {
-      "phases": [
-        {
-          "id": "w0-plan",
-          "label": "make a post · Plan",
-          "color": "sky"
-        },
-        {
-          "id": "w0-write",
-          "label": "make a post · Write",
-          "color": "violet"
-        },
-        {
-          "id": "w0-check",
-          "label": "make a post · Check",
-          "color": "amber"
-        },
-        {
-          "id": "w0-post",
-          "label": "make a post · Post",
-          "color": "rose"
-        },
-        {
-          "id": "w1-read",
-          "label": "plan my week of content · Read",
-          "color": "violet"
-        },
-        {
-          "id": "w1-plan",
-          "label": "plan my week of content · Plan",
-          "color": "amber"
-        },
-        {
-          "id": "w1-write",
-          "label": "plan my week of content · Write",
-          "color": "rose"
-        },
-        {
-          "id": "w1-check",
-          "label": "plan my week of content · Check",
-          "color": "teal"
-        },
-        {
-          "id": "w1-post",
-          "label": "plan my week of content · Post",
-          "color": "lime"
-        },
-        {
-          "id": "w2-write",
-          "label": "make a short video script · Write",
-          "color": "amber"
-        },
-        {
-          "id": "w2-record",
-          "label": "make a short video script · Record",
-          "color": "rose"
-        },
-        {
-          "id": "w2-edit",
-          "label": "make a short video script · Edit",
-          "color": "teal"
-        },
-        {
-          "id": "w2-post",
-          "label": "make a short video script · Post",
-          "color": "lime"
-        }
-      ],
       "nodes": [
         {
-          "id": "w0-s1",
-          "phase": "w0-plan",
-          "label": "Social Manager",
-          "sub": "reads `brand/channels.md` and picks the job this",
+          "id": "entry",
+          "x": 0,
+          "y": 220,
+          "icon": "terminal",
+          "title": "/content-team",
+          "tone": "accent",
+          "stat": "3 workflows",
+          "hint": "type it, or say a workflow",
+          "detail": "Summon the Content Team by typing /content-team (or $content-team in Codex), or say one of its workflows out loud. It shows its workflows and team members, then runs the one you pick."
+        },
+        {
+          "id": "w0s1",
+          "x": 300,
+          "y": 0,
           "icon": "search",
+          "title": "Social Manager",
+          "stat": "no skill, the member does it",
+          "tone": "default",
+          "hint": "reads `brand/channels.md` and picks the job this post does (give, prov",
           "detail": "reads `brand/channels.md` and picks the job this post does (give, prove or invite) and where it goes."
         },
         {
-          "id": "w0-s2",
-          "phase": "w0-write",
-          "label": "Copywriter",
-          "sub": "draft-post",
+          "id": "w0s2",
+          "x": 600,
+          "y": 0,
           "icon": "form",
+          "title": "Copywriter",
+          "stat": "draft-post",
+          "tone": "default",
+          "hint": "drafts it in your voice for one buyer (a persona from `brand/personas/",
           "detail": "drafts it in your voice for one buyer (a persona from `brand/personas/` if you have them)."
         },
         {
-          "id": "w0-s3",
-          "phase": "w0-write",
-          "label": "Copywriter",
-          "sub": "write-hooks",
+          "id": "w0s3",
+          "x": 900,
+          "y": 0,
           "icon": "form",
+          "title": "Copywriter",
+          "stat": "write-hooks",
+          "tone": "default",
+          "hint": "writes the first line that earns the rest.",
           "detail": "writes the first line that earns the rest."
         },
         {
-          "id": "w0-s4",
-          "phase": "w0-check",
-          "label": "Editor",
-          "sub": "edit-a-draft",
+          "id": "w0s4",
+          "x": 1200,
+          "y": 0,
           "icon": "sparkle",
+          "title": "Editor",
+          "stat": "edit-a-draft",
+          "tone": "default",
+          "hint": "the second pass against `brand/voice.md`.",
           "detail": "the second pass against `brand/voice.md`."
         },
         {
-          "id": "w0-s5",
-          "phase": "w0-check",
-          "label": "You",
-          "sub": "read the draft and say yes or what to fix.",
-          "icon": "check",
-          "badge": "gate",
-          "detail": "read the draft and say yes or what to fix."
+          "id": "w0s5",
+          "x": 1500,
+          "y": 0,
+          "icon": "user",
+          "title": "You",
+          "stat": "your call",
+          "tone": "default",
+          "hint": "read the draft and say yes or what to fix.",
+          "detail": "read the draft and say yes or what to fix.",
+          "pill": {
+            "label": "gate",
+            "tone": "accent"
+          }
         },
         {
-          "id": "w0-s6",
-          "phase": "w0-post",
-          "label": "Social Manager",
-          "sub": "post-content",
+          "id": "w0s6",
+          "x": 1800,
+          "y": 0,
           "icon": "sparkle",
+          "title": "Social Manager",
+          "stat": "post-content",
+          "tone": "default",
+          "hint": "stages it on its platform for your final send and logs it.",
           "detail": "stages it on its platform for your final send and logs it."
         },
         {
-          "id": "w1-s1",
-          "phase": "w1-read",
-          "label": "Social Manager",
-          "sub": "read-the-stats",
+          "id": "w1s1",
+          "x": 300,
+          "y": 220,
           "icon": "sparkle",
+          "title": "Social Manager",
+          "stat": "read-the-stats",
+          "tone": "default",
+          "hint": "last week's numbers and which openers won. Skipped on the very first w",
           "detail": "last week's numbers and which openers won. Skipped on the very first week."
         },
         {
-          "id": "w1-s2",
-          "phase": "w1-plan",
-          "label": "Social Manager",
-          "sub": "plan-the-week",
+          "id": "w1s2",
+          "x": 600,
+          "y": 220,
           "icon": "check",
-          "badge": "gate",
-          "detail": "picks 3 to 5 posts from `knowledge/topics.md`, each with its job, its one reader and its platform, and one that goes out today."
+          "title": "Social Manager",
+          "stat": "plan-the-week",
+          "tone": "default",
+          "hint": "picks 3 to 5 posts from `knowledge/topics.md`, each with its job, its ",
+          "detail": "picks 3 to 5 posts from `knowledge/topics.md`, each with its job, its one reader and its platform, and one that goes out today.",
+          "pill": {
+            "label": "gate",
+            "tone": "accent"
+          }
         },
         {
-          "id": "w1-s3",
-          "phase": "w1-write",
-          "label": "Copywriter",
-          "sub": "draft-post",
+          "id": "w1s3",
+          "x": 900,
+          "y": 220,
           "icon": "form",
+          "title": "Copywriter",
+          "stat": "draft-post",
+          "tone": "default",
+          "hint": "drafts each one, with something useful inside the post, not only an as",
           "detail": "drafts each one, with something useful inside the post, not only an ask at the end."
         },
         {
-          "id": "w1-s4",
-          "phase": "w1-write",
-          "label": "Copywriter",
-          "sub": "write-hooks",
+          "id": "w1s4",
+          "x": 1200,
+          "y": 220,
           "icon": "sparkle",
+          "title": "Copywriter",
+          "stat": "write-hooks",
+          "tone": "default",
+          "hint": "five first lines for each post, from the opener bank and your winners ",
           "detail": "five first lines for each post, from the opener bank and your winners in `knowledge/hooks.md`. You pick."
         },
         {
-          "id": "w1-s5",
-          "phase": "w1-check",
-          "label": "Editor",
-          "sub": "edit-a-draft",
+          "id": "w1s5",
+          "x": 1500,
+          "y": 220,
           "icon": "check",
-          "badge": "gate",
-          "detail": "the second pass against `brand/voice.md`, read out loud."
+          "title": "Editor",
+          "stat": "edit-a-draft",
+          "tone": "default",
+          "hint": "the second pass against `brand/voice.md`, read out loud.",
+          "detail": "the second pass against `brand/voice.md`, read out loud.",
+          "pill": {
+            "label": "gate",
+            "tone": "accent"
+          }
         },
         {
-          "id": "w1-s6",
-          "phase": "w1-post",
-          "label": "Social Manager",
-          "sub": "post-content",
+          "id": "w1s6",
+          "x": 1800,
+          "y": 220,
           "icon": "sparkle",
+          "title": "Social Manager",
+          "stat": "post-content",
+          "tone": "default",
+          "hint": "stages today's post for your send, puts the rest on the calendar on th",
           "detail": "stages today's post for your send, puts the rest on the calendar on their days, and logs each one."
         },
         {
-          "id": "w2-s1",
-          "phase": "w2-write",
-          "label": "Copywriter",
-          "sub": "write-a-script",
+          "id": "w2s1",
+          "x": 300,
+          "y": 440,
           "icon": "sparkle",
+          "title": "Copywriter",
+          "stat": "write-a-script",
+          "tone": "default",
+          "hint": "two or three options on different openers and structures, each one ope",
           "detail": "two or three options on different openers and structures, each one opening a question in the first line and answering it at the end."
         },
         {
-          "id": "w2-s2",
-          "phase": "w2-write",
-          "label": "Editor",
-          "sub": "edit-a-draft",
+          "id": "w2s2",
+          "x": 600,
+          "y": 440,
           "icon": "check",
-          "badge": "gate",
-          "detail": "reads each option out loud and cuts whatever stalls."
+          "title": "Editor",
+          "stat": "edit-a-draft",
+          "tone": "default",
+          "hint": "reads each option out loud and cuts whatever stalls.",
+          "detail": "reads each option out loud and cuts whatever stalls.",
+          "pill": {
+            "label": "gate",
+            "tone": "accent"
+          }
         },
         {
-          "id": "w2-s3",
-          "phase": "w2-record",
-          "label": "You",
-          "sub": "record it in one take on your phone, reading fro",
-          "icon": "search",
-          "detail": "record it in one take on your phone, reading from the script, and drop the file in `recordings/`."
+          "id": "w2s3",
+          "x": 900,
+          "y": 440,
+          "icon": "user",
+          "title": "You",
+          "stat": "your call",
+          "tone": "default",
+          "hint": "record it in one take on your phone, reading from the script, and drop",
+          "detail": "record it in one take on your phone, reading from the script, and drop the file in `recordings/`.",
+          "pill": {
+            "label": "you",
+            "tone": "warn"
+          }
         },
         {
-          "id": "w2-s4",
-          "phase": "w2-edit",
-          "label": "Video Editor",
-          "sub": "cut-a-recording",
+          "id": "w2s4",
+          "x": 1200,
+          "y": 440,
           "icon": "check",
-          "badge": "gate",
-          "detail": "cuts the dead air, levels the sound and adds captions."
+          "title": "Video Editor",
+          "stat": "cut-a-recording",
+          "tone": "default",
+          "hint": "cuts the dead air, levels the sound and adds captions.",
+          "detail": "cuts the dead air, levels the sound and adds captions.",
+          "pill": {
+            "label": "gate",
+            "tone": "accent"
+          }
         },
         {
-          "id": "w2-s5",
-          "phase": "w2-post",
-          "label": "Designer",
-          "sub": "make-a-cover",
+          "id": "w2s5",
+          "x": 1500,
+          "y": 440,
           "icon": "sparkle",
+          "title": "Designer",
+          "stat": "make-a-cover",
+          "tone": "default",
+          "hint": "the cover in your one locked style.",
           "detail": "the cover in your one locked style."
         },
         {
-          "id": "w2-s6",
-          "phase": "w2-post",
-          "label": "Social Manager",
-          "sub": "post-content",
+          "id": "w2s6",
+          "x": 1800,
+          "y": 440,
           "icon": "sparkle",
+          "title": "Social Manager",
+          "stat": "post-content",
+          "tone": "default",
+          "hint": "stages it with its caption for your send and logs which opener it used",
           "detail": "stages it with its caption for your send and logs which opener it used."
         }
       ],
       "edges": [
         {
-          "from": "w0-s1",
-          "to": "w0-s2"
+          "id": "e-entry-w0s1",
+          "source": "entry",
+          "target": "w0s1",
+          "animated": true,
+          "label": "make a post"
         },
         {
-          "from": "w0-s2",
-          "to": "w0-s3"
+          "id": "e-w0s1-w0s2",
+          "source": "w0s1",
+          "target": "w0s2",
+          "animated": false,
+          "label": "write"
         },
         {
-          "from": "w0-s3",
-          "to": "w0-s4"
+          "id": "e-w0s2-w0s3",
+          "source": "w0s2",
+          "target": "w0s3",
+          "animated": false
         },
         {
-          "from": "w0-s4",
-          "to": "w0-s5"
+          "id": "e-w0s3-w0s4",
+          "source": "w0s3",
+          "target": "w0s4",
+          "animated": false,
+          "label": "check"
         },
         {
-          "from": "w0-s5",
-          "to": "w0-s6"
+          "id": "e-w0s4-w0s5",
+          "source": "w0s4",
+          "target": "w0s5",
+          "animated": false,
+          "label": "approve"
         },
         {
-          "from": "w1-s1",
-          "to": "w1-s2"
+          "id": "e-w0s5-w0s6",
+          "source": "w0s5",
+          "target": "w0s6",
+          "animated": false,
+          "label": "post"
         },
         {
-          "from": "w1-s2",
-          "to": "w1-s3"
+          "id": "e-entry-w1s1",
+          "source": "entry",
+          "target": "w1s1",
+          "animated": true
         },
         {
-          "from": "w1-s3",
-          "to": "w1-s4"
+          "id": "e-w1s1-w1s2",
+          "source": "w1s1",
+          "target": "w1s2",
+          "animated": false,
+          "label": "plan"
         },
         {
-          "from": "w1-s4",
-          "to": "w1-s5"
+          "id": "e-w1s2-w1s3",
+          "source": "w1s2",
+          "target": "w1s3",
+          "animated": false,
+          "label": "write"
         },
         {
-          "from": "w1-s5",
-          "to": "w1-s6"
+          "id": "e-w1s3-w1s4",
+          "source": "w1s3",
+          "target": "w1s4",
+          "animated": false
         },
         {
-          "from": "w2-s1",
-          "to": "w2-s2"
+          "id": "e-w1s4-w1s5",
+          "source": "w1s4",
+          "target": "w1s5",
+          "animated": false,
+          "label": "check"
         },
         {
-          "from": "w2-s2",
-          "to": "w2-s3"
+          "id": "e-w1s5-w1s6",
+          "source": "w1s5",
+          "target": "w1s6",
+          "animated": false,
+          "label": "post"
         },
         {
-          "from": "w2-s3",
-          "to": "w2-s4"
+          "id": "e-entry-w2s1",
+          "source": "entry",
+          "target": "w2s1",
+          "animated": true
         },
         {
-          "from": "w2-s4",
-          "to": "w2-s5"
+          "id": "e-w2s1-w2s2",
+          "source": "w2s1",
+          "target": "w2s2",
+          "animated": false,
+          "label": "approve"
         },
         {
-          "from": "w2-s5",
-          "to": "w2-s6"
+          "id": "e-w2s2-w2s3",
+          "source": "w2s2",
+          "target": "w2s3",
+          "animated": false,
+          "label": "record"
+        },
+        {
+          "id": "e-w2s3-w2s4",
+          "source": "w2s3",
+          "target": "w2s4",
+          "animated": false,
+          "label": "edit"
+        },
+        {
+          "id": "e-w2s4-w2s5",
+          "source": "w2s4",
+          "target": "w2s5",
+          "animated": false,
+          "label": "post"
+        },
+        {
+          "id": "e-w2s5-w2s6",
+          "source": "w2s5",
+          "target": "w2s6",
+          "animated": false
+        }
+      ],
+      "sections": [
+        {
+          "id": "trunk",
+          "title": "Start",
+          "subtitle": "/content-team",
+          "tone": "runtime",
+          "x": -24,
+          "y": 146,
+          "width": 277,
+          "height": 162,
+          "icon": "terminal"
+        },
+        {
+          "id": "w0-plan",
+          "title": "Plan",
+          "subtitle": "\"make a post\"",
+          "tone": "decision",
+          "x": 276,
+          "y": -74,
+          "width": 277,
+          "height": 162
+        },
+        {
+          "id": "w0-write",
+          "title": "Write",
+          "subtitle": "2 steps",
+          "tone": "training",
+          "x": 576,
+          "y": -74,
+          "width": 577,
+          "height": 162
+        },
+        {
+          "id": "w0-check",
+          "title": "Check",
+          "subtitle": "2 steps",
+          "tone": "review",
+          "x": 1176,
+          "y": -74,
+          "width": 577,
+          "height": 162
+        },
+        {
+          "id": "w0-post",
+          "title": "Post",
+          "subtitle": "1 step",
+          "tone": "action",
+          "x": 1776,
+          "y": -74,
+          "width": 277,
+          "height": 162
+        },
+        {
+          "id": "w1-read",
+          "title": "Read",
+          "subtitle": "\"plan my week of content\"",
+          "tone": "knowledge",
+          "x": 276,
+          "y": 146,
+          "width": 277,
+          "height": 162
+        },
+        {
+          "id": "w1-plan",
+          "title": "Plan",
+          "subtitle": "1 step",
+          "tone": "decision",
+          "x": 576,
+          "y": 146,
+          "width": 277,
+          "height": 162
+        },
+        {
+          "id": "w1-write",
+          "title": "Write",
+          "subtitle": "2 steps",
+          "tone": "training",
+          "x": 876,
+          "y": 146,
+          "width": 577,
+          "height": 162
+        },
+        {
+          "id": "w1-check",
+          "title": "Check",
+          "subtitle": "1 step",
+          "tone": "review",
+          "x": 1476,
+          "y": 146,
+          "width": 277,
+          "height": 162
+        },
+        {
+          "id": "w1-post",
+          "title": "Post",
+          "subtitle": "1 step",
+          "tone": "action",
+          "x": 1776,
+          "y": 146,
+          "width": 277,
+          "height": 162
+        },
+        {
+          "id": "w2-write",
+          "title": "Write",
+          "subtitle": "\"make a short video script\"",
+          "tone": "training",
+          "x": 276,
+          "y": 366,
+          "width": 577,
+          "height": 162
+        },
+        {
+          "id": "w2-record",
+          "title": "Record",
+          "subtitle": "1 step",
+          "tone": "training",
+          "x": 876,
+          "y": 366,
+          "width": 277,
+          "height": 162
+        },
+        {
+          "id": "w2-edit",
+          "title": "Edit",
+          "subtitle": "1 step",
+          "tone": "training",
+          "x": 1176,
+          "y": 366,
+          "width": 277,
+          "height": 162
+        },
+        {
+          "id": "w2-post",
+          "title": "Post",
+          "subtitle": "2 steps",
+          "tone": "action",
+          "x": 1476,
+          "y": 366,
+          "width": 577,
+          "height": 162
         }
       ]
     }
@@ -1019,7 +1517,7 @@
     "buildStatus": "planning",
     "purpose": "Turns your raw recordings into posts: cut, captioned, covered, and turned into more than one piece.",
     "sourceOfTruth": "departments/marketing/editing-team/team.md",
-    "flowAsOf": "2026-10-24",
+    "flowAsOf": "2026-11-07",
     "seats": [
       {
         "name": "Video Editor",
@@ -1042,70 +1540,136 @@
       }
     ],
     "flow": {
-      "phases": [
-        {
-          "id": "w0-cut",
-          "label": "Cut",
-          "color": "sky"
-        },
-        {
-          "id": "w0-dress",
-          "label": "Dress",
-          "color": "violet"
-        },
-        {
-          "id": "w0-post",
-          "label": "Post",
-          "color": "amber"
-        }
-      ],
       "nodes": [
         {
-          "id": "w0-s1",
-          "phase": "w0-cut",
-          "label": "Video Editor",
-          "sub": "cut-a-recording",
-          "icon": "check",
-          "badge": "gate",
-          "detail": "trims the start and end, cuts the dead air, levels the sound and adds captions."
+          "id": "entry",
+          "x": 0,
+          "y": 0,
+          "icon": "terminal",
+          "title": "/editing-team",
+          "tone": "accent",
+          "stat": "1 workflow",
+          "hint": "type it, or say a workflow",
+          "detail": "Summon the Editing Team by typing /editing-team (or $editing-team in Codex), or say one of its workflows out loud. It shows its workflows and team members, then runs the one you pick."
         },
         {
-          "id": "w0-s2",
-          "phase": "w0-dress",
-          "label": "Designer",
-          "sub": "make-a-cover",
+          "id": "w0s1",
+          "x": 300,
+          "y": 0,
+          "icon": "check",
+          "title": "Video Editor",
+          "stat": "cut-a-recording",
+          "tone": "default",
+          "hint": "trims the start and end, cuts the dead air, levels the sound and adds ",
+          "detail": "trims the start and end, cuts the dead air, levels the sound and adds captions.",
+          "pill": {
+            "label": "gate",
+            "tone": "accent"
+          }
+        },
+        {
+          "id": "w0s2",
+          "x": 600,
+          "y": 0,
           "icon": "sparkle",
+          "title": "Designer",
+          "stat": "make-a-cover",
+          "tone": "default",
+          "hint": "the cover in your one locked style.",
           "detail": "the cover in your one locked style."
         },
         {
-          "id": "w0-s3",
-          "phase": "w0-dress",
-          "label": "Copywriter",
-          "sub": "repurpose-it",
+          "id": "w0s3",
+          "x": 900,
+          "y": 0,
           "icon": "sparkle",
+          "title": "Copywriter",
+          "stat": "repurpose-it",
+          "tone": "default",
+          "hint": "turns the video into four more pieces.",
           "detail": "turns the video into four more pieces."
         },
         {
-          "id": "w0-s4",
-          "phase": "w0-post",
-          "label": "Social Manager",
-          "sub": "post-content",
+          "id": "w0s4",
+          "x": 1200,
+          "y": 0,
           "icon": "sparkle",
+          "title": "Social Manager",
+          "stat": "post-content",
+          "tone": "default",
+          "hint": "stages the video and the pieces for your send and logs them.",
           "detail": "stages the video and the pieces for your send and logs them."
         }
       ],
       "edges": [
         {
-          "from": "w0-s1",
-          "to": "w0-s2"
+          "id": "e-entry-w0s1",
+          "source": "entry",
+          "target": "w0s1",
+          "animated": true
         },
         {
-          "from": "w0-s2",
-          "to": "w0-s3"
+          "id": "e-w0s1-w0s2",
+          "source": "w0s1",
+          "target": "w0s2",
+          "animated": false,
+          "label": "dress"
         },
         {
-          "from": "w0-s3",
-          "to": "w0-s4"
+          "id": "e-w0s2-w0s3",
+          "source": "w0s2",
+          "target": "w0s3",
+          "animated": false
+        },
+        {
+          "id": "e-w0s3-w0s4",
+          "source": "w0s3",
+          "target": "w0s4",
+          "animated": false,
+          "label": "post"
+        }
+      ],
+      "sections": [
+        {
+          "id": "trunk",
+          "title": "Start",
+          "subtitle": "/editing-team",
+          "tone": "runtime",
+          "x": -24,
+          "y": -74,
+          "width": 277,
+          "height": 162,
+          "icon": "terminal"
+        },
+        {
+          "id": "w0-cut",
+          "title": "Cut",
+          "subtitle": "\"edit my video\"",
+          "tone": "runtime",
+          "x": 276,
+          "y": -74,
+          "width": 277,
+          "height": 162
+        },
+        {
+          "id": "w0-dress",
+          "title": "Dress",
+          "subtitle": "2 steps",
+          "tone": "decision",
+          "x": 576,
+          "y": -74,
+          "width": 577,
+          "height": 162
+        },
+        {
+          "id": "w0-post",
+          "title": "Post",
+          "subtitle": "1 step",
+          "tone": "action",
+          "x": 1176,
+          "y": -74,
+          "width": 277,
+          "height": 162
         }
       ]
     }
@@ -1120,7 +1684,7 @@
     "buildStatus": "active",
     "purpose": "Everything after somebody already knows you: replies, check-ins, and keeping warm leads warm.",
     "sourceOfTruth": "departments/marketing/follow-up-team/team.md",
-    "flowAsOf": "2026-10-24",
+    "flowAsOf": "2026-11-07",
     "seats": [
       {
         "name": "Nurture Agent",
@@ -1160,71 +1724,145 @@
       }
     ],
     "flow": {
-      "phases": [
-        {
-          "id": "w0-find",
-          "label": "Find",
-          "color": "sky"
-        },
-        {
-          "id": "w0-draft",
-          "label": "Draft",
-          "color": "violet"
-        },
-        {
-          "id": "w0-send",
-          "label": "Send",
-          "color": "amber"
-        }
-      ],
       "nodes": [
         {
-          "id": "w0-s1",
-          "phase": "w0-find",
-          "label": "Nurture Agent",
-          "sub": "who-went-quiet",
+          "id": "entry",
+          "x": 0,
+          "y": 0,
+          "icon": "terminal",
+          "title": "/follow-up-team",
+          "tone": "accent",
+          "stat": "1 workflow",
+          "hint": "type it, or say a workflow",
+          "detail": "Summon the Follow-Up Team by typing /follow-up-team (or $follow-up-team in Codex), or say one of its workflows out loud. It shows its workflows and team members, then runs the one you pick."
+        },
+        {
+          "id": "w0s1",
+          "x": 300,
+          "y": 0,
           "icon": "sparkle",
+          "title": "Nurture Agent",
+          "stat": "who-went-quiet",
+          "tone": "default",
+          "hint": "the list of who's owed a touch and why. You pick one.",
           "detail": "the list of who's owed a touch and why. You pick one."
         },
         {
-          "id": "w0-s2",
-          "phase": "w0-draft",
-          "label": "Reply Agent",
-          "sub": "draft-a-reply",
+          "id": "w0s2",
+          "x": 600,
+          "y": 0,
           "icon": "check",
-          "badge": "gate",
-          "detail": "if they said something."
+          "title": "Reply Agent",
+          "stat": "draft-a-reply",
+          "tone": "default",
+          "hint": "if they said something.",
+          "detail": "if they said something.",
+          "pill": {
+            "label": "gate",
+            "tone": "accent"
+          }
         },
         {
-          "id": "w0-s3",
-          "phase": "w0-draft",
-          "label": "Nurture Agent",
-          "sub": "one-nudge",
+          "id": "w0s3",
+          "x": 900,
+          "y": 0,
           "icon": "check",
-          "badge": "gate",
-          "detail": "if they went quiet."
+          "title": "Nurture Agent",
+          "stat": "one-nudge",
+          "tone": "default",
+          "hint": "if they went quiet.",
+          "detail": "if they went quiet.",
+          "pill": {
+            "label": "gate",
+            "tone": "accent"
+          }
         },
         {
-          "id": "w0-s4",
-          "phase": "w0-send",
-          "label": "You",
-          "sub": "send it yourself. The touch gets a dated line in",
-          "icon": "sparkle",
-          "detail": "send it yourself. The touch gets a dated line in the lead's file."
+          "id": "w0s4",
+          "x": 1200,
+          "y": 0,
+          "icon": "user",
+          "title": "You",
+          "stat": "your call",
+          "tone": "default",
+          "hint": "send it yourself. The touch gets a dated line in the lead's file.",
+          "detail": "send it yourself. The touch gets a dated line in the lead's file.",
+          "pill": {
+            "label": "you",
+            "tone": "warn"
+          }
         }
       ],
       "edges": [
         {
-          "from": "w0-s1",
-          "to": "w0-s2"
+          "id": "e-entry-w0s1",
+          "source": "entry",
+          "target": "w0s1",
+          "animated": true
         },
         {
-          "from": "w0-s2",
-          "to": "w0-s3"
+          "id": "e-w0s1-w0s2",
+          "source": "w0s1",
+          "target": "w0s2",
+          "animated": false,
+          "label": "draft"
         },
         {
-          "from": "w0-s3",
-          "to": "w0-s4"
+          "id": "e-w0s2-w0s3",
+          "source": "w0s2",
+          "target": "w0s3",
+          "animated": false,
+          "label": "approve"
+        },
+        {
+          "id": "e-w0s3-w0s4",
+          "source": "w0s3",
+          "target": "w0s4",
+          "animated": false,
+          "label": "send"
+        }
+      ],
+      "sections": [
+        {
+          "id": "trunk",
+          "title": "Start",
+          "subtitle": "/follow-up-team",
+          "tone": "runtime",
+          "x": -24,
+          "y": -74,
+          "width": 277,
+          "height": 162,
+          "icon": "terminal"
+        },
+        {
+          "id": "w0-find",
+          "title": "Find",
+          "subtitle": "\"keep my clients warm\"",
+          "tone": "runtime",
+          "x": 276,
+          "y": -74,
+          "width": 277,
+          "height": 162
+        },
+        {
+          "id": "w0-draft",
+          "title": "Draft",
+          "subtitle": "2 steps",
+          "tone": "training",
+          "x": 576,
+          "y": -74,
+          "width": 577,
+          "height": 162
+        },
+        {
+          "id": "w0-send",
+          "title": "Send",
+          "subtitle": "1 step",
+          "tone": "action",
+          "x": 1176,
+          "y": -74,
+          "width": 277,
+          "height": 162
         }
       ]
     }
@@ -1239,7 +1877,7 @@
     "buildStatus": "planning",
     "purpose": "The email your audience actually opens, once your list exists.",
     "sourceOfTruth": "departments/marketing/newsletter-team/team.md",
-    "flowAsOf": "2026-10-24",
+    "flowAsOf": "2026-11-07",
     "seats": [
       {
         "name": "List Manager",
@@ -1254,9 +1892,9 @@
     ],
     "skills": [],
     "flow": {
-      "phases": [],
       "nodes": [],
-      "edges": []
+      "edges": [],
+      "sections": []
     }
   },
   {
@@ -1269,7 +1907,7 @@
     "buildStatus": "planning",
     "purpose": "Knows what's happening outside your business: competitors, what works in your space, and what belongs in your knowledge folder.",
     "sourceOfTruth": "departments/marketing/research-team/team.md",
-    "flowAsOf": "2026-10-24",
+    "flowAsOf": "2026-11-07",
     "seats": [
       {
         "name": "Researcher",
@@ -1304,81 +1942,149 @@
       }
     ],
     "flow": {
-      "phases": [
-        {
-          "id": "w0-outside",
-          "label": "Outside",
-          "color": "sky"
-        },
-        {
-          "id": "w0-inside",
-          "label": "Inside",
-          "color": "violet"
-        },
-        {
-          "id": "w0-report",
-          "label": "Report",
-          "color": "amber"
-        }
-      ],
       "nodes": [
         {
-          "id": "w0-s1",
-          "phase": "w0-outside",
-          "label": "Researcher",
-          "sub": "competitor-check",
+          "id": "entry",
+          "x": 0,
+          "y": 0,
+          "icon": "terminal",
+          "title": "/research-team",
+          "tone": "accent",
+          "stat": "1 workflow",
+          "hint": "type it, or say a workflow",
+          "detail": "Summon the Research Team by typing /research-team (or $research-team in Codex), or say one of its workflows out loud. It shows its workflows and team members, then runs the one you pick."
+        },
+        {
+          "id": "w0s1",
+          "x": 300,
+          "y": 0,
           "icon": "sparkle",
+          "title": "Researcher",
+          "stat": "competitor-check",
+          "tone": "default",
+          "hint": "what changed out there.",
           "detail": "what changed out there."
         },
         {
-          "id": "w0-s2",
-          "phase": "w0-outside",
-          "label": "Researcher",
-          "sub": "find-outliers",
+          "id": "w0s2",
+          "x": 600,
+          "y": 0,
           "icon": "sparkle",
+          "title": "Researcher",
+          "stat": "find-outliers",
+          "tone": "default",
+          "hint": "what's overperforming in your space.",
           "detail": "what's overperforming in your space."
         },
         {
-          "id": "w0-s3",
-          "phase": "w0-inside",
-          "label": "Traffic Agent",
-          "sub": "weekly-traffic-read",
+          "id": "w0s3",
+          "x": 900,
+          "y": 0,
           "icon": "sparkle",
+          "title": "Traffic Agent",
+          "stat": "weekly-traffic-read",
+          "tone": "default",
+          "hint": "what came to your site, from where, and one action.",
           "detail": "what came to your site, from where, and one action."
         },
         {
-          "id": "w0-s4",
-          "phase": "w0-inside",
-          "label": "Social Manager",
-          "sub": "read-the-stats",
+          "id": "w0s4",
+          "x": 1200,
+          "y": 0,
           "icon": "sparkle",
+          "title": "Social Manager",
+          "stat": "read-the-stats",
+          "tone": "default",
+          "hint": "how each post did against its own job.",
           "detail": "how each post did against its own job."
         },
         {
-          "id": "w0-s5",
-          "phase": "w0-report",
-          "label": "Researcher",
-          "sub": "writes `knowledge/reports/marketing-checkup-<YYY",
+          "id": "w0s5",
+          "x": 1500,
+          "y": 0,
           "icon": "search",
+          "title": "Researcher",
+          "stat": "no skill, the member does it",
+          "tone": "default",
+          "hint": "writes `knowledge/reports/marketing-checkup-<YYYY-MM>.md` from the fou",
           "detail": "writes `knowledge/reports/marketing-checkup-<YYYY-MM>.md` from the four steps above: competitors, outliers, traffic, content, and the ONE thing to do next. Anything that changes what a team is building gets flagged to you directly."
         }
       ],
       "edges": [
         {
-          "from": "w0-s1",
-          "to": "w0-s2"
+          "id": "e-entry-w0s1",
+          "source": "entry",
+          "target": "w0s1",
+          "animated": true
         },
         {
-          "from": "w0-s2",
-          "to": "w0-s3"
+          "id": "e-w0s1-w0s2",
+          "source": "w0s1",
+          "target": "w0s2",
+          "animated": false
         },
         {
-          "from": "w0-s3",
-          "to": "w0-s4"
+          "id": "e-w0s2-w0s3",
+          "source": "w0s2",
+          "target": "w0s3",
+          "animated": false,
+          "label": "inside"
         },
         {
-          "from": "w0-s4",
-          "to": "w0-s5"
+          "id": "e-w0s3-w0s4",
+          "source": "w0s3",
+          "target": "w0s4",
+          "animated": false
+        },
+        {
+          "id": "e-w0s4-w0s5",
+          "source": "w0s4",
+          "target": "w0s5",
+          "animated": false,
+          "label": "report"
+        }
+      ],
+      "sections": [
+        {
+          "id": "trunk",
+          "title": "Start",
+          "subtitle": "/research-team",
+          "tone": "runtime",
+          "x": -24,
+          "y": -74,
+          "width": 277,
+          "height": 162,
+          "icon": "terminal"
+        },
+        {
+          "id": "w0-outside",
+          "title": "Outside",
+          "subtitle": "\"run my marketing checkup\"",
+          "tone": "runtime",
+          "x": 276,
+          "y": -74,
+          "width": 577,
+          "height": 162
+        },
+        {
+          "id": "w0-inside",
+          "title": "Inside",
+          "subtitle": "2 steps",
+          "tone": "decision",
+          "x": 876,
+          "y": -74,
+          "width": 577,
+          "height": 162
+        },
+        {
+          "id": "w0-report",
+          "title": "Report",
+          "subtitle": "1 step",
+          "tone": "knowledge",
+          "x": 1476,
+          "y": -74,
+          "width": 277,
+          "height": 162
         }
       ]
     }
@@ -1393,7 +2099,7 @@
     "buildStatus": "active",
     "purpose": "Your pages on the live internet, and the traffic that finds them.",
     "sourceOfTruth": "departments/marketing/website-team/team.md",
-    "flowAsOf": "2026-10-24",
+    "flowAsOf": "2026-11-07",
     "seats": [
       {
         "name": "Page Builder",
@@ -1475,211 +2181,360 @@
       }
     ],
     "flow": {
-      "phases": [
-        {
-          "id": "w0-plan",
-          "label": "build my landing page · Plan",
-          "color": "sky"
-        },
-        {
-          "id": "w0-write",
-          "label": "build my landing page · Write",
-          "color": "violet"
-        },
-        {
-          "id": "w0-look",
-          "label": "build my landing page · Look",
-          "color": "amber"
-        },
-        {
-          "id": "w0-get-found",
-          "label": "build my landing page · Get found",
-          "color": "rose"
-        },
-        {
-          "id": "w0-hand-off",
-          "label": "build my landing page · Hand off",
-          "color": "teal"
-        },
-        {
-          "id": "w1-review",
-          "label": "audit my site · Review",
-          "color": "violet"
-        },
-        {
-          "id": "w1-check",
-          "label": "audit my site · Check",
-          "color": "amber"
-        },
-        {
-          "id": "w1-report",
-          "label": "audit my site · Report",
-          "color": "rose"
-        }
-      ],
       "nodes": [
         {
-          "id": "w0-s1",
-          "phase": "w0-plan",
-          "label": "Page Builder",
-          "sub": "build-a-page",
+          "id": "entry",
+          "x": 0,
+          "y": 110,
+          "icon": "terminal",
+          "title": "/website-team",
+          "tone": "accent",
+          "stat": "2 workflows",
+          "hint": "type it, or say a workflow",
+          "detail": "Summon the Website Team by typing /website-team (or $website-team in Codex), or say one of its workflows out loud. It shows its workflows and team members, then runs the one you pick."
+        },
+        {
+          "id": "w0s1",
+          "x": 300,
+          "y": 0,
           "icon": "search",
+          "title": "Page Builder",
+          "stat": "build-a-page",
+          "tone": "default",
+          "hint": "checks the brand files, then lays out one page with one job.",
           "detail": "checks the brand files, then lays out one page with one job."
         },
         {
-          "id": "w0-s2",
-          "phase": "w0-write",
-          "label": "Page Builder",
-          "sub": "write-headlines",
+          "id": "w0s2",
+          "x": 600,
+          "y": 0,
           "icon": "check",
-          "badge": "gate",
-          "detail": "writes five headlines from your offer and grades them; the winner goes in `brand/offer.md`."
+          "title": "Page Builder",
+          "stat": "write-headlines",
+          "tone": "default",
+          "hint": "writes five headlines from your offer and grades them; the winner goes",
+          "detail": "writes five headlines from your offer and grades them; the winner goes in `brand/offer.md`.",
+          "pill": {
+            "label": "gate",
+            "tone": "accent"
+          }
         },
         {
-          "id": "w0-s3",
-          "phase": "w0-write",
-          "label": "Page Builder",
-          "sub": "page-copy",
+          "id": "w0s3",
+          "x": 900,
+          "y": 0,
           "icon": "form",
+          "title": "Page Builder",
+          "stat": "page-copy",
+          "tone": "default",
+          "hint": "writes the rest of the words, like you talk.",
           "detail": "writes the rest of the words, like you talk."
         },
         {
-          "id": "w0-s4",
-          "phase": "w0-look",
-          "label": "Page Builder",
-          "sub": "style-the-page",
+          "id": "w0s4",
+          "x": 1200,
+          "y": 0,
           "icon": "sparkle",
+          "title": "Page Builder",
+          "stat": "style-the-page",
+          "tone": "default",
+          "hint": "makes it look like your brand, on purpose.",
           "detail": "makes it look like your brand, on purpose."
         },
         {
-          "id": "w0-s5",
-          "phase": "w0-get-found",
-          "label": "Traffic Agent",
-          "sub": "seo-foundations",
+          "id": "w0s5",
+          "x": 1500,
+          "y": 0,
           "icon": "send",
+          "title": "Traffic Agent",
+          "stat": "seo-foundations",
+          "tone": "default",
+          "hint": "the search basics, before the page ships.",
           "detail": "the search basics, before the page ships."
         },
         {
-          "id": "w0-s6",
-          "phase": "w0-get-found",
-          "label": "Traffic Agent",
-          "sub": "ai-visibility",
+          "id": "w0s6",
+          "x": 1800,
+          "y": 0,
           "icon": "sparkle",
+          "title": "Traffic Agent",
+          "stat": "ai-visibility",
+          "tone": "default",
+          "hint": "makes the page easy for AI answers to find and quote.",
           "detail": "makes the page easy for AI answers to find and quote."
         },
         {
-          "id": "w0-s7",
-          "phase": "w0-hand-off",
-          "label": "Page Builder",
-          "sub": "hands the finished page to the Dev Team's \"ship ",
+          "id": "w0s7",
+          "x": 2100,
+          "y": 0,
           "icon": "send",
+          "title": "Page Builder",
+          "stat": "no skill, the member does it",
+          "tone": "default",
+          "hint": "hands the finished page to the Dev Team's \"ship my landing page\" workf",
           "detail": "hands the finished page to the Dev Team's \"ship my landing page\" workflow."
         },
         {
-          "id": "w1-s1",
-          "phase": "w1-review",
-          "label": "Page Builder",
-          "sub": "review-a-page",
+          "id": "w1s1",
+          "x": 300,
+          "y": 220,
           "icon": "send",
+          "title": "Page Builder",
+          "stat": "review-a-page",
+          "tone": "default",
+          "hint": "walks every live page like a stranger would.",
           "detail": "walks every live page like a stranger would."
         },
         {
-          "id": "w1-s2",
-          "phase": "w1-check",
-          "label": "Traffic Agent",
-          "sub": "seo-foundations",
+          "id": "w1s2",
+          "x": 600,
+          "y": 220,
           "icon": "send",
+          "title": "Traffic Agent",
+          "stat": "seo-foundations",
+          "tone": "default",
+          "hint": "checks what's live against the search basics.",
           "detail": "checks what's live against the search basics."
         },
         {
-          "id": "w1-s3",
-          "phase": "w1-check",
-          "label": "Traffic Agent",
-          "sub": "ai-visibility",
+          "id": "w1s3",
+          "x": 900,
+          "y": 220,
           "icon": "search",
+          "title": "Traffic Agent",
+          "stat": "ai-visibility",
+          "tone": "default",
+          "hint": "checks what AI answers can find.",
           "detail": "checks what AI answers can find."
         },
         {
-          "id": "w1-s4",
-          "phase": "w1-check",
-          "label": "Traffic Agent",
-          "sub": "speed-check",
+          "id": "w1s4",
+          "x": 1200,
+          "y": 220,
           "icon": "search",
+          "title": "Traffic Agent",
+          "stat": "speed-check",
+          "tone": "default",
+          "hint": "checks every page loads fast.",
           "detail": "checks every page loads fast."
         },
         {
-          "id": "w1-s5",
-          "phase": "w1-check",
-          "label": "Security Checker",
-          "sub": "security-sweep",
+          "id": "w1s5",
+          "x": 1500,
+          "y": 220,
           "icon": "shield",
+          "title": "Security Checker",
+          "stat": "security-sweep",
+          "tone": "default",
+          "hint": "sweeps the form path.",
           "detail": "sweeps the form path."
         },
         {
-          "id": "w1-s6",
-          "phase": "w1-report",
-          "label": "Page Builder",
-          "sub": "writes `knowledge/reports/site-audit-<YYYY-MM>.m",
+          "id": "w1s6",
+          "x": 1800,
+          "y": 220,
           "icon": "form",
+          "title": "Page Builder",
+          "stat": "no skill, the member does it",
+          "tone": "default",
+          "hint": "writes `knowledge/reports/site-audit-<YYYY-MM>.md` from the steps abov",
           "detail": "writes `knowledge/reports/site-audit-<YYYY-MM>.md` from the steps above: Quick win, Strategic, Long-term, each with the team member who owns it, ending with the ONE fix to do first."
         },
         {
-          "id": "w1-s7",
-          "phase": "w1-report",
-          "label": "Designer",
-          "sub": "make-a-report-doc",
+          "id": "w1s7",
+          "x": 2100,
+          "y": 220,
           "icon": "sparkle",
+          "title": "Designer",
+          "stat": "make-a-report-doc",
+          "tone": "default",
+          "hint": "makes it a shareable PDF if you want one.",
           "detail": "makes it a shareable PDF if you want one."
         }
       ],
       "edges": [
         {
-          "from": "w0-s1",
-          "to": "w0-s2"
+          "id": "e-entry-w0s1",
+          "source": "entry",
+          "target": "w0s1",
+          "animated": true
         },
         {
-          "from": "w0-s2",
-          "to": "w0-s3"
+          "id": "e-w0s1-w0s2",
+          "source": "w0s1",
+          "target": "w0s2",
+          "animated": false,
+          "label": "write"
         },
         {
-          "from": "w0-s3",
-          "to": "w0-s4"
+          "id": "e-w0s2-w0s3",
+          "source": "w0s2",
+          "target": "w0s3",
+          "animated": false
         },
         {
-          "from": "w0-s4",
-          "to": "w0-s5"
+          "id": "e-w0s3-w0s4",
+          "source": "w0s3",
+          "target": "w0s4",
+          "animated": false,
+          "label": "look"
         },
         {
-          "from": "w0-s5",
-          "to": "w0-s6"
+          "id": "e-w0s4-w0s5",
+          "source": "w0s4",
+          "target": "w0s5",
+          "animated": false,
+          "label": "get found"
         },
         {
-          "from": "w0-s6",
-          "to": "w0-s7"
+          "id": "e-w0s5-w0s6",
+          "source": "w0s5",
+          "target": "w0s6",
+          "animated": false
         },
         {
-          "from": "w1-s1",
-          "to": "w1-s2"
+          "id": "e-w0s6-w0s7",
+          "source": "w0s6",
+          "target": "w0s7",
+          "animated": false,
+          "label": "hand off"
         },
         {
-          "from": "w1-s2",
-          "to": "w1-s3"
+          "id": "e-entry-w1s1",
+          "source": "entry",
+          "target": "w1s1",
+          "animated": true
         },
         {
-          "from": "w1-s3",
-          "to": "w1-s4"
+          "id": "e-w1s1-w1s2",
+          "source": "w1s1",
+          "target": "w1s2",
+          "animated": false,
+          "label": "check"
         },
         {
-          "from": "w1-s4",
-          "to": "w1-s5"
+          "id": "e-w1s2-w1s3",
+          "source": "w1s2",
+          "target": "w1s3",
+          "animated": false
         },
         {
-          "from": "w1-s5",
-          "to": "w1-s6"
+          "id": "e-w1s3-w1s4",
+          "source": "w1s3",
+          "target": "w1s4",
+          "animated": false
         },
         {
-          "from": "w1-s6",
-          "to": "w1-s7"
+          "id": "e-w1s4-w1s5",
+          "source": "w1s4",
+          "target": "w1s5",
+          "animated": false
+        },
+        {
+          "id": "e-w1s5-w1s6",
+          "source": "w1s5",
+          "target": "w1s6",
+          "animated": false,
+          "label": "report"
+        },
+        {
+          "id": "e-w1s6-w1s7",
+          "source": "w1s6",
+          "target": "w1s7",
+          "animated": false
+        }
+      ],
+      "sections": [
+        {
+          "id": "trunk",
+          "title": "Start",
+          "subtitle": "/website-team",
+          "tone": "runtime",
+          "x": -24,
+          "y": 36,
+          "width": 277,
+          "height": 162,
+          "icon": "terminal"
+        },
+        {
+          "id": "w0-plan",
+          "title": "Plan",
+          "subtitle": "\"build my landing page\"",
+          "tone": "decision",
+          "x": 276,
+          "y": -74,
+          "width": 277,
+          "height": 162
+        },
+        {
+          "id": "w0-write",
+          "title": "Write",
+          "subtitle": "2 steps",
+          "tone": "training",
+          "x": 576,
+          "y": -74,
+          "width": 577,
+          "height": 162
+        },
+        {
+          "id": "w0-look",
+          "title": "Look",
+          "subtitle": "1 step",
+          "tone": "knowledge",
+          "x": 1176,
+          "y": -74,
+          "width": 277,
+          "height": 162
+        },
+        {
+          "id": "w0-get-found",
+          "title": "Get found",
+          "subtitle": "2 steps",
+          "tone": "review",
+          "x": 1476,
+          "y": -74,
+          "width": 577,
+          "height": 162
+        },
+        {
+          "id": "w0-hand-off",
+          "title": "Hand off",
+          "subtitle": "1 step",
+          "tone": "action",
+          "x": 2076,
+          "y": -74,
+          "width": 277,
+          "height": 162
+        },
+        {
+          "id": "w1-review",
+          "title": "Review",
+          "subtitle": "\"audit my site\"",
+          "tone": "review",
+          "x": 276,
+          "y": 146,
+          "width": 277,
+          "height": 162
+        },
+        {
+          "id": "w1-check",
+          "title": "Check",
+          "subtitle": "4 steps",
+          "tone": "review",
+          "x": 576,
+          "y": 146,
+          "width": 1177,
+          "height": 162
+        },
+        {
+          "id": "w1-report",
+          "title": "Report",
+          "subtitle": "2 steps",
+          "tone": "knowledge",
+          "x": 1776,
+          "y": 146,
+          "width": 577,
+          "height": 162
         }
       ]
     }
@@ -1694,7 +2549,7 @@
     "buildStatus": "planning",
     "purpose": "Runs the room: knows the whole business, keeps the shared brain true, scores ideas, and picks what comes next.",
     "sourceOfTruth": "departments/operations/strategy-team/team.md",
-    "flowAsOf": "2026-10-24",
+    "flowAsOf": "2026-11-07",
     "seats": [
       {
         "name": "Company Strategist",
@@ -1733,58 +2588,119 @@
       }
     ],
     "flow": {
-      "phases": [
-        {
-          "id": "w0-read",
-          "label": "Read",
-          "color": "sky"
-        },
-        {
-          "id": "w0-pick",
-          "label": "Pick",
-          "color": "violet"
-        },
-        {
-          "id": "w0-brief",
-          "label": "Brief",
-          "color": "amber"
-        }
-      ],
       "nodes": [
         {
-          "id": "w0-s1",
-          "phase": "w0-read",
-          "label": "Company Strategist",
-          "sub": "company-strategist",
+          "id": "entry",
+          "x": 0,
+          "y": 0,
+          "icon": "terminal",
+          "title": "/strategy-team",
+          "tone": "accent",
+          "stat": "1 workflow",
+          "hint": "type it, or say a workflow",
+          "detail": "Summon the Strategy Team by typing /strategy-team (or $strategy-team in Codex), or say one of its workflows out loud. It shows its workflows and team members, then runs the one you pick."
+        },
+        {
+          "id": "w0s1",
+          "x": 300,
+          "y": 0,
           "icon": "search",
+          "title": "Company Strategist",
+          "stat": "company-strategist",
+          "tone": "default",
+          "hint": "reads the whole repo and says what's true, what's thin, and what's mis",
           "detail": "reads the whole repo and says what's true, what's thin, and what's missing, then makes ONE pick with its reasons."
         },
         {
-          "id": "w0-s2",
-          "phase": "w0-pick",
-          "label": "You",
-          "sub": "push back where it's wrong, then agree on the pi",
-          "icon": "check",
-          "badge": "gate",
-          "detail": "push back where it's wrong, then agree on the pick."
+          "id": "w0s2",
+          "x": 600,
+          "y": 0,
+          "icon": "user",
+          "title": "You",
+          "stat": "your call",
+          "tone": "default",
+          "hint": "push back where it's wrong, then agree on the pick.",
+          "detail": "push back where it's wrong, then agree on the pick.",
+          "pill": {
+            "label": "gate",
+            "tone": "accent"
+          }
         },
         {
-          "id": "w0-s3",
-          "phase": "w0-brief",
-          "label": "Company Strategist",
-          "sub": "writes the brief to `departments/operations/stra",
+          "id": "w0s3",
+          "x": 900,
+          "y": 0,
           "icon": "search",
+          "title": "Company Strategist",
+          "stat": "no skill, the member does it",
+          "tone": "default",
+          "hint": "writes the brief to `departments/operations/strategy-team/company-stra",
           "detail": "writes the brief to `departments/operations/strategy-team/company-strategist/briefs/<YYYY-MM-DD>-<team-member>.md`, in the shape `briefs/README.md` gives."
         }
       ],
       "edges": [
         {
-          "from": "w0-s1",
-          "to": "w0-s2"
+          "id": "e-entry-w0s1",
+          "source": "entry",
+          "target": "w0s1",
+          "animated": true
         },
         {
-          "from": "w0-s2",
-          "to": "w0-s3"
+          "id": "e-w0s1-w0s2",
+          "source": "w0s1",
+          "target": "w0s2",
+          "animated": false,
+          "label": "pick"
+        },
+        {
+          "id": "e-w0s2-w0s3",
+          "source": "w0s2",
+          "target": "w0s3",
+          "animated": false,
+          "label": "brief"
+        }
+      ],
+      "sections": [
+        {
+          "id": "trunk",
+          "title": "Start",
+          "subtitle": "/strategy-team",
+          "tone": "runtime",
+          "x": -24,
+          "y": -74,
+          "width": 277,
+          "height": 162,
+          "icon": "terminal"
+        },
+        {
+          "id": "w0-read",
+          "title": "Read",
+          "subtitle": "\"what comes next\"",
+          "tone": "knowledge",
+          "x": 276,
+          "y": -74,
+          "width": 277,
+          "height": 162
+        },
+        {
+          "id": "w0-pick",
+          "title": "Pick",
+          "subtitle": "1 step",
+          "tone": "decision",
+          "x": 576,
+          "y": -74,
+          "width": 277,
+          "height": 162
+        },
+        {
+          "id": "w0-brief",
+          "title": "Brief",
+          "subtitle": "1 step",
+          "tone": "knowledge",
+          "x": 876,
+          "y": -74,
+          "width": 277,
+          "height": 162
         }
       ]
     }
@@ -1799,7 +2715,7 @@
     "buildStatus": "active",
     "purpose": "The path from stranger to booked call: the assessment, the calendar, and the record.",
     "sourceOfTruth": "departments/sales/sales-team/team.md",
-    "flowAsOf": "2026-10-24",
+    "flowAsOf": "2026-11-07",
     "seats": [
       {
         "name": "Assessment Agent",
@@ -1844,83 +2760,162 @@
       }
     ],
     "flow": {
-      "phases": [
-        {
-          "id": "w0-sort",
-          "label": "Sort",
-          "color": "sky"
-        },
-        {
-          "id": "w0-book",
-          "label": "Book",
-          "color": "violet"
-        },
-        {
-          "id": "w0-keep",
-          "label": "Keep",
-          "color": "amber"
-        }
-      ],
       "nodes": [
         {
-          "id": "w0-s1",
-          "phase": "w0-sort",
-          "label": "CRM Agent",
-          "sub": "log-a-lead",
+          "id": "entry",
+          "x": 0,
+          "y": 0,
+          "icon": "terminal",
+          "title": "/sales-team",
+          "tone": "accent",
+          "stat": "1 workflow",
+          "hint": "type it, or say a workflow",
+          "detail": "Summon the Sales Team by typing /sales-team (or $sales-team in Codex), or say one of its workflows out loud. It shows its workflows and team members, then runs the one you pick."
+        },
+        {
+          "id": "w0s1",
+          "x": 300,
+          "y": 0,
           "icon": "sparkle",
+          "title": "CRM Agent",
+          "stat": "log-a-lead",
+          "tone": "default",
+          "hint": "makes the lead's file from what came in.",
           "detail": "makes the lead's file from what came in."
         },
         {
-          "id": "w0-s2",
-          "phase": "w0-sort",
-          "label": "You",
-          "sub": "read the file and decide if it's a fit.",
+          "id": "w0s2",
+          "x": 600,
+          "y": 0,
+          "icon": "user",
+          "title": "You",
+          "stat": "your call",
+          "tone": "default",
+          "hint": "read the file and decide if it's a fit.",
+          "detail": "read the file and decide if it's a fit.",
+          "pill": {
+            "label": "gate",
+            "tone": "accent"
+          }
+        },
+        {
+          "id": "w0s3",
+          "x": 900,
+          "y": 0,
           "icon": "check",
-          "badge": "gate",
-          "detail": "read the file and decide if it's a fit."
+          "title": "Calendar Agent",
+          "stat": "book-the-call",
+          "tone": "default",
+          "hint": "two booking messages with a time you pick.",
+          "detail": "two booking messages with a time you pick.",
+          "pill": {
+            "label": "gate",
+            "tone": "accent"
+          }
         },
         {
-          "id": "w0-s3",
-          "phase": "w0-book",
-          "label": "Calendar Agent",
-          "sub": "book-the-call",
-          "icon": "check",
-          "badge": "gate",
-          "detail": "two booking messages with a time you pick."
+          "id": "w0s4",
+          "x": 1200,
+          "y": 0,
+          "icon": "user",
+          "title": "You",
+          "stat": "your call",
+          "tone": "default",
+          "hint": "send it yourself.",
+          "detail": "send it yourself.",
+          "pill": {
+            "label": "you",
+            "tone": "warn"
+          }
         },
         {
-          "id": "w0-s4",
-          "phase": "w0-book",
-          "label": "You",
-          "sub": "send it yourself.",
-          "icon": "sparkle",
-          "detail": "send it yourself."
-        },
-        {
-          "id": "w0-s5",
-          "phase": "w0-keep",
-          "label": "CRM Agent",
-          "sub": "adds a dated line to the lead's file when you sa",
+          "id": "w0s5",
+          "x": 1500,
+          "y": 0,
           "icon": "form",
+          "title": "CRM Agent",
+          "stat": "no skill, the member does it",
+          "tone": "default",
+          "hint": "adds a dated line to the lead's file when you say it went out. If they",
           "detail": "adds a dated line to the lead's file when you say it went out. If they reply, the Follow-Up Team's draft-a-reply takes the next message."
         }
       ],
       "edges": [
         {
-          "from": "w0-s1",
-          "to": "w0-s2"
+          "id": "e-entry-w0s1",
+          "source": "entry",
+          "target": "w0s1",
+          "animated": true
         },
         {
-          "from": "w0-s2",
-          "to": "w0-s3"
+          "id": "e-w0s1-w0s2",
+          "source": "w0s1",
+          "target": "w0s2",
+          "animated": false,
+          "label": "approve"
         },
         {
-          "from": "w0-s3",
-          "to": "w0-s4"
+          "id": "e-w0s2-w0s3",
+          "source": "w0s2",
+          "target": "w0s3",
+          "animated": false,
+          "label": "book"
         },
         {
-          "from": "w0-s4",
-          "to": "w0-s5"
+          "id": "e-w0s3-w0s4",
+          "source": "w0s3",
+          "target": "w0s4",
+          "animated": false
+        },
+        {
+          "id": "e-w0s4-w0s5",
+          "source": "w0s4",
+          "target": "w0s5",
+          "animated": false,
+          "label": "keep"
+        }
+      ],
+      "sections": [
+        {
+          "id": "trunk",
+          "title": "Start",
+          "subtitle": "/sales-team",
+          "tone": "runtime",
+          "x": -24,
+          "y": -74,
+          "width": 277,
+          "height": 162,
+          "icon": "terminal"
+        },
+        {
+          "id": "w0-sort",
+          "title": "Sort",
+          "subtitle": "\"work my new lead\"",
+          "tone": "runtime",
+          "x": 276,
+          "y": -74,
+          "width": 577,
+          "height": 162
+        },
+        {
+          "id": "w0-book",
+          "title": "Book",
+          "subtitle": "2 steps",
+          "tone": "decision",
+          "x": 876,
+          "y": -74,
+          "width": 577,
+          "height": 162
+        },
+        {
+          "id": "w0-keep",
+          "title": "Keep",
+          "subtitle": "1 step",
+          "tone": "knowledge",
+          "x": 1476,
+          "y": -74,
+          "width": 277,
+          "height": 162
         }
       ]
     }

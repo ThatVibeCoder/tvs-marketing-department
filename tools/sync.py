@@ -463,6 +463,108 @@ def icon(text):
     return "sparkle"
 
 
+# The flow canvas, drawn the Command Center way: a "sideways tree" on a COL 300 x ROW 110 grid. A short trunk on
+# the left (summon the team), split early, one row band per workflow, each band's phases as colour-coded frames
+# left to right with their steps inside, and one empty row between bands for the frame headers. Frame geometry is
+# in builder units (a 288x76 card on screen is about 229x72 here), the same as the Command Center's frame().
+FLOW_COL, FLOW_ROW = 300, 110
+
+
+def flow_at(col, row):
+    return {"x": col * FLOW_COL, "y": row * FLOW_ROW}
+
+
+def flow_frame(fid, title, subtitle, tone, c0, r0, c1, r1, icon_key=None):
+    f = {"id": fid, "title": title, "subtitle": subtitle, "tone": tone, "x": c0 * FLOW_COL - 24, "y": r0 * FLOW_ROW - 74,
+         "width": (c1 - c0) * FLOW_COL + 229 + 48, "height": (r1 - r0) * FLOW_ROW + 72 + 90}
+    if icon_key:
+        f["icon"] = icon_key
+    return f
+
+
+PHASE_TONE = [("read", "knowledge"), ("research", "knowledge"), ("learn", "knowledge"), ("plan", "decision"),
+              ("decide", "decision"), ("check", "review"), ("review", "review"), ("approve", "review"),
+              ("test", "review"), ("post", "action"), ("ship", "action"), ("send", "action"), ("live", "action"),
+              ("launch", "action"), ("write", "training"), ("draft", "training"), ("record", "training"),
+              ("edit", "training"), ("build", "training")]
+TONE_CYCLE = ["runtime", "decision", "knowledge", "review", "action", "training"]
+
+
+def phase_tone(name, i):
+    n = name.lower()
+    for k, v in PHASE_TONE:
+        if k in n:
+            return v
+    return TONE_CYCLE[i % len(TONE_CYCLE)]
+
+
+def team_flow(t):
+    flows = [w for w in t["workflows"] if w["steps"]]
+    if not flows:
+        return {"nodes": [], "edges": [], "sections": []}
+    rows = [2 * i for i in range(len(flows))]
+    trunk_row = rows[len(rows) // 2] if len(rows) % 2 else (rows[len(rows) // 2 - 1] + rows[len(rows) // 2]) // 2
+    nodes = [{"id": "entry", **flow_at(0, trunk_row), "icon": "terminal", "title": t["command"], "tone": "accent",
+              "stat": f"{len(flows)} workflow{'s' if len(flows) != 1 else ''}", "hint": "type it, or say a workflow",
+              "detail": f"Summon the {t['name']} by typing {t['command']} (or $" + t["id"] + " in Codex), or say one of its "
+                        "workflows out loud. It shows its workflows and team members, then runs the one you pick."}]
+    edges, sections = [], [flow_frame("trunk", "Start", t["command"], "runtime", 0, trunk_row, 0, trunk_row, "terminal")]
+    for wi, w in enumerate(flows):
+        row, col, prev, prev_phase = rows[wi], 1, "entry", None
+        by_phase = []
+        for st in w["steps"]:
+            if not by_phase or by_phase[-1][0] != st["phase"]:
+                by_phase.append((st["phase"], []))
+            by_phase[-1][1].append(st)
+        for pi, (ph, steps) in enumerate(by_phase):
+            c0 = col
+            for st in steps:
+                nid = f"w{wi}s{st['n']}"
+                you = st["member"].lower() == "you"
+                n = {"id": nid, **flow_at(col, row), "icon": "user" if you else "check" if st["gate"] else icon(st["text"]),
+                     "title": st["member"], "stat": st["skill"] or ("your call" if you else "no skill, the member does it"),
+                     "tone": "default", "hint": st["text"][:70], "detail": st["text"] or st["member"]}
+                if st["gate"]:
+                    n["pill"] = {"label": "gate", "tone": "accent"}
+                elif you:
+                    n["pill"] = {"label": "you", "tone": "warn"}
+                nodes.append(n)
+                e = {"id": f"e-{prev}-{nid}", "source": prev, "target": nid, "animated": prev == "entry"}
+                if prev == "entry":
+                    e["label"] = w["say"] if len(w["say"]) <= 12 else None
+                elif prev_phase is not None and prev_phase != ph:
+                    e["label"] = ph.lower()
+                elif st["gate"]:
+                    e["label"] = "approve"
+                edges.append({k: v for k, v in e.items() if v is not None})
+                prev, prev_phase, col = nid, ph, col + 1
+            sub = f"\"{w['say']}\"" if pi == 0 else f"{len(steps)} step{'s' if len(steps) != 1 else ''}"
+            sections.append(flow_frame(f"w{wi}-{slug(ph)}", ph, sub, phase_tone(ph, pi), c0, row, col - 1, row))
+    return {"nodes": nodes, "edges": edges, "sections": sections}
+
+
+def routine_flow(meta, body, sched, live, source):
+    steps = [re.sub(r"^\s*\d+\.\s*", "", ln).strip() for ln in section_text(body, "Steps").splitlines() if re.match(r"^\s*\d+\.\s", ln)]
+    team = meta.get("team", "") or "its team"
+    nodes = [{"id": "trigger", **flow_at(0, 0), "icon": "clock", "title": sched or "Not scheduled yet",
+              "stat": "runs on its own" if live else "turned on by its lesson", "tone": "accent" if live else "dimmed",
+              "hint": "schedule", "detail": "When it runs. The lesson that builds this routine fills in `schedule:` and sets `status: live`."},
+             {"id": "team", **flow_at(1, 0), "icon": "users", "title": team, "stat": "runs the steps", "tone": "default",
+              "detail": f"The routine runs as {team}: it reads that team's files first and stays inside their edges."}]
+    edges = [{"id": "e-trigger-team", "source": "trigger", "target": "team", "animated": live, "label": "run"}]
+    prev = "team"
+    for i, st in enumerate(steps or ["Steps not written yet"], start=1):
+        nid = f"s{i}"
+        nodes.append({"id": nid, **flow_at(1 + i, 0), "icon": icon(st), "title": f"Step {i}" if steps else "Steps",
+                      "stat": st[:60], "tone": "default" if steps else "dimmed", "detail": st})
+        edges.append({"id": f"e-{prev}-{nid}", "source": prev, "target": nid, "animated": live})
+        prev = nid
+    last = 1 + max(1, len(steps))
+    return {"topologySource": source, "nodes": nodes, "edges": edges, "sections": [
+        flow_frame("trigger", "Trigger", "when it runs", "runtime", 0, 0, 0, 0, "clock"),
+        flow_frame("run", "Runs", team, "action", 1, 0, last, 0, "users")]}
+
+
 def build_cc(depts, today):
     teams = []
     for d in depts:
@@ -473,26 +575,12 @@ def build_cc(depts, today):
             for w in t["workflows"]:
                 skills.append({"name": slug(w["say"]), "command": "/" + slug(w["say"]), "seat": "Workflow",
                                "owns": f"Say \"{w['say']}\". " + (w["when"] or "")})
-            phases, nodes, edges = [], [], []
-            for wi, w in enumerate(t["workflows"]):
-                prefix = f"w{wi}-"
-                for pi, ph in enumerate(w["phases"]):
-                    label = ph if len(t["workflows"]) == 1 else f"{w['say']} · {ph}"
-                    phases.append({"id": prefix + slug(ph), "label": label, "color": COLORS[(pi + wi) % len(COLORS)]})
-                prev = None
-                for i, st in enumerate(w["steps"]):
-                    nid = f"{prefix}s{i + 1}"
-                    nodes.append({"id": nid, "phase": prefix + slug(st["phase"]), "label": st["member"],
-                                  "sub": (st["skill"] or st["text"])[:48], "icon": "check" if st["gate"] else icon(st["text"]),
-                                  **({"badge": "gate"} if st["gate"] else {}), "detail": st["text"]})
-                    if prev:
-                        edges.append({"from": prev, "to": nid})
-                    prev = nid
+            flow = team_flow(t)
             teams.append({"id": t["id"], "name": t["name"], "command": t["command"], "department": d["id"],
                           "departmentName": d["name"], "teamType": d["name"],
                           "buildStatus": "active" if t["status"] == "live" else "planning", "purpose": t["purpose"],
                           "sourceOfTruth": t["path"], "flowAsOf": today, "seats": seats, "skills": skills,
-                          "flow": {"phases": phases, "nodes": nodes, "edges": edges}})
+                          "flow": flow})
     autos = []
     rdir = os.path.join(ROOT, "routines")
     for r in sorted(os.listdir(rdir)) if os.path.isdir(rdir) else []:
@@ -514,7 +602,7 @@ def build_cc(depts, today):
                       "active": status == "live", "sourceOfTruth": rel(p),
                       "stats": {"lastRunAt": None, "lastRunStatus": None, "runCount": None, "failureCount": None,
                                 "failureRate": None, "avgRunMs": None, "extras": []},
-                      "flow": {"topologySource": rel(p), "nodes": [], "edges": []}})
+                      "flow": routine_flow(meta, body, sched, status == "live", rel(p))})
     return {"teams.json": teams, "automations.json": autos, "content.json": build_content()}
 
 
