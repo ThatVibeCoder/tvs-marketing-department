@@ -568,7 +568,7 @@ const MODULES = [
     children: [["/content", "Overview", "layoutGrid", null, true], ["/content/calendar", "Calendar", "calendarDays"], ["/content/research", "Research", "search"],
       ...["tiktok", "instagram", "twitter", "threads", "youtube", "skool", "linkedin"].map((p) => [`/content/${p}`, PLATFORM_LABEL[p], null, p])] },
   { key: "web", label: "Web & Analytics", href: "/web", icon: "globe", description: "See where your traffic comes from and how you rank in search.",
-    children: [["/web", "Overview", null, null, true], ["/web/traffic", "Traffic"], ["/web/geography", "Geography"], ["/web/pages", "Pages"], ["/web/search", "Search"], ["/web/settings", "Settings"]] },
+    children: [["/web", "Overview", null, null, true], ["/web/landing", "Landing Pages"], ["/web/traffic", "Traffic"], ["/web/geography", "Geography"], ["/web/pages", "Pages"], ["/web/search", "Search"], ["/web/settings", "Settings"]] },
   { key: "automations", label: "Automations", href: "/agent-teams", icon: "waypoints", description: "Your agent teams, their workflows, and every routine your department runs.",
     match: ["/agent-teams", "/automations", "/executions"],
     children: [["/agent-teams", "Agent Teams"], ["/automations", "Automations"], ["/executions", "Executions"]] }
@@ -670,6 +670,7 @@ function applyState(s) {
   state.web = s.web || null;
   state.payments = s.payments || null;
   state.business = s.business || state.business;
+  state.landingPages = s.landingPages || state.landingPages;
   state.problems = s.problems || [];
   state.server = s.server || null;
 }
@@ -683,6 +684,7 @@ async function boot() {
     state.content = window.CC_DATA.content || { posts: [], research: {} };
     state.settings = window.CC_DATA.settings || {};
     state.business = window.CC_DATA.business || null;
+    state.landingPages = window.CC_DATA.landingPages || null;
   }
   state.web = window.CC_WEB || null; // tools/pull_web.py writes data/web.js; it stays on this computer
   state.payments = window.CC_PAYMENTS || null; // tools/sync.py copies payments.json to data/payments.js; both stay on this computer

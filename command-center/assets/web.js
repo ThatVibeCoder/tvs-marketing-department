@@ -4,7 +4,7 @@
 
 const WEB_RANGES = ["7d", "30d", "90d"];
 const WEB_RANGE_LABELS = { "7d": "7 days", "30d": "30 days", "90d": "90 days" };
-const WEB_TABS = [["", "Overview"], ["traffic", "Traffic"], ["geography", "Geography"], ["pages", "Pages"], ["search", "Search"], ["settings", "Settings"]];
+const WEB_TABS = [["", "Overview"], ["landing", "Landing Pages"], ["traffic", "Traffic"], ["geography", "Geography"], ["pages", "Pages"], ["search", "Search"], ["settings", "Settings"]];
 const webNf = new Intl.NumberFormat("en-US");
 const webPct = (n) => `${(n * 100).toFixed(1)}%`;
 const webSnap = () => {
@@ -268,8 +268,56 @@ function renderWebSettings() {
     webPanel("Display", "settings", null, h("div", {}, [row("Default range", "Last 30 days"), row("Datacenter/bot filtering", "On"), row("Windows end", "Yesterday (today is still filling in)")]))
   ]);
 }
+// ---------- Landing Pages: every page the Website Team built, the pages under each one, grouped by offer ----------
+const PAGE_KIND_LABEL = { landing: "Landing page", product: "Product page", form: "Form", "thank-you": "Thank-you", upsell: "Upsell", other: "Page" };
+const openPages = new Set();
+function pageVisits(p, snap) {
+  if (!snap || !p.route) return null;
+  const site = (snap.siteDomain || "").replace(/^www\./, ""), dom = (p.domain || "").replace(/^www\./, "");
+  if (dom && site && dom !== site) return null; // another domain: this site's GA property doesn't see it
+  const hit = (snap.topPages || []).find((t) => t.path === p.route || t.path === p.route.replace(/\/$/, "") || t.path === p.route + "/");
+  return hit ? hit.views : null; // not in the pull's top pages: unknown, never shown as 0
+}
+function offerLabel(path) {
+  if (!path) return "No offer named";
+  const o = ((state.business || {}).offers || []).find((d) => d.path === path);
+  if (o) return o.main ? (gv(o, "Name") || "Main offer") : docName(o, "Offer");
+  return path.replace(/^brand\/offers\//, "").replace(/\.md$/, "").replace(/^brand\/offer$/, "Main offer");
+}
+function renderLandingPages() {
+  const reg = (window.CC_DATA && window.CC_DATA.landingPages) || { pages: [] }, all = (state.landingPages || reg).pages || [], snap = webSnap();
+  if (!all.length) return h("div", { class: "dash-container" }, h("div", { class: "empty glass rounded-xl" }, [h("div", { html: lineIcon("layoutGrid") }), h("p", { class: "empty-title" }, "No landing pages yet"),
+    h("p", { class: "empty-desc", html: "Your Website Team lists every page it builds here, with the pages under it: forms, thank-you pages, upsells and product pages, on any domain. Ask your AI: <b>add the website team</b>, then <b>build my landing page</b>. The list lives in <code>knowledge/landing-pages.json</code>." }), h("a", { href: "#/agent-teams", class: "btn-accent-outline mt2" }, [svgIcon("plus", "accent"), "See the Website Team"])]));
+  const kids = (id) => all.filter((p) => p.parent === id);
+  const under = (id) => kids(id).reduce((n, c) => n + 1 + under(c.id), 0); // every page below, at any depth
+  const tops = all.filter((p) => !p.parent);
+  const groups = {};
+  for (const p of tops) (groups[p.offer || ""] = groups[p.offer || ""] || []).push(p);
+  const domains = new Set(all.map((p) => p.domain).filter(Boolean));
+  const views = (p) => { const v = pageVisits(p, snap); return v === null ? h("span", { class: "muted-sub" }, "—") : h("span", { class: "num fg" }, webNf.format(v)); };
+  const pill = (p) => h("span", { class: cls("status-pill", p.status === "live" && "ok") }, p.status);
+  const where = (p) => h("span", { class: "tiny-sub truncate" }, p.url || [p.domain, p.route].filter(Boolean).join("") || p.file || "—");
+  const row = (p, depth) => {
+    const sub = kids(p.id), open = openPages.has(p.id);
+    const toggle = sub.length ? h("button", { type: "button", class: cls("lp-toggle", open && "open"), "aria-expanded": open ? "true" : "false", onclick: () => { open ? openPages.delete(p.id) : openPages.add(p.id); render(); } }, [h("span", { class: "lp-caret", html: lineIcon("chevronRight") }), `${sub.length} sub-page${sub.length === 1 ? "" : "s"}`]) : h("span", { class: "tiny-sub" }, depth ? "" : "no sub-pages");
+    return [h("div", { class: cls("lp-row", depth && "sub") }, [
+      h("div", { class: "min0 lp-main" }, [h("div", { class: "row wrap gap2 min0" }, [h("span", { class: "b fg lp-title" }, p.title), h("span", { class: "chip" }, PAGE_KIND_LABEL[p.kind] || "Page"), pill(p)]),
+        h("div", { class: "row gap2 min0 mt1" }, [where(p), p.domain && depth && p.domain !== (all.find((x) => x.id === p.parent) || {}).domain ? h("span", { class: "chip dashed" }, "other domain") : null]),
+        p.purpose ? h("p", { class: "tiny-sub mt1 m0" }, p.purpose) : null,
+        depth && p.offer && p.offer !== (all.find((x) => x.id === p.parent) || {}).offer ? h("p", { class: "tiny-sub mt1 m0" }, ["Sells: ", h("span", { class: "fg" }, offerLabel(p.offer))]) : null]),
+      h("div", { class: "lp-views", title: pageVisits(p, snap) === null ? (snap ? "Not in your Google Analytics top pages, or on another domain" : "Connect Google Analytics to see views") : null }, [views(p), h("span", { class: "tiny-sub" }, "views, 30d")]),
+      h("div", { class: "lp-side" }, toggle)
+    ]), ...(open ? sub.flatMap((c) => row(c, depth + 1)) : [])];
+  };
+  return h("div", { class: "dash-container space-y-6" }, [
+    h("div", { class: "web-kpis lp-kpis" }, [["Landing pages", tops.length], ["Pages under them", all.length - tops.length], ["Live", all.filter((p) => p.status === "live").length], ["Domains", domains.size || "—"]].map(([l, v]) => h("div", { class: "glass rounded-xl lp-kpi" }, [h("p", { class: "tiny-sub" }, l), h("p", { class: "web-stat-sm" }, String(v))]))),
+    ...Object.entries(groups).map(([offer, list]) => webPanel(offerLabel(offer), "layers", `${list.length} landing page${list.length === 1 ? "" : "s"} · ${list.reduce((n, p) => n + under(p.id), 0)} under them`,
+      h("div", { class: "lp-list" }, list.flatMap((p) => row(p, 0))))),
+    h("p", { class: "tiny-sub" }, ["From ", h("code", {}, "knowledge/landing-pages.json"), ", which the Website Team's build-a-page and ship-a-page keep up to date. ", snap ? "Views are from your last Google Analytics pull, matched by each page's route." : "Connect Google Analytics in Settings → Web connections to see views."])
+  ]);
+}
 function renderWeb(parts) {
   const tab = parts[1] || "";
-  const body = tab === "traffic" ? renderWebTraffic() : tab === "geography" ? renderWebGeography() : tab === "pages" ? renderWebPages() : tab === "search" ? renderWebSearch() : tab === "settings" ? renderWebSettings() : tab ? notFound("That Web page doesn't exist") : renderWebOverview();
+  const body = tab === "traffic" ? renderWebTraffic() : tab === "geography" ? renderWebGeography() : tab === "pages" ? renderWebPages() : tab === "search" ? renderWebSearch() : tab === "settings" ? renderWebSettings() : tab === "landing" ? renderLandingPages() : tab ? notFound("That Web page doesn't exist") : renderWebOverview();
   return [webHeader(tab), body];
 }

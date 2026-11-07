@@ -1350,3 +1350,14 @@ a.biz-card:hover { border-color: var(--color-accent-ring); } .biz-card.new { bor
 .offer-guarantee { display: flex; gap: .75rem; align-items: flex-start; padding: .875rem 1rem; border: 1px solid var(--color-accent-ring); border-radius: 1rem; background: var(--color-accent-soft); }
 .biz-list { display: grid; gap: .5rem; margin-top: .375rem; } .biz-list-n { width: 1.25rem; flex: none; text-align: right; color: var(--color-fg-subtle); font-size: .8125rem; }
 .provider-like { padding: 1rem 1.25rem; }
+/* Landing Pages */
+.lp-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; } @media (max-width: 760px) { .lp-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.lp-kpi { padding: 1rem 1.25rem; } .lp-kpi p { margin: 0; }
+.lp-list { display: flex; flex-direction: column; }
+.lp-row { display: grid; grid-template-columns: minmax(0, 1fr) 6.5rem 8.5rem; gap: 1rem; align-items: center; padding: .875rem 1.25rem; border-top: 1px solid var(--color-border); }
+.lp-row:first-child { border-top: 0; } .lp-row.sub { padding-left: 2.75rem; background: var(--color-surface-2); } .lp-row.sub .lp-main { border-left: 2px solid var(--color-accent-ring); padding-left: .75rem; }
+.lp-views { display: flex; flex-direction: column; align-items: flex-end; } .lp-side { display: flex; justify-content: flex-end; }
+.lp-toggle { display: inline-flex; align-items: center; gap: .25rem; border: 1px solid var(--color-border); border-radius: 9999px; background: transparent; color: var(--color-fg); padding: .3rem .7rem .3rem .45rem; font-size: .75rem; cursor: pointer; }
+.lp-toggle:hover, .lp-toggle.open { border-color: var(--color-accent-ring); } .lp-caret { display: inline-flex; width: .9rem; height: .9rem; transition: transform .15s; } .lp-toggle.open .lp-caret { transform: rotate(90deg); }
+@media (max-width: 640px) { .lp-row { grid-template-columns: minmax(0, 1fr) auto; } .lp-side { grid-column: 1 / -1; justify-content: flex-start; } .lp-row.sub { padding-left: 1.5rem; } }
+.lp-title { overflow-wrap: anywhere; }
