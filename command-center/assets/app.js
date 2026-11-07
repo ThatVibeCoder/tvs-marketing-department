@@ -39,13 +39,15 @@ const ICONS = {
   log: '<path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/>',
   trend: '<path d="m3 17 6-6 4 4 7-8"/><path d="M14 7h6v6"/>',
   shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  briefcase: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/>',
+  tag: '<path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
   card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/>',
   chevron: '<path d="m9 6 6 6-6 6"/>',
   close: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'
 };
 const icon = (name, cls = "") => `<svg viewBox="0 0 24 24" class="${cls}" aria-hidden="true">${ICONS[name] || ICONS.zap}</svg>`;
 
-const state = { automations: [], teams: [], executions: [], content: null, web: null, payments: null, settings: null, keys: null, problems: [], server: null, route: {}, flow: { zoom: 1, pan: { x: 0, y: 0 } } };
+const state = { automations: [], teams: [], executions: [], content: null, web: null, payments: null, business: null, settings: null, keys: null, problems: [], server: null, route: {}, flow: { zoom: 1, pan: { x: 0, y: 0 } } };
 
 function h(tag, attrs = {}, children = []) {
   const n = document.createElement(tag);
@@ -553,13 +555,15 @@ function parseRoute() {
   state.route = { parts, query: new URLSearchParams(queryRaw) };
 }
 
-// ---- The shell: the Command Center's side panel (Dashboard · Overview · WORKSPACE: Content, Web & Analytics,
+// ---- The shell: the Command Center's side panel (Dashboard · Overview · WORKSPACE: My Business, Content, Web & Analytics,
 // Automations · Settings at the bottom) and the floating top bar. A module's sub-items drop down under it: always
 // when you're inside it, or when you open it with its arrow (remembered on this computer).
 const RAIL_KEY = "cc-sidepanel-collapsed", THEME_KEY = "cc-theme", OPEN_KEY = "cc-sidepanel-open";
 const store = { get: (k) => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* private window */ } } };
 const UTILITY = [["/dashboard", "Dashboard", "gauge"], ["/overview", "Overview", "layoutGrid"]];
 const MODULES = [
+  { key: "business", label: "My Business", href: "/business", icon: "briefcase", description: "Who you serve, what you sell, and who else they could pick.",
+    children: [["/business", "Overview", "layoutGrid", null, true], ["/business/icps", "ICPs", "user"], ["/business/buyers", "Buyers", "users"], ["/business/friction", "Friction Points", "alert"], ["/business/offers", "Offers", "tag"], ["/business/competitors", "Competitors", "search"]] },
   { key: "content", label: "Content", href: "/content", icon: "radio", description: "Plan, schedule, and review posts for every platform you're on.",
     children: [["/content", "Overview", "layoutGrid", null, true], ["/content/calendar", "Calendar", "calendarDays"], ["/content/research", "Research", "search"],
       ...["tiktok", "instagram", "twitter", "threads", "youtube", "skool", "linkedin"].map((p) => [`/content/${p}`, PLATFORM_LABEL[p], null, p])] },
@@ -623,7 +627,7 @@ function renderShell() {
     ];
   }
   rail.replaceChildren(h("div", { class: "dash-rail" }, inner));
-  const titles = { dashboard: "Dashboard", overview: "Overview", settings: "Settings", content: "Content", web: "Web & Analytics" };
+  const titles = { business: "My Business", dashboard: "Dashboard", overview: "Overview", settings: "Settings", content: "Content", web: "Web & Analytics" };
   const title = titles[p[0]] || "Automations";
   $("#headerTitle").textContent = title;
   $("#modePill").textContent = state.server ? "Editing on" : "From your repo";
@@ -648,6 +652,7 @@ function render() {
   else if (p[0] === "content") view = renderContent(p);
   else if (p[0] === "settings") view = renderSettings(p);
   else if (p[0] === "web") view = renderWeb(p);
+  else if (p[0] === "business") view = renderBusiness(p);
   else if (p[0] === "dashboard") view = renderDashboard();
   else if (p[0] === "overview") view = renderGlance();
   else view = renderAutomations();
@@ -664,6 +669,7 @@ function applyState(s) {
   state.keys = s.keys || null;
   state.web = s.web || null;
   state.payments = s.payments || null;
+  state.business = s.business || state.business;
   state.problems = s.problems || [];
   state.server = s.server || null;
 }
@@ -676,6 +682,7 @@ async function boot() {
     state.executions = window.CC_DATA.executions || [];
     state.content = window.CC_DATA.content || { posts: [], research: {} };
     state.settings = window.CC_DATA.settings || {};
+    state.business = window.CC_DATA.business || null;
   }
   state.web = window.CC_WEB || null; // tools/pull_web.py writes data/web.js; it stays on this computer
   state.payments = window.CC_PAYMENTS || null; // tools/sync.py copies payments.json to data/payments.js; both stay on this computer
