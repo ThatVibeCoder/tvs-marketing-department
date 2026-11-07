@@ -1,9 +1,8 @@
-// Dashboard and Overview: the Command Center's two home pages.
+// Dashboard: the Command Center's home page.
 // Dashboard = the business at a glance: Revenue · MRR · Website Visitors · Open invoices, the Total Revenue
 // dot-matrix, revenue by customer and the recent payments. The money comes from command-center/data/payments.json
 // (the Payments Agent fills it; it never leaves this computer), the visitors from the Web pull. With nothing
 // there yet, every tile says how to connect it. Never a made-up number.
-// Overview = a welcome band and one card per module.
 
 const TREND_PERIODS = [
   ["weekly", "Weekly"],

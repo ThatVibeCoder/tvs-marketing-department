@@ -261,7 +261,9 @@ def save_settings(data):
     if not isinstance(data, dict):
         raise ValueError("Settings must be an object.")
     named = re.compile(r"\b(?:" + "|".join(map(re.escape, ALL_KEYS)) + r")\s*[=:]\s*\S")  # a pasted .env line
-    for v in strings_in(data):
+    for v in strings_in({k: v for k, v in data.items() if k != "_base"}):  # _base is what the file already held
+        if re.match(r"^https?://", v.strip()):
+            continue  # a link (a Google Sheet, a long LinkedIn URL) is never a key
         if KEY_SHAPE.search(v) or named.search(v):
             raise ValueError("That looks like a key. Keys never go in settings.json (it's saved to GitHub): paste it under "
                              "Connected Accounts, Payments or Web connections, which keep it in .env.")

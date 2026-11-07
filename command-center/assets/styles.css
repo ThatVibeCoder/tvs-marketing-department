@@ -1212,7 +1212,7 @@ p.kpi-note { margin-left: 0; }
 .click-row { cursor: pointer; }
 .click-row td.truncate { max-width: 28rem; }
 
-/* ── Overview (the module cards) ── */
+/* ── Dashboard: phone padding, KPI footers, the collapsed rail ── */
 @media (max-width: 767px) { .dash-page { padding: 1.25rem 1rem; } .rail.collapsed .dash-rail { position: relative; left: 0; top: 0; width: 100%; } }
 .kpi-foot > * { white-space: nowrap; } .kpi-foot .tiny-sub { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .rail.collapsed:hover .dash-rail { background: var(--solid-glass); }

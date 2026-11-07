@@ -440,3 +440,35 @@ class F14SlowGoogleNeverBlocksASave(unittest.TestCase):
             httpd.shutdown()
             sync.SETTINGS_FILE, serve.files.ROOT, sync.CC_DATA = old
             shutil.rmtree(tmp, ignore_errors=True)
+
+
+class FinalReviewMinors(unittest.TestCase):
+    """From the final review: written files keep normal permissions; links aren't keys; _base can't lock a save."""
+
+    def test_written_files_keep_their_mode(self):
+        import stat, tempfile, sync
+        d = os.path.realpath(tempfile.mkdtemp())
+        p = os.path.join(d, "a.json")
+        sync.write(p, "{}")
+        self.assertNotEqual(stat.S_IMODE(os.stat(p).st_mode), 0o600, "a new file is readable like any other")
+        os.chmod(p, 0o640)
+        sync.write(p, "{ }")
+        self.assertEqual(stat.S_IMODE(os.stat(p).st_mode), 0o640)
+        sync.write(p, "x", 0o600)
+        self.assertEqual(stat.S_IMODE(os.stat(p).st_mode), 0o600)
+
+    def test_links_save_and_base_is_not_scanned(self):
+        import shutil, tempfile, serve, sync
+        tmp = os.path.realpath(tempfile.mkdtemp())
+        old = sync.SETTINGS_FILE, serve.files.ROOT
+        sync.SETTINGS_FILE, serve.files.ROOT = os.path.join(tmp, "settings.json"), tmp
+        try:
+            sheet = "https://docs.google.com/spreadsheets/d/1AbCdEfGhIjKlMnOpQrStUvWxYz0123456789ABCDEFG/edit"
+            serve.save_settings({"web": {"siteDomain": sheet}})
+            serve.save_settings({"web": {"siteDomain": "example.com"}, "_base": {"web": {"siteDomain": "sk_live_" + "x" * 20}}})
+            self.assertEqual(sync.load_settings()["web"]["siteDomain"], "example.com")
+            with self.assertRaises(ValueError):
+                serve.save_settings({"web": {"siteDomain": "sk_live_" + "x" * 20}})
+        finally:
+            sync.SETTINGS_FILE, serve.files.ROOT = old
+            shutil.rmtree(tmp, ignore_errors=True)

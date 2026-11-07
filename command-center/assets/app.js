@@ -1186,22 +1186,24 @@ function renderShell() {
               "ul",
               { class: "rail-children" },
               m.children
-                .filter(([, , , platform]) => !platform || !((state.settings || {}).hiddenPlatforms || []).includes(platform))
+                .filter(
+                  ([, , , platform]) => !platform || !((state.settings || {}).hiddenPlatforms || []).includes(platform),
+                )
                 .map(([href, label, ic, platform, exact]) => {
-                const on = exact ? path === href : under(href);
-                return h(
-                  "li",
-                  {},
-                  h("a", { href: `#${href}`, class: "rail-child", "aria-current": on ? "page" : null }, [
-                    platform
-                      ? h("span", { class: "child-ic", html: platformMark(platform) })
-                      : ic
-                        ? h("span", { class: "child-ic", html: lineIcon(ic) })
-                        : null,
-                    h("span", { class: "truncate" }, label),
-                  ]),
-                );
-              }),
+                  const on = exact ? path === href : under(href);
+                  return h(
+                    "li",
+                    {},
+                    h("a", { href: `#${href}`, class: "rail-child", "aria-current": on ? "page" : null }, [
+                      platform
+                        ? h("span", { class: "child-ic", html: platformMark(platform) })
+                        : ic
+                          ? h("span", { class: "child-ic", html: lineIcon(ic) })
+                          : null,
+                      h("span", { class: "truncate" }, label),
+                    ]),
+                  );
+                }),
             )
           : null,
       ]);
@@ -1280,7 +1282,8 @@ function render() {
   else if (p[0] === "web") view = renderWeb(p);
   else if (p[0] === "dashboard") view = renderDashboard();
   else if (p[0] === "agent") view = renderAgent();
-  else if (p[0] === "overview") view = renderDashboard(); // the old Overview page: its links land on the Dashboard
+  else if (p[0] === "overview")
+    view = renderDashboard(); // the old Overview page: its links land on the Dashboard
   else view = renderAutomations();
   renderShell();
   document.body.classList.remove("drawer-open");

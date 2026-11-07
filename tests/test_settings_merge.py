@@ -77,9 +77,6 @@ class StaleTab(unittest.TestCase):
             self.assertIn("_base: Object.fromEntries(Object.keys(patch)", f.read())
 
 
-if __name__ == "__main__":
-    unittest.main()
-
 
 class HiddenPlatforms(unittest.TestCase):
     """Settings → Connected Accounts → Show in the sidebar: the platforms a member turned off."""
@@ -105,3 +102,6 @@ class HiddenPlatforms(unittest.TestCase):
         for bad in ("tiktok", ["myspace"], [1]):
             with self.assertRaises(ValueError):
                 serve.save_settings({"hiddenPlatforms": bad})
+
+if __name__ == "__main__":
+    unittest.main()

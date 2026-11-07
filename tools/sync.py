@@ -61,8 +61,13 @@ def write(p, text, mode=None):
     try:
         with os.fdopen(fd, "w", encoding="utf-8", newline="") as f:
             f.write(text)
-        if mode is not None:
-            os.chmod(tmp, mode)
+        if mode is None:  # mkstemp makes the temp file 0600: give it the old file's mode, or the usual one for a new file
+            if os.path.exists(p):
+                mode = os.stat(p).st_mode & 0o777
+            else:
+                um = os.umask(0); os.umask(um)
+                mode = 0o666 & ~um
+        os.chmod(tmp, mode)
         os.replace(tmp, p)
     except BaseException:
         if os.path.exists(tmp):
