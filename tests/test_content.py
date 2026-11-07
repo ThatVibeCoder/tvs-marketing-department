@@ -23,6 +23,8 @@ class RepoCopy(unittest.TestCase):
         self.tmp = tempfile.mkdtemp()
         self.repo = os.path.join(self.tmp, "repo")
         shutil.copytree(ROOT, self.repo, ignore=shutil.ignore_patterns(".git", "__pycache__", ".env", "settings.json"))
+        # posts live with the Content Team's Social Manager, so add the team the way a member does
+        subprocess.run([sys.executable, "tools/add_team.py", "content-team"], cwd=self.repo, capture_output=True, check=True)
 
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)

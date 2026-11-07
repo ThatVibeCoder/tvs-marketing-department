@@ -11,9 +11,9 @@ import unittest
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIRS = [
-    os.path.join(ROOT, "departments", "marketing", "follow-up-team"),
-    os.path.join(ROOT, "departments", "sales", "sales-team", "calendar-agent"),
-    os.path.join(ROOT, "departments", "sales", "sales-team", "crm-agent"),
+    os.path.join(ROOT, "library", "teams", "marketing", "follow-up-team"),
+    os.path.join(ROOT, "library", "teams", "sales", "sales-team", "calendar-agent"),
+    os.path.join(ROOT, "library", "teams", "sales", "sales-team", "crm-agent"),
 ]
 MUST = [
     "Drafts only, and the owner sends every message to a lead. No agent ever sends.",

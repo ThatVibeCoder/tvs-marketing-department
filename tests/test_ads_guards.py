@@ -10,7 +10,7 @@ import re
 import unittest
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ADS = os.path.join(ROOT, "departments", "marketing", "ads-team")
+ADS = os.path.join(ROOT, "library", "teams", "marketing", "ads-team")  # the library copy members add
 MUST = [
     "Everything is built paused",
     "never touch billing",

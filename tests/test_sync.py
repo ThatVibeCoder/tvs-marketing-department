@@ -20,6 +20,8 @@ class SyncTest(unittest.TestCase):
         self.tmp = tempfile.mkdtemp()
         self.repo = os.path.join(self.tmp, "repo")
         shutil.copytree(ROOT, self.repo, ignore=shutil.ignore_patterns(".git", "__pycache__"))
+        # the department ships nearly empty; these tests run on the Content Team, added the way a member adds it
+        subprocess.run([sys.executable, "tools/add_team.py", "content-team"], cwd=self.repo, capture_output=True, check=True)
 
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)
