@@ -918,12 +918,17 @@ def main():
         for s in stale:
             print("OUT OF DATE:", s)
         if errors or stale:
-            print("Not in sync. Fix anything marked FIX, then run `python3 tools/sync.py`.")
+            if errors:
+                print("Not in sync. Show the owner each FIX line above, word for word, and stop. Don't rerun until "
+                      "something has changed.")
+            else:
+                print("Not in sync. Run `python3 tools/sync.py` once (Windows: `py tools/sync.py`).")
             sys.exit(1)
         print("Everything is in sync.")
     else:
         if errors:
-            print("Nothing was rebuilt. Fix the lines marked FIX, then run this again.")
+            print("Nothing was rebuilt. Show the owner each FIX line above, word for word, and stop. Don't rerun "
+                  "until something has changed.")
             sys.exit(1)
         print(f"Rebuilt {len(stale)} file(s)." if stale else "Already in sync. Nothing changed.")
 

@@ -108,7 +108,7 @@ In Claude Code, Gemini CLI, Cursor and Grok Build, type them with a slash: `/dev
 
 ## Keep it in sync: run the sync command
 
-Run it any time a team, team member, skill, workflow or routine is added, renamed or removed, and before every save. It checks the structure, rebuilds every agent's shortcuts and commands (and the CLAUDE.md, GEMINI.md and Cursor pointers), and refreshes the Command Center. If it prints a line starting with FIX, fix that first. Adding `--check` changes nothing and fails if anything is out of date, and the GitHub Agent's save-work runs it before every save.
+Run it any time a team, team member, skill, workflow or routine is added, renamed or removed, and before every save. It checks the structure, rebuilds every agent's shortcuts and commands (and the CLAUDE.md, GEMINI.md and Cursor pointers), and refreshes the Command Center. **Run it once.** If it prints a line starting with FIX, show the owner that exact line and stop. Never fix-and-rerun on your own, and never run it again on an error nothing has changed. Adding `--check` changes nothing and fails if anything is out of date, and the GitHub Agent's save-work runs it before every save.
 
 **Which command, by computer** (check which one the owner is on first):
 - **Mac or Linux:** `python3 tools/sync.py`
