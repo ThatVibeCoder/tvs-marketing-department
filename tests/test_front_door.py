@@ -38,7 +38,11 @@ class FrontDoorTest(unittest.TestCase):
     def test_the_strategist_is_the_front_door_only_once_its_lesson_builds_it(self):
         text = agents_md()
         section = text.split("## The front door")[1].split("\n## ")[0]
-        self.assertIn("once its lesson builds it", section)
+        self.assertIn("Until then there's no front door", section)
+        for skill in ("set-up-your-company-strategist", "company-strategist (the front door)"):
+            self.assertIn(skill, section)
+        self.assertIn("routes every ask to the team that owns it", section)
+        self.assertIn("on its own, with nothing to register", section)  # finds teams added later
         self.assertIn(STRATEGIST, section)
         self.assertIn("talk to my company strategist", section)
         self.assertIn('says "set up my company strategist"', section)
