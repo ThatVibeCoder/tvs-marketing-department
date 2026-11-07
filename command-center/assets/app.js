@@ -631,17 +631,26 @@ function parseRoute() {
   state.route = { parts, query: new URLSearchParams(queryRaw) };
 }
 
-// ---- The shell: a floating glass sidebar (Automations · Content · Settings) and a floating top bar ----
-const RAIL_KEY = "cc-sidepanel-collapsed", THEME_KEY = "cc-theme";
+// ---- The shell: the Command Center's side panel (Dashboard · Overview · WORKSPACE: Content, Web & Analytics,
+// Automations · Settings at the bottom) and the floating top bar. A module's sub-items drop down under it: always
+// when you're inside it, or when you open it with its arrow (remembered on this computer).
+const RAIL_KEY = "cc-sidepanel-collapsed", THEME_KEY = "cc-theme", OPEN_KEY = "cc-sidepanel-open";
 const store = { get: (k) => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* private window */ } } };
-const AUTOMATION_LINKS = [["/agent-teams", "Agent Teams", "users"], ["/automations", "Automations", "waypoints"], ["/executions", "Executions", "activity"]];
-const WEB_LINKS = [["/web", "Overview", "layoutGrid"], ["/web/traffic", "Traffic", "trend"], ["/web/pages", "Pages", "barChart2"], ["/web/search", "Search", "search"], ["/web/geography", "Geography", "globe"], ["/web/settings", "Settings", "settings"]];
-const CONTENT_LINKS = [["/content", "Overview", "layoutGrid"], ["/content/calendar", "Calendar", "calendarDays"], ["/content/research", "Research", "search"],
-  ...["tiktok", "instagram", "twitter", "threads", "youtube", "skool", "linkedin"].map((p) => [`/content/${p}`, PLATFORM_LABEL[p], null, p])];
-function railLink(path, label, ic, platform, active, collapsed) {
-  return h("a", { href: `#${path}`, class: "rail-link", "aria-current": active ? "page" : null, title: collapsed ? label : null }, [
-    h("span", { class: "rail-ic", html: platform ? platformMark(platform) : lineIcon(ic) }),
-    collapsed ? null : h("span", { class: "truncate" }, label)
+const UTILITY = [["/dashboard", "Dashboard", "gauge"], ["/overview", "Overview", "layoutGrid"]];
+const MODULES = [
+  { key: "content", label: "Content", href: "/content", icon: "radio", description: "Plan, schedule, and review posts for every platform you're on.",
+    children: [["/content", "Overview", "layoutGrid", null, true], ["/content/calendar", "Calendar", "calendarDays"], ["/content/research", "Research", "search"],
+      ...["tiktok", "instagram", "twitter", "threads", "youtube", "skool", "linkedin"].map((p) => [`/content/${p}`, PLATFORM_LABEL[p], null, p])] },
+  { key: "web", label: "Web & Analytics", href: "/web", icon: "globe", description: "See where your traffic comes from and how you rank in search.",
+    children: [["/web", "Overview", null, null, true], ["/web/traffic", "Traffic"], ["/web/geography", "Geography"], ["/web/pages", "Pages"], ["/web/search", "Search"], ["/web/settings", "Settings"]] },
+  { key: "automations", label: "Automations", href: "/agent-teams", icon: "waypoints", description: "Your agent teams, their workflows, and every routine your department runs.",
+    match: ["/agent-teams", "/automations", "/executions"],
+    children: [["/agent-teams", "Agent Teams"], ["/automations", "Automations"], ["/executions", "Executions"]] }
+];
+function openSet() { try { return new Set(JSON.parse(store.get(OPEN_KEY) || "[]")); } catch { return new Set(); } }
+function railLink(path, label, ic, active, extraCls) {
+  return h("a", { href: `#${path}`, class: cls("rail-link", extraCls), "aria-current": active ? "page" : null, title: label }, [
+    h("span", { class: "rail-ic", html: lineIcon(ic) }), h("span", { class: "rail-label truncate" }, label)
   ]);
 }
 function renderShell() {
@@ -649,30 +658,45 @@ function renderShell() {
   const collapsed = store.get(RAIL_KEY) === "1" && !matchMedia("(max-width: 767px)").matches;
   const rail = $("#rail");
   rail.classList.toggle("collapsed", collapsed);
-  const isOn = (href) => href === "/content" || href === "/web" ? path === href : path === href || path.startsWith(href + "/");
+  const under = (href) => path === href || path.startsWith(href + "/");
   let inner;
   if (inSettings) {
     const a = (state.settings && state.settings.account) || {};
     inner = [
-      h("div", { class: "rail-top" }, h("a", { href: "#/agent-teams", class: "rail-back" }, [h("span", { class: "rail-ic", html: lineIcon("arrowLeft") }), collapsed ? null : h("span", { class: "truncate" }, "Command Center")])),
-      collapsed ? null : h("div", { class: "rail-id" }, [h("span", { class: "id-avatar" }, ((a.name || "Y").trim()[0] || "Y").toUpperCase()), h("span", { class: "min0" }, [h("span", { class: "id-name" }, a.name || "Your name"), h("span", { class: "id-role" }, a.role || "Owner")])]),
-      h("nav", { class: "rail-nav", "aria-label": "Settings sections" }, [collapsed ? null : h("p", { class: "rail-group" }, "Settings"),
-        ...SETTINGS_SECTIONS.map((s) => railLink(`/settings/${s.slug}`, s.label, s.icon, null, (p[1] || "account") === s.slug, collapsed))])
+      h("div", { class: "rail-top" }, h("a", { href: "#/dashboard", class: "rail-back" }, [h("span", { class: "rail-ic", html: lineIcon("arrowLeft") }), h("span", { class: "rail-label truncate" }, "Command Center")])),
+      h("div", { class: "rail-id" }, [h("span", { class: "id-avatar" }, ((a.name || "Y").trim()[0] || "Y").toUpperCase()), h("span", { class: "min0 rail-label" }, [h("span", { class: "id-name" }, a.name || "Your name"), h("span", { class: "id-role" }, a.role || "Owner")])]),
+      h("nav", { class: "rail-nav", "aria-label": "Settings sections" }, [h("p", { class: "rail-group" }, "Settings"),
+        ...SETTINGS_SECTIONS.map((s) => railLink(`/settings/${s.slug}`, s.label, s.icon, (p[1] || "account") === s.slug))])
     ];
   } else {
+    const opened = openSet();
+    const modBlock = (m) => {
+      const active = (m.match || [m.href]).some(under);
+      const open = active || opened.has(m.key);
+      const toggle = h("button", { type: "button", class: cls("rail-caret", open && "open"), "aria-expanded": open ? "true" : "false", "aria-label": `${open ? "Hide" : "Show"} ${m.label} pages`,
+        onclick: (e) => { e.preventDefault(); const s2 = openSet(); if (s2.has(m.key) || active) s2.delete(m.key); else s2.add(m.key); if (!active) store.set(OPEN_KEY, JSON.stringify([...s2])); renderShell(); }, html: lineIcon("chevronDown") });
+      return h("li", {}, [
+        h("div", { class: "rail-mod-row" }, [railLink(m.href, m.label, m.icon, active, "mod"), active ? null : toggle]),
+        open ? h("ul", { class: "rail-children" }, m.children.map(([href, label, ic, platform, exact]) => {
+          const on = exact ? path === href : under(href);
+          return h("li", {}, h("a", { href: `#${href}`, class: "rail-child", "aria-current": on ? "page" : null }, [
+            platform ? h("span", { class: "child-ic", html: platformMark(platform) }) : ic ? h("span", { class: "child-ic", html: lineIcon(ic) }) : null, h("span", { class: "truncate" }, label)]));
+        })) : null
+      ]);
+    };
     inner = [
-      h("div", { class: "rail-top" }, [collapsed ? null : h("a", { href: "#/agent-teams", class: "rail-brand" }, [h("span", { class: "rail-ic", html: lineIcon("layoutGrid") }), h("span", { class: "truncate" }, "Command Center")]),
-        h("button", { type: "button", class: "rail-toggle", "aria-label": collapsed ? "Pin side panel open" : "Collapse side panel", onclick: () => { if (document.body.classList.contains("drawer-open")) { document.body.classList.remove("drawer-open"); return; } store.set(RAIL_KEY, collapsed ? "0" : "1"); renderShell(); }, html: lineIcon(collapsed ? "panelOpen" : "panelClose") })]),
+      h("div", { class: "rail-top" }, [h("a", { href: "#/dashboard", class: "rail-brand rail-label" }, [h("span", { class: "rail-ic", html: lineIcon("layoutGrid") }), h("span", { class: "truncate" }, "Command Center")]),
+        h("button", { type: "button", class: "rail-toggle", "aria-pressed": collapsed ? "true" : "false", "aria-label": collapsed ? "Pin side panel open" : "Collapse side panel", onclick: () => { if (document.body.classList.contains("drawer-open")) { document.body.classList.remove("drawer-open"); return; } store.set(RAIL_KEY, collapsed ? "0" : "1"); renderShell(); }, html: lineIcon(collapsed ? "panelOpen" : "panelClose") })]),
       h("nav", { class: "rail-nav", "aria-label": "Dashboard sections" }, [
-        h("div", { class: "rail-sec" }, [collapsed ? h("div", { class: "rail-rule" }) : h("p", { class: "rail-group" }, "Automations"), ...AUTOMATION_LINKS.map(([href, l, ic]) => railLink(href, l, ic, null, isOn(href), collapsed))]),
-        h("div", { class: "rail-sec" }, [collapsed ? h("div", { class: "rail-rule" }) : h("p", { class: "rail-group" }, "Content"), ...CONTENT_LINKS.map(([href, l, ic, pl]) => railLink(href, l, ic, pl, isOn(href), collapsed))]),
-        h("div", { class: "rail-sec" }, [collapsed ? h("div", { class: "rail-rule" }) : h("p", { class: "rail-group" }, "Web"), ...WEB_LINKS.map(([href, l, ic]) => railLink(href, l, ic, null, isOn(href), collapsed))])
-      ])
+        h("ul", { class: "rail-sec" }, UTILITY.map(([href, l, ic]) => h("li", {}, railLink(href, l, ic, under(href))))),
+        h("div", { class: "rail-sec" }, [h("p", { class: "rail-group" }, "Workspace"), h("div", { class: "rail-rule" }), h("ul", { class: "rail-mods" }, MODULES.map(modBlock))])
+      ]),
+      h("div", { class: "rail-bottom" }, railLink("/settings/account", "Settings", "settings", false, "settings-link"))
     ];
   }
-  if (!inSettings) inner.push(h("div", { class: "rail-bottom" }, railLink("/settings/account", "Settings", "settings", null, false, collapsed)));
   rail.replaceChildren(h("div", { class: "dash-rail" }, inner));
-  const title = inSettings ? "Settings" : p[0] === "content" ? "Content" : p[0] === "web" ? "Web & Analytics" : "Automations";
+  const titles = { dashboard: "Dashboard", overview: "Overview", settings: "Settings", content: "Content", web: "Web & Analytics" };
+  const title = titles[p[0]] || "Automations";
   $("#headerTitle").textContent = title;
   $("#modePill").textContent = state.server ? "Editing on" : "From your repo";
   $("#modePill").title = state.server ? "tools/serve.py is running: saves land in your files" : "Read-only. Run python3 tools/serve.py to edit from here";
@@ -696,6 +720,8 @@ function render() {
   else if (p[0] === "content") view = renderContent(p);
   else if (p[0] === "settings") view = renderSettings(p);
   else if (p[0] === "web") view = renderWeb(p);
+  else if (p[0] === "dashboard") view = renderDashboard();
+  else if (p[0] === "overview") view = renderGlance();
   else view = renderAutomations();
   renderShell();
   document.body.classList.remove("drawer-open");
@@ -734,7 +760,7 @@ async function boot() {
   $("#menuBtn").addEventListener("click", () => document.body.classList.toggle("drawer-open"));
   $("#drawerShade").addEventListener("click", () => document.body.classList.remove("drawer-open"));
   window.addEventListener("hashchange", render);
-  if (!location.hash) history.replaceState(null, "", `${location.pathname}${location.search}#/agent-teams`);
+  if (!location.hash) history.replaceState(null, "", `${location.pathname}${location.search}#/dashboard`);
   render();
 }
 boot();

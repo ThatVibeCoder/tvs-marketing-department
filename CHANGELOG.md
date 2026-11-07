@@ -14,7 +14,7 @@ The `VERSION` file at the root holds one number: the generation your repo was cl
 
 **What's new.** The Command Center got a new look and a whole content system.
 
-- **A new look.** Dark glass by default, a warm light mode (the sun and moon button in the top bar), and a sidebar on the left: **Automations** (Agent Teams, Automations, Executions, the same pages as before) and **Content**, with **Settings** at the bottom.
+- **A new look.** Dark glass by default, a warm light mode (the sun and moon button in the top bar), and a sidebar on the left: **Dashboard** and **Overview** at the top, then **Content**, **Web & Analytics** and **Automations** (Agent Teams, Automations, Executions, the same pages as before), each opening into its pages, with **Settings** at the bottom. Collapse it to icons with the button at its top.
 - **Content.** An Overview (posts out, what's waiting on you, every platform, when posts go out), a Calendar (month and list, your open posting times, drag a post to move it), Research (your outliers, topics, openers, competitors and swipes from `knowledge/`), and one page per platform: TikTok, Instagram, X, Threads, YouTube, Skool and LinkedIn. Each has an Overview, a Review queue (Approve, Reject, or the A and R keys) and its Calendar.
 - **An editor that shows exactly what it looks like.** Open any post and edit it next to a live preview drawn the way that platform draws it, on a phone or a desktop, with its character counter, Threads and X chains, the Skool title and category, and the YouTube title.
 - **Posts are files.** Each post is one file in `departments/marketing/content-team/social-manager/posts/`. The Content Team's draft-post, plan-the-week and post-content skills write and read them, and the Command Center edits them.
