@@ -1247,3 +1247,32 @@ p.kpi-note { margin-left: 0; }
 .agent-cmd { display: inline-block; margin-top: .375rem; border: 1px solid var(--color-border); border-radius: .5rem; background: var(--hover-wash); padding: .375rem .625rem; font-size: .8125rem; color: var(--color-fg); }
 .agent-files { display: flex; flex-direction: column; gap: .25rem; }
 .agent-files code { font-size: .75rem; }
+
+/* ── Flow canvas, the Command Center look ── */
+.dash-flow-canvas { background-image: radial-gradient(rgba(255,255,255,.2) 1.3px, transparent 1.3px); background-size: 22px 22px; }
+:root.dash-light .dash-flow-canvas { background-image: radial-gradient(rgba(0,0,0,.09) 1px, transparent 1px); }
+.flow-section { position: absolute; pointer-events: none; overflow: hidden; border: 1px solid; border-radius: 20px; box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 1px 2px rgba(0,0,0,.25); }
+:root.dash-light .flow-section { box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 1px 2px rgba(0,0,0,.04); }
+.flow-section-top { position: absolute; left: 0; right: 0; top: 0; height: 5px; }
+.flow-section-head { display: flex; align-items: center; gap: .75rem; padding: 13px 1.25rem 0; }
+.flow-section-ic { display: inline-flex; width: 2.5rem; height: 2.5rem; flex: none; align-items: center; justify-content: center; border: 1px solid; border-radius: 11px; }
+.flow-section-ic svg { width: 22px; height: 22px; }
+.flow-section-dot { width: .75rem; height: .75rem; border-radius: 4px; }
+.flow-section-text { display: flex; min-width: 0; flex-direction: column; gap: .25rem; }
+.flow-section-title { white-space: nowrap; font-size: 28px; font-weight: 600; line-height: 1; letter-spacing: -.01em; }
+.flow-section-sub { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; line-height: 1; color: var(--color-fg-muted); }
+.node.flow-card { min-height: 0; border-radius: 13px; padding: .875rem 1rem; transition: box-shadow .15s; }
+.node.flow-card.small { width: 214px; }
+.node.flow-card .node-icon { border-radius: 11px; }
+.node.flow-card .node-title span:first-child { font-size: 14px; }
+.node-badge { padding: .125rem .5rem; letter-spacing: .05em; }
+.edge-label { border: 1px solid var(--color-border); background: color-mix(in srgb, var(--color-surface-solid) 85%, transparent); padding: 3px .5rem; color: var(--color-fg-subtle); box-shadow: var(--shadow-sm); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+.bead-dot { fill: var(--color-accent); }
+.app-main svg circle.bead-dot { stroke: none; }
+/* Chromium: the same refracting frost as the Command Center (SVG filters in index.html). */
+.lg-chromium .lg-header { -webkit-backdrop-filter: url(#lg-bar); backdrop-filter: url(#lg-bar); }
+.lg-chromium .lg-tabs { -webkit-backdrop-filter: url(#lg-seg); backdrop-filter: url(#lg-seg); }
+.lg-chromium .dash-rail { -webkit-backdrop-filter: url(#lg-rail); backdrop-filter: url(#lg-rail); }
+/* The icons-only panel flies out OVER the page as the same see-through glass, not a solid sheet. */
+.rail.collapsed:hover .dash-rail { background: var(--glass-fill-lg); box-shadow: var(--glass-rim), var(--glass-glow), var(--glass-shadow), var(--shadow-lg); }
+@media (max-width: 767px) { .lg-chromium .dash-rail { -webkit-backdrop-filter: var(--glass-filter); backdrop-filter: var(--glass-filter); } }
