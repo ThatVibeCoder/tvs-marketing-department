@@ -10,6 +10,15 @@ Before any writing, planning or building, read `business.md` and everything in `
 
 **A file or section that still says `_Not filled in yet._` counts as missing.** So does a file that's only the template's own explanation with nothing filled in. Stop, name what's missing and the lesson that fills it (by the lesson's title, never a day number), and ask. Generic work written around a missing file is worse than a question.
 
+## The front door: your Company Strategist
+
+When the owner asks for something without naming a team, a workflow or a skill, or says "talk to my company strategist", the Company Strategist takes it. It reads which teams are in `departments/` right now, hands the ask to the one that owns it by that team's own front door, and says which library team to add when none fits. It never does a team's job itself.
+
+- **If `departments/operations/strategy-team/company-strategist/skills/company-strategist/SKILL.md` is there,** read the strategist's file next to it (`company-strategist.md`), then that skill, and follow it.
+- **If it isn't there yet** (the Strategy Team hasn't been added), read the same skill from the library, `library/teams/operations/strategy-team/company-strategist/skills/company-strategist/SKILL.md`, and route by it. Then offer to set the strategist up: that's `library/teams/operations/strategy-team/company-strategist/skills/set-up-your-company-strategist/SKILL.md` (the Set Up Your Company Strategist lesson).
+
+When the owner names a team, a workflow or a skill, skip the front door and run what they named.
+
 ## Where everything goes
 
 Every piece of information has exactly one home. Find it in this table and add to it. Never make a second copy somewhere else, because copies drift.
@@ -81,14 +90,14 @@ departments/<department>/                 a department (marketing, sales, it-sys
 
 ## Commands: every team and every skill can be summoned
 
-`.claude/skills/` (Claude Code) and `.agents/skills/` (Codex) hold shortcuts, `.gemini/commands/` (Gemini CLI) and `.cursor/commands/` (Cursor) hold the same ones as commands, and `tools/sync.py` builds every one of them from the folders above. Never write a skill straight into those folders and never edit a shortcut. Put the real skill inside its team member, then run sync. Grok Build has no command folder we could confirm, so on Grok ask for a team or a skill by name.
+`.claude/skills/` (Claude Code) and `.agents/skills/` (Codex) hold shortcuts, `.gemini/commands/` (Gemini CLI) and `.cursor/commands/` (Cursor) hold the same ones as commands, and `tools/sync.py` builds every one of them from the folders above. Never write a skill straight into those folders and never edit a shortcut. Put the real skill inside its team member, then run sync. Grok Build reads the same shortcuts from `.agents/skills/` and `.claude/skills/`, so it needs no folder of its own.
 
 After sync, the owner can call:
 - a whole team (for example `content-team`): it shows that team's workflows and skills and runs the one they pick;
 - a workflow, by saying its words (for example "build my landing page") or by its shortcut (`build-my-landing-page`), to run it start to finish;
 - one skill on its own (for example `draft-post`).
 
-In Claude Code, Gemini CLI and Cursor, type them with a slash: `/content-team`. In Codex, type them with a dollar sign, `$content-team`, or pick them from the `/skills` menu. In Grok Build (or any other agent), say it: "run my content team". Saying what you want in plain words works everywhere. The Command Center's Settings → AI Agents page shows each one.
+In Claude Code, Gemini CLI, Cursor and Grok Build, type them with a slash: `/content-team` (Grok Build loads them only once you've said yes to trusting this folder). In Codex, type them with a dollar sign, `$content-team`, or pick them from the `/skills` menu. In any other agent, say it: "run my content team". Saying what you want in plain words works everywhere. The Command Center's Settings → AI Agents page shows each one.
 
 ## Running a workflow
 

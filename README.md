@@ -37,7 +37,9 @@ CHANGELOG.md              what's new since your copy was made
 
 Your department starts with one demo, the **Example Team**, so you can see how a team is built. Every full team waits in the team library (`library/teams/`) until the classroom gets to it. Say "add the website team" to your AI (or run `python3 tools/add_team.py website-team`), and the whole team, every team member, skill and workflow, lands in `departments/` and shows up in the Command Center. `python3 tools/add_team.py` on its own lists them all.
 
-Once a team is added, type its command to summon it, say one of its workflows out loud (like "build my landing page"), or run one skill on its own. In Claude Code, Gemini CLI and Cursor commands start with a slash (`/website-team`, `/build-a-page`). In Codex they start with a dollar sign (`$website-team`), or pick them from the `/skills` menu. In Grok Build, say it: "run my website team".
+Once a team is added, type its command to summon it, say one of its workflows out loud (like "build my landing page"), or run one skill on its own. In Claude Code, Gemini CLI, Cursor and Grok Build commands start with a slash (`/website-team`, `/build-a-page`). In Codex they start with a dollar sign (`$website-team`), or pick them from the `/skills` menu.
+
+Don't know which team does what? Add the Strategy Team and talk to your **Company Strategist** (`/company-strategist`, or just say "talk to my company strategist"). It reads which teams you have and hands each ask to the one that owns it.
 
 | Department | Team | Add it with | In the library |
 |---|---|---|---|
