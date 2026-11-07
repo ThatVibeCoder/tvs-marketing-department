@@ -23,6 +23,8 @@ const initials = (name) => (name || "?").replace(/[^\p{L}\p{N}\s]/gu, " ").split
 // A section the list editor may rewrite: empty, or every line already a list item. Anything else (a ### subhead,
 // a lead-in line) is edited as plain text so its shape survives.
 const isPlainList = (text) => (text || "").split("\n").filter((l) => l.trim()).every((l) => /^\s*([-*+]|\d+[.)])\s+/.test(l));
+// An answer loses only its blank lines at the top and spaces at the end: an indented first line (code) stays indented.
+const keepIndent = (text) => (text || "").replace(/^(?:[ \t]*\n)+/, "").replace(/\s+$/, "");
 const listLines = (text) => (text || "").split("\n").map((l) => l.replace(/^\s*([-*]|\d+[.)])\s+/, "").trim()).filter(Boolean);
 
 // Long text stays short: three lines and a "more" that opens the rest.
@@ -155,11 +157,11 @@ function docEditor(kind, doc, back) {
   });
   const save = () => {
     const ch = {};
-    const pick = (grp) => { const out = {}; for (const [k, [el, was]] of Object.entries(inputs[grp])) if (el.value.trim() !== (was || "").trim()) out[k] = el.value.trim(); return out; };
+    const pick = (grp) => { const out = {}; for (const [k, [el, was]] of Object.entries(inputs[grp])) if (el.value.trim() !== (was || "").trim()) out[k] = grp === "sections" ? keepIndent(el.value) : el.value.trim(); return out; };
     const gl = pick("glance"), ss = pick("sections"), fs = {};
     for (const [t, m] of Object.entries(inputs.fields)) { const o = {}; for (const [k, [el, was]] of Object.entries(m)) if ((el.value || "").trim() !== (was || "").trim()) o[k] = el.value.trim(); if (Object.keys(o).length) fs[t] = o; }
     if (Object.keys(gl).length) ch.glance = gl; if (Object.keys(ss).length) ch.sections = ss; if (Object.keys(fs).length) ch.fields = fs;
-    const at = inputs.at.filter(([sec, el]) => el.value.trim() !== (sec.body || "").trim()).map(([sec, el]) => ({ title: sec.title, n: sec.n, text: el.value.trim() }));
+    const at = inputs.at.filter(([sec, el]) => el.value.trim() !== (sec.body || "").trim()).map(([sec, el]) => ({ title: sec.title, n: sec.n, text: keepIndent(el.value) }));
     if (at.length) ch.sectionsAt = at;
     if (titleIn && titleIn.value.trim() && titleIn.value.trim() !== name) ch.title = kind === "icp" ? `ICP: ${titleIn.value.trim()}` : titleIn.value.trim();
     if (!Object.keys(ch).length) return toast("Nothing changed.");

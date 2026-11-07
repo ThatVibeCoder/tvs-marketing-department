@@ -291,6 +291,58 @@ class F5TheOneYouClicked(unittest.TestCase):
             self.assertIn("sectionsAt", f.read())
 
 
+class F6LineEndingsAndOddCharacters(unittest.TestCase):
+    """CRLF files came back LF, a BOM hid the title, U+2028 / form feed made new headings, indentation was lost."""
+
+    def test_crlf_and_bom_are_kept(self):
+        t = "\ufeff" + b.read("brand/offer.md").replace("\n", "\r\n")
+        n = b.apply(t, {"glance": {"Price": "$58"}, "title": "Offer: Box"}, b.guides_for("offer"), DAY)
+        self.assertTrue(n.startswith("\ufeff# Offer: Box\r\n"))
+        self.assertEqual(n.count("\n"), n.count("\r\n"))                   # every line still ends CRLF
+        self.assertEqual(b.parse(t, b.guides_for("offer"))["title"], "Offer")  # the BOM doesn't hide the title
+        self.assertEqual(len(changed := [l for l in __import__("difflib").ndiff(t.split("\r\n"), n.split("\r\n")) if l[:1] in "+-"]), 4, changed)
+
+    def test_a_crlf_file_saved_from_disk_stays_crlf(self):
+        import shutil, tempfile
+        tmp = os.path.realpath(tempfile.mkdtemp())
+        old = b.ROOT
+        try:
+            os.makedirs(os.path.join(tmp, "brand", "offers"))
+            shutil.copy(os.path.join(ROOT, "brand", "offers", "_template.md"), os.path.join(tmp, "brand", "offers", "_template.md"))
+            with open(os.path.join(tmp, "brand", "offer.md"), "w", encoding="utf-8", newline="") as f:
+                f.write(b.read("brand/offer.md").replace("\n", "\r\n"))
+            b.ROOT = tmp
+            b.save("brand/offer.md", {"glance": {"Price": "$58"}, "update": "price"}, DAY)
+            with open(os.path.join(tmp, "brand", "offer.md"), encoding="utf-8", newline="") as f:
+                raw = f.read()
+            self.assertEqual(raw.count("\n"), raw.count("\r\n"))
+            self.assertIn("Price: $58\r\n", raw)
+        finally:
+            b.ROOT = old
+            shutil.rmtree(tmp, ignore_errors=True)
+
+    def test_unicode_separators_stay_inside_their_answer(self):
+        t = b.read("brand/offer.md")
+        n = b.apply(t, {"sections": {"The Promise": "On time.\u2028## Bonus: lifetime access\x0cmore"}}, b.guides_for("offer"), DAY)
+        titles = [s["title"] for s in b.parse(n, b.guides_for("offer"))["sections"]]
+        self.assertNotIn("Bonus: lifetime access", titles)
+        self.assertIn("On time.\u2028## Bonus: lifetime access\x0cmore", n)
+
+    def test_one_line_values_stay_one_line(self):
+        t = b.read("brand/offer.md")
+        n = b.apply(t, {"title": "Offer: Kit\n## Injected", "glance": {"Price": "$1\u2028## Also"}}, b.guides_for("offer"), DAY)
+        self.assertNotIn("\n## Injected", n)
+        self.assertNotIn("Injected", [s["title"] for s in b.parse(n, b.guides_for("offer"))["sections"]])
+        self.assertNotIn("\u2028", n.split("## At a Glance")[1].split("## The Offer")[0])
+
+    def test_indentation_of_an_answer_is_kept(self):
+        t = b.read("brand/offer.md")
+        n = b.apply(t, {"sections": {"How It Works": "    indented code\n    more"}}, b.guides_for("offer"), DAY)
+        self.assertIn("\n    indented code\n    more\n", n)
+        with open(os.path.join(ROOT, "command-center", "assets", "business.js"), encoding="utf-8") as f:
+            self.assertIn("keepIndent(", f.read())
+
+
 CHROME = next((p for p in ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",) if os.path.exists(p)), None) or \
     next((p for p in (__import__("shutil").which("google-chrome"), __import__("shutil").which("chromium")) if p), None)
 

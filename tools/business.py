@@ -64,7 +64,7 @@ def atomic_write(path, text, mode=None):
 
 
 def read(rel):
-    with open(os.path.join(ROOT, rel), encoding="utf-8") as f:
+    with open(os.path.join(ROOT, rel), encoding="utf-8", newline="") as f:  # as it is on disk: CRLF stays CRLF
         return f.read()
 
 
@@ -94,6 +94,29 @@ def split_key(line):
 def short_key(key):
     """The key without its hint: `One liner (I help ...)` -> `One liner`."""
     return re.sub(r"\s*\(.*\)\s*$", "", key).strip()
+
+
+# ---------- lines, the way the file has them ----------
+def split_lines(text):
+    """(lines, newline, bom, ends_with_newline). Only \\n splits a line, so a U+2028, form feed or other odd
+    character pasted into an answer stays inside it instead of starting a new heading."""
+    bom = text.startswith("\ufeff")
+    body = text[1:] if bom else text
+    nl = "\r\n" if "\r\n" in body else "\n"
+    lines = body.replace("\r\n", "\n").split("\n")
+    trail = len(lines) > 1 and lines[-1] == ""
+    if trail:
+        lines.pop()
+    return lines, nl, bom, trail
+
+
+def join_lines(lines, nl, bom, trail):
+    return ("\ufeff" if bom else "") + nl.join(lines) + (nl if trail or not lines else "")
+
+
+def one_line(value):
+    """A title, a glance value or a field is one line: any line break in it becomes a space."""
+    return re.sub(r"[\r\n\u2028\u2029\x0b\x0c\x1c\x1d\x1e\x85]+", " ", str(value)).strip()
 
 
 # ---------- reading ----------
@@ -168,7 +191,7 @@ def template_guides(rel):
         text = read(rel)
     except OSError:
         return {}
-    lines = text.splitlines()
+    lines = split_lines(text)[0]
     out = {}
     for s, e in _blocks(lines):
         title = lines[s][3:].strip()
@@ -182,7 +205,7 @@ def template_guides(rel):
 
 
 def parse(text, guides=None):
-    lines = text.splitlines()
+    lines = split_lines(text)[0]
     title = next((ln[2:].strip() for ln in lines if ln.startswith("# ")), "")
     filled = next((ln for ln in lines if ln.startswith("**Filled by:**")), "")
     lessons = re.findall(r"\(([^()]+?) lesson\)", filled)
@@ -237,7 +260,7 @@ def _set_glance(lines, key, value):
     close_i = next((i for i in range(open_i + 1, e) if lines[i].strip().startswith(FENCE)), None) if open_i is not None else None
     if close_i is None:
         return lines
-    val = value.strip().replace("\n", " ") or MARKER
+    val = one_line(value) or MARKER
     keys = [(i, split_key(lines[i])[0]) for i in range(open_i + 1, close_i)]
     # the exact key first, so Price (monthly) never lands on Price (one-off); the short label only as a fallback
     hit = next((i for i, k in keys if k == key), None)
@@ -288,7 +311,7 @@ def _set_section(lines, title, value, guides, n=1):
             raise ValueError(f"This file has no {n}th ## {title} section anymore. Reload the page.")
         lines = _insert_section(lines, title, (guides or {}).get(title, ""))
     start, end = _answer_span(lines, title, guides, n)
-    new = (value or "").strip("\n").splitlines() or [MARKER]
+    new = (value or "").replace("\r\n", "\n").strip("\n").split("\n") or [MARKER]
     if not any(ln.strip() for ln in new):
         new = [MARKER]
     lines[start:end] = [""] + new
@@ -301,7 +324,7 @@ def _set_field(lines, title, key, value, guides):
         start, end = _answer_span(lines, title, guides)
         lines[start:end] = [""]
     s, e = _find(lines, title)
-    val = (value or "").strip().replace("\n", " ")
+    val = one_line(value or "")
     for i in range(s + 1, e):
         m = FIELD.match(lines[i].strip())
         if m and m.group(1).strip().lower() == key.lower():
@@ -343,12 +366,11 @@ def apply(text, changes, guides=None, today=None):
     """Change only what's asked: changes = {"title", "glance": {key: value}, "sections": {title: text},
     "sectionsAt": [{"title", "n", "text"}] (when a title appears twice),
     "fields": {section: {field: value}}, "update": "what changed"}. Everything else stays byte for byte."""
-    trail = text.endswith("\n")
-    lines = text.splitlines()
+    lines, nl, bom, trail = split_lines(text)
     if changes.get("title"):
         i = next((n for n, ln in enumerate(lines) if ln.startswith("# ")), None)
         if i is not None:
-            lines[i] = "# " + changes["title"].strip()
+            lines[i] = "# " + one_line(changes["title"])
     for k, v in (changes.get("glance") or {}).items():
         lines = _set_glance(lines, k, str(v))
     for t, v in (changes.get("sections") or {}).items():
@@ -359,8 +381,7 @@ def apply(text, changes, guides=None, today=None):
         for k, v in fs.items():
             lines = _set_field(lines, t, k, str(v), guides)
     lines = _add_update(lines, changes.get("update"), today, "What Changed" if _find(lines, "What Changed") and not _find(lines, "Updates") else "Updates")
-    out = "\n".join(lines)
-    return out + "\n" if trail or not out.endswith("\n") else out
+    return join_lines(lines, nl, bom, True)  # the file's own line endings and BOM, always ending in a newline
 
 
 # ---------- the whole picture, for the dashboard ----------
@@ -394,7 +415,7 @@ def competitor_names(business_doc):
     if not sec or not sec["body"]:
         return []
     names = []
-    for ln in sec["body"].splitlines():
+    for ln in sec["body"].split("\n"):
         ln = re.sub(r"^\s*([-*]|\d+[.)])\s*", "", ln).strip()
         if not ln:
             continue
@@ -499,7 +520,7 @@ def _list_in_readme(folder, slug, name, kind):
     heading = {"persona": "The personas", "competitor": "Summary"}.get(kind)
     if not heading or not os.path.isfile(readme):
         return
-    lines = read(f"{folder}/README.md").splitlines()
+    lines = read(f"{folder}/README.md").split("\n")
     span = _find(lines, heading)
     if not span:
         return
