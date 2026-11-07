@@ -343,6 +343,51 @@ class F6LineEndingsAndOddCharacters(unittest.TestCase):
             self.assertIn("keepIndent(", f.read())
 
 
+class F7BadInputIsAPlainError(ServerCase):
+    """Odd input dropped the connection ('couldn't reach the server') instead of saying what was wrong."""
+
+    def raw(self, path, body, length=None):
+        import http.client, json
+        c = http.client.HTTPConnection("127.0.0.1", self.port, timeout=5)
+        data = body if isinstance(body, bytes) else json.dumps(body).encode()
+        c.putrequest("POST", path)
+        c.putheader("Host", "localhost"); c.putheader("Content-Type", "application/json")
+        c.putheader("Content-Length", str(len(data) if length is None else length)); c.endheaders()
+        c.send(data)
+        r = c.getresponse()
+        raw = r.read()
+        return r.status, json.loads(raw)
+
+    def test_each_shape_gets_a_reason(self):
+        cases = [
+            ("/api/business/save", {"path": "brand/offer.md", "changes": {"fields": {"X": ["a"]}}}),
+            ("/api/business/save", {"path": "brand/offer.md", "changes": {"glance": "Price"}}),
+            ("/api/business/save", {"path": "brand/offer.md", "changes": {"sectionsAt": [{"title": "Notes", "n": "x", "text": 1}]}}),
+            ("/api/posts", {"platform": "threads", "body": "x", "date": 20261107}),
+            ("/api/posts", ["not", "an", "object"]),
+            ("/api/settings", ["not", "an", "object"]),
+            ("/api/keys", {"name": ["BLOTATO_API_KEY"], "value": "x"}),
+        ]
+        for path, body in cases:
+            code, res = self.raw(path, body)
+            self.assertEqual(code, 400, (path, body, res))
+            self.assertTrue(res.get("error"), (path, body))
+
+    def test_negative_and_huge_lengths(self):
+        code, res = self.raw("/api/settings", {"poster": "manual"}, length=-1)
+        self.assertEqual(code, 400)
+        code, res = self.raw("/api/settings", b"{}", length=3_000_000)
+        self.assertEqual(code, 413)
+
+    def test_names_with_backslashes_and_newlines(self):
+        code, res = self.call("POST", "/api/business/new", {"kind": "persona", "name": "Ops\\Team A\\1"})
+        self.assertEqual(code, 200, res)
+        self.assertTrue(self.text(res["path"]).startswith("# Ops\\Team A\\1\n"))
+        code, res = self.call("POST", "/api/business/new", {"kind": "persona", "name": "Two\nlines"})
+        self.assertEqual(code, 200, res)
+        self.assertIn("- `two-lines.md`: Two lines\n", self.text("brand/personas/README.md"))
+
+
 CHROME = next((p for p in ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",) if os.path.exists(p)), None) or \
     next((p for p in (__import__("shutil").which("google-chrome"), __import__("shutil").which("chromium")) if p), None)
 

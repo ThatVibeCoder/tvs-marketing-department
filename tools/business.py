@@ -492,7 +492,7 @@ def create(kind, name, today=None):
     """A new ICP, offer, persona or competitor, copied from its template, named, and listed in the folder's README."""
     if kind not in KINDS:
         raise ValueError("You can add an ICP, an offer, a buyer or a competitor.")
-    name = (name or "").strip()
+    name = one_line(name or "")
     if not name:
         raise ValueError("Give it a name first.")
     k = KINDS[kind]
@@ -506,7 +506,7 @@ def create(kind, name, today=None):
     except OSError:
         raise FileNotFoundError(f"{k['template']} is missing, so there's nothing to copy. Get it back from the template repo.")
     heading = {"icp": f"ICP: {name}", "offer": f"Offer: {name}", "persona": name, "competitor": name}[kind]
-    text = re.sub(r"^# .*$", "# " + heading, text, count=1, flags=re.M)
+    text = re.sub(r"^# .*$", lambda _m: "# " + heading, text, count=1, flags=re.M)  # the name as text, never a pattern
     text = apply(text, {"update": "made in the Command Center"}, guides_for(kind), today)
     os.makedirs(os.path.dirname(p), exist_ok=True)
     atomic_write(p, text)

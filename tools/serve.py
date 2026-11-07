@@ -28,6 +28,7 @@ import re
 import subprocess
 import sys
 import threading
+import traceback
 import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import unquote, urlparse
@@ -142,7 +143,30 @@ def load_post_meta(pid):
     return meta, body
 
 
+def check_changes(changes):
+    """A business save's changes, checked at the edge: every value plain text, every group the right shape."""
+    bad = ValueError("Those changes aren't in a shape this page sends. Reload and try again.")
+    if not isinstance(changes, dict):
+        raise bad
+    for k in ("glance", "sections"):
+        if k in changes and not (isinstance(changes[k], dict) and all(isinstance(v, str) for v in changes[k].values())):
+            raise bad
+    if "fields" in changes and not (isinstance(changes["fields"], dict) and all(
+            isinstance(fs, dict) and all(isinstance(v, str) for v in fs.values()) for fs in changes["fields"].values())):
+        raise bad
+    if "sectionsAt" in changes and not (isinstance(changes["sectionsAt"], list) and all(
+            isinstance(a, dict) and isinstance(a.get("title"), str) and isinstance(a.get("text"), str) and isinstance(a.get("n", 1), int)
+            for a in changes["sectionsAt"])):
+        raise bad
+    if "title" in changes and not isinstance(changes["title"], str):
+        raise bad
+    return changes
+
+
 def check_fields(data):
+    for k in ("platform", "status", "date", "time", "title", "category", "body", "media", "media_type", "notes", "link", "account", "job", "posted_at", "hash"):
+        if k in data and data[k] is not None and not isinstance(data[k], str):
+            raise ValueError(f"{k} has to be plain text.")
     if "platform" in data and data["platform"] not in sync.PLATFORMS:
         raise ValueError("Pick one of the seven platforms.")
     if "status" in data and data["status"] not in sync.POST_STATUSES:
@@ -387,9 +411,18 @@ class Handler(BaseHTTPRequestHandler):
             return self.send_json(415, {"error": "Send JSON."})
         try:
             length = int(self.headers.get("Content-Length") or 0)
-            data = json.loads(self.rfile.read(min(length, 2_000_000)) or b"{}")
+        except ValueError:
+            length = -1
+        if length < 0:
+            return self.send_json(400, {"error": "That request had no readable length."})
+        if length > 2_000_000:
+            return self.send_json(413, {"error": "That's too big to save from here (2 MB at most)."})
+        try:
+            data = json.loads(self.rfile.read(length) or b"{}")
         except ValueError:
             return self.send_json(400, {"error": "That wasn't valid JSON."})
+        if not isinstance(data, dict):
+            return self.send_json(400, {"error": "Send one JSON object."})
         path = urlparse(self.path).path
         try:
             with LOCK:
@@ -407,16 +440,16 @@ class Handler(BaseHTTPRequestHandler):
                     save_settings(data)
                     result, what = {}, "saved settings"
                 elif path == "/api/keys":
-                    name, value = str(data.get("name", "")), str(data.get("value", "")).strip()
+                    if not isinstance(data.get("name"), str) or not isinstance(data.get("value", ""), str):
+                        raise ValueError("A key is a name and a value, both plain text.")
+                    name, value = data["name"], data.get("value", "").strip()
                     if name not in ALL_KEYS:
                         raise ValueError("That key name isn't on the list.")
                     write_key(name, clean_key(name, value))
                     result, what = {}, f"{'saved' if value else 'removed'} {name} in .env"
                 elif path == "/api/business/save":
                     rel = str(data.get("path", ""))
-                    changes = data.get("changes") or {}
-                    if not isinstance(changes, dict):
-                        raise ValueError("Nothing to save.")
+                    changes = check_changes(data.get("changes") or {})
                     clean = {k: changes[k] for k in ("title", "glance", "sections", "sectionsAt", "fields") if k in changes}
                     what_changed = [*(clean.get("glance") or {}), *(clean.get("sections") or {}), *[str(a.get("title")) for a in clean.get("sectionsAt") or [] if isinstance(a, dict)],
                                     *[f for fs in (clean.get("fields") or {}).values() for f in fs]]
@@ -447,6 +480,9 @@ class Handler(BaseHTTPRequestHandler):
             return self.send_json(404, {"error": str(e)})
         except ValueError as e:
             return self.send_json(400, {"error": str(e)})
+        except Exception:  # never a dropped connection: say so on the page, put the details in this window
+            traceback.print_exc()
+            return self.send_json(500, {"error": "Something went wrong saving that. The window running tools/serve.py has the details."})
         print(f"  {datetime.datetime.now():%H:%M:%S}  {what}", flush=True)
         result.update({"ok": True, "synced": synced, "state": state()})
         return self.send_json(200, result)
