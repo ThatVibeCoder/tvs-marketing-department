@@ -888,7 +888,10 @@ def main():
     n_t = sum(len(d["teams"]) for d in depts)
     n_m = sum(len(t["members"]) for d in depts for t in d["teams"])
     n_w = sum(len(t["workflows"]) for d in depts for t in d["teams"])
-    print(f"{len(depts)} departments · {n_t} teams · {n_m} team members · {len(all_skills(depts))} skills · {n_w} workflows")
+    n_s = len(all_skills(depts))
+    many = lambda n, word: f"{n} {word}" + ("" if n == 1 else "s")  # noqa: E731
+    print(" · ".join([many(len(depts), "department"), many(n_t, "team"), many(n_m, "team member"), many(n_s, "skill"),
+                      many(n_w, "workflow")]))
     for w in dict.fromkeys(warnings):
         print("NOTE:", w)
     for e in dict.fromkeys(errors):
