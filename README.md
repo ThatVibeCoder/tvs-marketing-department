@@ -30,6 +30,7 @@ departments/              the company itself
 routines/                 work that runs on a schedule
 command-center/index.html  the picture of all of it (python3 tools/serve.py turns editing on)
 AGENTS.md                 the rules every AI follows in this repo (CLAUDE.md, GEMINI.md and .cursor/rules point here)
+docs/REFERENCE.md         the long reference AGENTS.md points to: every home, the file formats, the Command Center
 CHANGELOG.md              what's new since your copy was made
 ```
 
@@ -63,7 +64,7 @@ flowchart LR
 
 ## Where everything goes
 
-Every piece of information has exactly one home: your audit, your voice, your offer, competitors, reports, finished work, all of it. The full list is in `AGENTS.md` under "Where everything goes." Never make a second copy somewhere else, because copies drift.
+Every piece of information has exactly one home: your audit, your voice, your offer, competitors, reports, finished work, all of it. The full list is in `docs/REFERENCE.md` under "Where everything goes." Never make a second copy somewhere else, because copies drift.
 
 ## Staying up to date
 

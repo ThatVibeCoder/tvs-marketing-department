@@ -262,7 +262,7 @@ def read_tree():
                 continue
             tpath = os.path.join(tdir, "team.md")
             if not os.path.isfile(tpath):
-                errors.append(f"{rel(tdir)}: a team folder needs a team.md. Teams come from their classroom lesson; if this folder was made by hand to hold a file, move the file to its home in AGENTS.md and delete the folder")
+                errors.append(f"{rel(tdir)}: a team folder needs a team.md. Teams come from their classroom lesson; if this folder was made by hand to hold a file, move the file to its home (docs/REFERENCE.md, \"Where everything goes\") and delete the folder")
                 continue
             meta, body = frontmatter(read(tpath))
             for k in ("name", "command", "department", "status", "purpose"):

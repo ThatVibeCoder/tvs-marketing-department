@@ -60,7 +60,7 @@ class FrontDoorTest(unittest.TestCase):
 
     def test_the_price_has_one_home(self):
         # cold test B8: AGENTS.md gave the price two homes (business.md "the money" and offer.md "the price")
-        rows = [l for l in agents_md().splitlines() if l.startswith("| What ")]
+        rows = [l for l in read(os.path.join(ROOT, "docs", "REFERENCE.md")).splitlines() if l.startswith("| What ")]
         biz = [r for r in rows if "`business.md` |" in r][0]
         offer = [r for r in rows if r.startswith("| What you sell, the price")][0]
         self.assertIn("the price itself lives in `brand/offer.md`", biz)
@@ -77,6 +77,13 @@ class FrontDoorTest(unittest.TestCase):
     def test_agents_md_fits_codex(self):
         # Codex stops reading project instructions at project_doc_max_bytes, 32 KiB by default
         self.assertLess(os.path.getsize(os.path.join(ROOT, "AGENTS.md")), 32 * 1024)
+
+    def test_agents_md_stays_under_12_kb(self):
+        # every agent loads AGENTS.md on every turn; at 22.8 KB it burned a member's whole weekly Codex limit.
+        # Long reference material goes in docs/REFERENCE.md, pointed to with one line.
+        self.assertLess(os.path.getsize(os.path.join(ROOT, "AGENTS.md")), 12 * 1024)
+        self.assertIn("docs/REFERENCE.md", agents_md())
+        self.assertTrue(os.path.isfile(os.path.join(ROOT, "docs", "REFERENCE.md")))
 
     def test_grok_reads_the_codex_shortcuts(self):
         # Grok Build loads skills from .agents/skills/ and .claude/skills/, deduplicated by name; a name is lowercase
