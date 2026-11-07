@@ -44,7 +44,7 @@ const ICONS = {
 };
 const icon = (name, cls = "") => `<svg viewBox="0 0 24 24" class="${cls}" aria-hidden="true">${ICONS[name] || ICONS.zap}</svg>`;
 
-const state = { automations: [], teams: [], executions: [], route: {}, flow: { zoom: 1, pan: { x: 0, y: 0 } } };
+const state = { automations: [], teams: [], executions: [], content: null, settings: null, keys: null, problems: [], server: null, route: {}, flow: { zoom: 1, pan: { x: 0, y: 0 } } };
 
 function h(tag, attrs = {}, children = []) {
   const n = document.createElement(tag);
@@ -488,7 +488,7 @@ function renderPhasedFlow(flow, wrap) {
   const b = L.bounds;
   const stage = h("div", { class: "flow-stage", style: `width:${b.r + 400}px;height:${b.b + 400}px` });
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.innerHTML = '<defs><marker id="ph-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(255,255,255,.42)" stroke="none"/></marker></defs>';
+  svg.innerHTML = '<defs><marker id="ph-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" style="fill:var(--edge-line)" stroke="none"/></marker></defs>';
   for (const p of L.phases) {
     stage.append(h("section", { class: "phase-box", style: `left:${p.x}px;top:${p.y}px;width:${p.w}px;height:${p.h}px;--ph:${p.color}`, "aria-label": `${p.label} phase` }, [
       h("header", { class: "phase-head" }, [h("span", { class: "phase-dot" }), h("span", { class: "phase-label" }, p.label), h("span", { class: "phase-count" }, `${p.nodes.length} step${p.nodes.length === 1 ? "" : "s"}`)]),
@@ -618,17 +618,69 @@ function minimap(flow) {
     const x = ((n.x * POS_SCALE_X - b.x) / w) * 130 + 10;
     const y = ((n.y * POS_SCALE_Y - b.y) / hgt) * 70 + 10;
     const ww = ((n.small ? SMALL_W : NODE_W) / w) * 130;
-    return `<rect x="${x}" y="${y}" width="${Math.max(5, ww)}" height="6" rx="2" fill="${n.tone === "accent" ? "#42caad" : n.tone === "dimmed" ? "#454240" : "#6f6b67"}"/>`;
+    return `<rect x="${x}" y="${y}" width="${Math.max(5, ww)}" height="6" rx="2" style="fill:${n.tone === "accent" ? "var(--color-accent)" : n.tone === "dimmed" ? "var(--minimap-dim)" : "var(--minimap-node)"}"/>`;
   }).join("");
   return h("div", { class: "minimap glass", html: `<svg viewBox="0 0 150 90" aria-hidden="true">${rects}</svg>` });
 }
 
-function notFound(title) { return h("div", { class: "dash-container" }, emptyState("alert", title, "Check the URL or use the tab strip to return to the module.")); }
+function notFound(title) { return h("div", { class: "dash-container" }, emptyState("alert", title, "Check the URL or use the sidebar to get back.")); }
 function parseRoute() {
-  const raw = (location.hash || "#/automations").slice(1);
+  const raw = (location.hash || "#/agent-teams").slice(1);
   const [pathRaw, queryRaw = ""] = raw.split("?");
   const parts = pathRaw.split("/").filter(Boolean).map(decodeURIComponent);
   state.route = { parts, query: new URLSearchParams(queryRaw) };
+}
+
+// ---- The shell: a floating glass sidebar (Automations · Content · Settings) and a floating top bar ----
+const RAIL_KEY = "cc-sidepanel-collapsed", THEME_KEY = "cc-theme";
+const store = { get: (k) => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* private window */ } } };
+const AUTOMATION_LINKS = [["/agent-teams", "Agent Teams", "users"], ["/automations", "Automations", "waypoints"], ["/executions", "Executions", "activity"]];
+const CONTENT_LINKS = [["/content", "Overview", "layoutGrid"], ["/content/calendar", "Calendar", "calendarDays"], ["/content/research", "Research", "search"],
+  ...["tiktok", "instagram", "twitter", "threads", "youtube", "skool", "linkedin"].map((p) => [`/content/${p}`, PLATFORM_LABEL[p], null, p])];
+function railLink(path, label, ic, platform, active, collapsed) {
+  return h("a", { href: `#${path}`, class: "rail-link", "aria-current": active ? "page" : null, title: collapsed ? label : null }, [
+    h("span", { class: "rail-ic", html: platform ? platformMark(platform) : lineIcon(ic) }),
+    collapsed ? null : h("span", { class: "truncate" }, label)
+  ]);
+}
+function renderShell() {
+  const p = state.route.parts, path = "/" + p.join("/"), inSettings = p[0] === "settings";
+  const collapsed = store.get(RAIL_KEY) === "1" && !matchMedia("(max-width: 767px)").matches;
+  const rail = $("#rail");
+  rail.classList.toggle("collapsed", collapsed);
+  const isOn = (href) => href === "/content" ? path === "/content" : path === href || path.startsWith(href + "/");
+  let inner;
+  if (inSettings) {
+    const a = (state.settings && state.settings.account) || {};
+    inner = [
+      h("div", { class: "rail-top" }, h("a", { href: "#/agent-teams", class: "rail-back" }, [h("span", { class: "rail-ic", html: lineIcon("arrowLeft") }), collapsed ? null : h("span", { class: "truncate" }, "Command Center")])),
+      collapsed ? null : h("div", { class: "rail-id" }, [h("span", { class: "id-avatar" }, ((a.name || "Y").trim()[0] || "Y").toUpperCase()), h("span", { class: "min0" }, [h("span", { class: "id-name" }, a.name || "Your name"), h("span", { class: "id-role" }, a.role || "Owner")])]),
+      h("nav", { class: "rail-nav", "aria-label": "Settings sections" }, [collapsed ? null : h("p", { class: "rail-group" }, "Settings"),
+        ...SETTINGS_SECTIONS.map((s) => railLink(`/settings/${s.slug}`, s.label, s.icon, null, (p[1] || "account") === s.slug, collapsed))])
+    ];
+  } else {
+    inner = [
+      h("div", { class: "rail-top" }, [collapsed ? null : h("a", { href: "#/agent-teams", class: "rail-brand" }, [h("span", { class: "rail-ic", html: lineIcon("layoutGrid") }), h("span", { class: "truncate" }, "Command Center")]),
+        h("button", { type: "button", class: "rail-toggle", "aria-label": collapsed ? "Pin side panel open" : "Collapse side panel", onclick: () => { if (document.body.classList.contains("drawer-open")) { document.body.classList.remove("drawer-open"); return; } store.set(RAIL_KEY, collapsed ? "0" : "1"); renderShell(); }, html: lineIcon(collapsed ? "panelOpen" : "panelClose") })]),
+      h("nav", { class: "rail-nav", "aria-label": "Dashboard sections" }, [
+        h("div", { class: "rail-sec" }, [collapsed ? h("div", { class: "rail-rule" }) : h("p", { class: "rail-group" }, "Automations"), ...AUTOMATION_LINKS.map(([href, l, ic]) => railLink(href, l, ic, null, isOn(href), collapsed))]),
+        h("div", { class: "rail-sec" }, [collapsed ? h("div", { class: "rail-rule" }) : h("p", { class: "rail-group" }, "Content"), ...CONTENT_LINKS.map(([href, l, ic, pl]) => railLink(href, l, ic, pl, isOn(href), collapsed))])
+      ])
+    ];
+  }
+  if (!inSettings) inner.push(h("div", { class: "rail-bottom" }, railLink("/settings/account", "Settings", "settings", null, false, collapsed)));
+  rail.replaceChildren(h("div", { class: "dash-rail" }, inner));
+  const title = inSettings ? "Settings" : p[0] === "content" ? "Content" : "Automations";
+  $("#headerTitle").textContent = title;
+  $("#modePill").textContent = state.server ? "Editing on" : "From your repo";
+  $("#modePill").title = state.server ? "tools/serve.py is running: saves land in your files" : "Read-only. Run python3 tools/serve.py to edit from here";
+  $("#themeBtn").innerHTML = lineIcon(document.documentElement.classList.contains("dash-light") ? "moon" : "sun");
+  document.title = `${title} · Command Center`;
+}
+function setTheme(t) {
+  document.documentElement.classList.toggle("dash-light", t === "light");
+  store.set(THEME_KEY, t);
+  render();
 }
 function render() {
   parseRoute();
@@ -639,45 +691,43 @@ function render() {
   else if (p[0] === "agent-teams") view = renderTeams();
   else if (p[0] === "executions") view = renderExecutionsPage();
   else if (p[0] === "automations" && p[1]) view = renderAutomationDetail(p[1], p[2] === "executions" ? "executions" : "editor");
+  else if (p[0] === "content") view = renderContent(p);
+  else if (p[0] === "settings") view = renderSettings(p);
   else view = renderAutomations();
+  renderShell();
+  document.body.classList.remove("drawer-open");
   app.replaceChildren(...[].concat(view));
   app.focus({ preventScroll: true });
+  if (comp) drawSheet();
 }
-async function loadJson(path, fallback) {
-  try {
-    const res = await fetch(path, { cache: "no-store" });
-    if (!res.ok) throw new Error(String(res.status));
-    const data = await res.json();
-    return data;
-  } catch (err) {
-    console.warn(`Could not load ${path}`, err);
-    return fallback;
-  }
+function applyState(s) {
+  if (!s) return;
+  state.content = s.content || state.content;
+  state.settings = s.settings || state.settings;
+  state.keys = s.keys || null;
+  state.problems = s.problems || [];
+  state.server = s.server || null;
 }
 async function boot() {
-  const demo = false; // sample-data mode lives in the Command Center Starter repo, not here
-  if (!demo && window.CC_DATA) {
+  if (store.get(THEME_KEY) === "light") document.documentElement.classList.add("dash-light");
+  if (window.CC_DATA) {
     // tools/sync.py writes data/data.js, so this page opens straight from the folder (no server needed)
     state.automations = window.CC_DATA.automations || [];
     state.teams = window.CC_DATA.teams || [];
     state.executions = window.CC_DATA.executions || [];
-    $("#modePill").textContent = "From your repo";
-  } else if (demo) {
-    const ex = await loadJson("data/EXAMPLES.json", {});
-    state.automations = ex.automations || [];
-    state.teams = ex.teams || [];
-    state.executions = ex.executions || [];
-    $("#modePill").textContent = "Sample data";
-  } else {
-    const [automations, teams, executions] = await Promise.all([
-      loadJson("data/automations.json", []),
-      loadJson("data/teams.json", []),
-      loadJson("data/executions.json", [])
-    ]);
-    state.automations = Array.isArray(automations) ? automations : automations.automations || [];
-    state.teams = Array.isArray(teams) ? teams : teams.teams || [];
-    state.executions = Array.isArray(executions) ? executions : executions.executions || [];
+    state.content = window.CC_DATA.content || { posts: [], research: {} };
+    state.settings = window.CC_DATA.settings || {};
   }
+  // Served by tools/serve.py? Then read the live files and turn editing on.
+  if (location.protocol.startsWith("http")) {
+    try {
+      const res = await fetch("api/state", { cache: "no-store" });
+      if (res.ok) applyState(await res.json());
+    } catch { /* a plain static host: stay read-only */ }
+  }
+  $("#themeBtn").addEventListener("click", () => setTheme(document.documentElement.classList.contains("dash-light") ? "dark" : "light"));
+  $("#menuBtn").addEventListener("click", () => document.body.classList.toggle("drawer-open"));
+  $("#drawerShade").addEventListener("click", () => document.body.classList.remove("drawer-open"));
   window.addEventListener("hashchange", render);
   if (!location.hash) history.replaceState(null, "", `${location.pathname}${location.search}#/agent-teams`);
   render();
