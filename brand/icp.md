@@ -1,6 +1,6 @@
 # ICP: Who You Serve
 
-**Filled by:** the Lock In Your ICP lesson. Kept by the ICP & Offer Owner on the Strategy Team, once the Strategy Team's lesson builds it.
+**Filled by:** the Lock In Your ICP lesson. Kept by the Company Strategist on the Strategy Team (set up in the Set Up Your Company Strategist lesson).
 
 The one person you sell to, in their own words. Every writer, page and offer reads this file first.
 

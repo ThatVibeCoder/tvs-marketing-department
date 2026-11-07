@@ -1,6 +1,6 @@
 # Contrarian Take
 
-**Filled by:** the Contrarian Take lesson. Kept by the ICP & Offer Owner on the Strategy Team, once the Strategy Team's lesson builds it.
+**Filled by:** the Contrarian Take lesson. Kept by the Company Strategist on the Strategy Team (set up in the Set Up Your Company Strategist lesson).
 
 The thing you believe about your industry that most people in it get wrong. It's the spine of your content and the reason anyone remembers you. If it doesn't make somebody disagree, it isn't contrarian yet.
 

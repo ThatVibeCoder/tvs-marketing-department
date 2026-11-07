@@ -1,8 +1,8 @@
 # Channels
 
-**Filled by:** The Everyone Trap lesson fills The Funnel Split; the Pick Your Platforms lesson fills Where You Show Up. Kept by the Social Manager on the Content Team, once the Content Team lesson builds it.
+**Filled by:** The Everyone Trap lesson (both sections). Kept by the Company Strategist on the Strategy Team (set up in the Set Up Your Company Strategist lesson).
 
-The set-your-content-mix skill sets your funnel split. Where you actually show up, and how your effort splits between them, gets worked out with your AI separately when you get there. Not every platform, your platforms, with an honest split that matches the hours you really have.
+The set-your-content-mix skill sets your funnel split and where you actually show up. Not every platform, your platforms, with an honest split that matches the hours you really have.
 
 Until it's filled, team members ask before assuming where anything gets published.
 
@@ -12,7 +12,7 @@ Your starting mix out of every 10 public pieces (roughly 7 give / 2 prove / 1 in
 _Not filled in yet._
 
 ## Where You Show Up
-Your actual platforms, ranked, with an honest read on how your hours split between them. You work this out with your AI when you get there; the classroom walks you through it.
+Your actual platforms, ranked, with an honest read on how your hours split between them.
 
 _Not filled in yet._
 

@@ -1,6 +1,6 @@
 # Business Audit
 
-**Filled by:** the Cut What You Don't Need lesson, using what the Walk Your Whole Business lesson wrote into `business.md`. Read by the company strategist, the ICP & Offer Owner, the copywriter and every team member that picks what comes next, once their lessons build them.
+**Filled by:** the Cut What You Don't Need lesson, using what the Walk Your Whole Business lesson wrote into `business.md`. Kept by the Company Strategist on the Strategy Team (set up in the Set Up Your Company Strategist lesson). Read by every team member that picks what comes next.
 
 Where your money and your hours really go, what to cut, and what to hand off first. A section that still says _Not filled in yet._ counts as missing.
 
