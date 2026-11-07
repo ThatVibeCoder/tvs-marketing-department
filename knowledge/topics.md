@@ -15,7 +15,7 @@ Next up: _Not filled in yet._
 
 ## The Four Questions
 Every post answers these four before it gets written. Keep this section as it is.
-1. **Who is it for?** One person: the ICP, or a persona by name.
+1. **Who is it for?** One person: the ICP (or another ICP from `brand/icps/`, by name).
 2. **What job does it do?** Give, prove or invite, weighed against The Funnel Split in `brand/channels.md`.
 3. **What do they walk away with, even if they never reply?** The step, the number, the before and after.
 4. **Where does it send them?** Nowhere, a reply, your page, or one next step. Never more than one.

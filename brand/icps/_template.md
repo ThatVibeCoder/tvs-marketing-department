@@ -62,7 +62,7 @@ _Not filled in yet._
 _Not filled in yet._
 
 ## Profile Data (optional)
-Optional, laid out like the Ideal Customer Profile template: fill in what you know and leave the rest blank. An empty line here never stops anyone. Personas lists the buyer files in `brand/personas/` that belong to this ICP.
+Optional, laid out like the Ideal Customer Profile template: fill in what you know and leave the rest blank. An empty line here never stops anyone.
 
 **Age range:**
 **Income:**
@@ -73,7 +73,6 @@ Optional, laid out like the Ideal Customer Profile template: fill in what you kn
 **Reasons they buy:**
 **Solutions you give them:**
 **Positioning:**
-**Personas:**
 
 ## Updates
 Every change to this file gets one dated line here, newest on top: what changed and why (for example `2026-11-02: added the price, owner confirmed`). This is how the file keeps itself current instead of going stale.
