@@ -153,6 +153,8 @@ class DashboardDraws(PaymentsCopy):
         self.assertIn("$180", html)                      # MRR
         self.assertIn("$300 unpaid", html)               # the one open invoice
         self.assertIn("1 past due", html)
+        self.assertNotIn("kpi-spark", html)                # no mini bar charts next to the KPI numbers (Brian)
+        self.assertEqual(html.count('class="glass kpi-card"'), 4)
         self.assertNotIn("Connect your payments in Settings → Payments", html)
         self.assertNotIn("Connect in Settings → Payments", html)
 

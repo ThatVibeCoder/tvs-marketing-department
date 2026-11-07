@@ -1176,7 +1176,6 @@ body.sheet-open { overflow: hidden; }
 .kpi-body { flex: 1; display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; padding: 1.25rem; }
 .kpi-label { font-size: 11px; font-weight: 500; line-height: 1rem; letter-spacing: .12em; text-transform: uppercase; color: var(--color-fg-subtle); }
 .kpi-value { margin-top: .5rem; font-size: 2rem; line-height: 1; font-weight: 600; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
-.kpi-spark { width: 84px; height: 44px; flex: none; display: block; }
 .kpi-foot { display: flex; align-items: center; gap: .375rem; border-top: 1px solid var(--edge-soft); background: var(--color-bg); padding: .625rem 1.25rem; font-size: .75rem; }
 .muted-sub { color: var(--color-fg-subtle); }
 .kpi-note { margin-left: auto; font-size: 10px; color: var(--color-fg-subtle); }

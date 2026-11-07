@@ -13,14 +13,12 @@ function greeting() {
 const longToday = () => new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", timeZone: tzName() });
 const firstName = () => ((settings().account || {}).name || "").trim().split(/\s+/)[0];
 
-function kpiCard({ label, value, delta, caption, spark, footnote }) {
-  const W = 84, H = 44, n = Math.max(1, spark.length), max = Math.max(1, ...spark), colW = W / n, barW = Math.max(1.5, colW * 0.62);
-  const bars = spark.map((v, i) => { const hh = Math.max(v > 0 ? 2 : 0, (v / max) * (H - 2)); return `<rect x="${(i * colW + (colW - barW) / 2).toFixed(2)}" y="${(H - hh).toFixed(2)}" width="${barW.toFixed(2)}" height="${hh.toFixed(2)}" rx="1" style="fill:var(--color-accent)" opacity="${(0.5 + 0.5 * (i / n)).toFixed(2)}"/>`; }).join("");
+// A KPI card: the label, the big number, then the change, its caption and where it came from. No sparkline (Brian, 11/07).
+function kpiCard({ label, value, delta, caption, footnote }) {
   const up = delta !== null && delta >= 0;
   return h("div", { class: "glass kpi-card" }, [
     h("div", { class: "kpi-body" }, [
-      h("div", { class: "min0" }, [h("div", { class: "kpi-label" }, label), h("div", { class: "kpi-value" }, value)]),
-      h("div", { html: `<svg viewBox="0 0 ${W} ${H}" class="kpi-spark" aria-hidden="true">${bars}</svg>` })
+      h("div", { class: "min0" }, [h("div", { class: "kpi-label" }, label), h("div", { class: "kpi-value" }, value)])
     ]),
     h("div", { class: "kpi-foot" }, [
       h("span", { class: cls("b", delta === null ? "muted-sub" : up ? "accent" : "danger") }, delta === null ? "—" : `${up ? "▲" : "▼"} ${Math.abs(delta).toFixed(1)}%`),
@@ -118,7 +116,7 @@ function revenueSummary(pay, todayKey, period) {
   const byCustomer = Object.entries(paid.reduce((m, p) => { const c = (p.customer || "").trim() || "No name"; m[c] = (m[c] || 0) + p.amount; return m; }, {})).map(([customer, total]) => ({ customer, total })).sort((x, y) => y.total - x.total);
   const open = (pay.invoices || []).filter((i) => i.status === "open");
   return {
-    revenue30: sum(last30), revenuePrev30: sum(prev30), spark: last30.slice(-14),
+    revenue30: sum(last30), revenuePrev30: sum(prev30),
     trend: { keys, values, labelKind }, allTime: sum(paid.map((p) => p.amount)), byCustomer,
     openCount: open.length, openAmount: sum(open.map((i) => i.amount)), overdue: open.filter((i) => i.dueDate && i.dueDate < todayKey).length,
     recent: [...(pay.payments || [])].sort((x, y) => (y.date || "").localeCompare(x.date || "")).slice(0, 8)
@@ -146,10 +144,10 @@ function renderDashboard() {
     h("div", { class: "row wrap dash-head" }, h("div", {}, [h("h1", { class: "dash-h1" }, `${greeting()}${name ? `, ${name}` : ""}`), h("p", { class: "tiny-sub dash-date" }, `${longToday()} · the business at a glance`)])),
     readOnlyNote(),
     h("div", { class: "kpi-row" }, [
-      kpiCard({ label: "Revenue", value: r ? money(r.revenue30) : "—", delta: r ? pct(r.revenue30, r.revenuePrev30) : null, caption: r ? "collected, last 30 days" : CONNECT_SHORT, spark: r ? r.spark : [], footnote: stamp }),
-      kpiCard({ label: "MRR", value: r && pay.mrr !== null ? money(pay.mrr) : "—", delta: null, caption: !r ? CONNECT_SHORT : pay.mrr !== null ? `recurring / mo${pay.activeSubscriptions !== null ? ` · ${pay.activeSubscriptions} active` : ""}` : "no subscriptions in payments.json", spark: [], footnote: stamp }),
-      kpiCard({ label: "Website Visitors", value: w30 ? w30.totals.activeUsers.toLocaleString("en-US") : "—", delta: w30 ? pct(w30.totals.activeUsers, w30.previousTotals.activeUsers) : null, caption: w30 ? "active users, 30 days" : "connect it in Web → Settings", spark: w30 ? w30.trend.slice(-14).map((t) => t.users) : [], footnote: snap ? `GA4 · ${new Date(snap.capturedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: tzName() })}` : null }),
-      kpiCard({ label: "Open Invoices", value: r ? r.openCount.toLocaleString("en-US") : "—", delta: null, caption: r ? `${money(r.openAmount)} unpaid` : CONNECT_SHORT, spark: [], footnote: r && r.overdue ? `${r.overdue} past due` : stamp })
+      kpiCard({ label: "Revenue", value: r ? money(r.revenue30) : "—", delta: r ? pct(r.revenue30, r.revenuePrev30) : null, caption: r ? "collected, last 30 days" : CONNECT_SHORT, footnote: stamp }),
+      kpiCard({ label: "MRR", value: r && pay.mrr !== null ? money(pay.mrr) : "—", delta: null, caption: !r ? CONNECT_SHORT : pay.mrr !== null ? `recurring / mo${pay.activeSubscriptions !== null ? ` · ${pay.activeSubscriptions} active` : ""}` : "no subscriptions in payments.json", footnote: stamp }),
+      kpiCard({ label: "Website Visitors", value: w30 ? w30.totals.activeUsers.toLocaleString("en-US") : "—", delta: w30 ? pct(w30.totals.activeUsers, w30.previousTotals.activeUsers) : null, caption: w30 ? "active users, 30 days" : "connect it in Web → Settings", footnote: snap ? `GA4 · ${new Date(snap.capturedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: tzName() })}` : null }),
+      kpiCard({ label: "Open Invoices", value: r ? r.openCount.toLocaleString("en-US") : "—", delta: null, caption: r ? `${money(r.openAmount)} unpaid` : CONNECT_SHORT, footnote: r && r.overdue ? `${r.overdue} past due` : stamp })
     ]),
     h("div", { class: "dash-hero-grid" }, [
       h("div", { class: "glass dash-panel" }, [
