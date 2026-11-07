@@ -38,6 +38,12 @@ The `VERSION` file at the root holds one number: the generation your repo was cl
 5. Run the sync command. It writes `GEMINI.md`, the Cursor rule and the Gemini and Cursor command folders for the teams you have.
 None of this rewrites what's already in your `business.md` or your brand files.
 
+**Added 2026-11-07 (the Chapter 2 files match the lessons).**
+- The top notes in `business.md`, `knowledge/business-audit.md` and `brand/` say the Company Strategist keeps them, and name the lesson that fills each one by its title. Every Chapter 2 interview skill is saved under the Company Strategist.
+- `brand/voice.md` is now a map of where your real voice lives: two new sections, Where My Voice Lives and Voice Samples, and a "Read the real thing first" line in At a Glance.
+- Buyer personas are gone: `brand/personas/` and the Personas line in Profile Data. No lesson fills them.
+To take it, say to your AI: "Add the 2026-11-07 Chapter 2 fixes from the template changelog." It updates the top notes, adds the two voice sections to your `brand/voice.md` if they aren't there, and fetches the new `AGENTS.md`, `docs/REFERENCE.md` and `tests/`, keeping every word you already wrote. If your `brand/personas/` has files you filled in, it asks you before removing anything.
+
 ---
 
 _Version 3 and older describe teams the template shipped back then. From version 4 those teams come from their classroom lessons instead, so an older entry's "take it" line can no longer fetch a team from the template: do that team's lesson._
@@ -118,7 +124,7 @@ To take it, say to your AI: "Add the content chapter part 1 from the template ch
 To take it, say to your AI: "Add the 2026-10-24 version 3 fixes from the template changelog." It fetches `tools/sync.py`, `tests/`, `knowledge/goals.md`, `site/` and `vercel.json`, adds the two rows to `AGENTS.md` and the goals row to `knowledge/README.md`, keeping everything you already wrote, then runs the sync command and save-work. If your repo already has a `vercel.json` or a site somewhere else, it asks you first.
 
 **To take it.** Say to your AI: "Update my department to version 3 from the template changelog." The GitHub Agent's add-from-template skill walks it with you one step at a time:
-1. Fetch `tools/`, `command-center/`, `departments/operations/`, every `departments/*/README.md`, `brand/friction-points.md`, `brand/personas/`, the new `knowledge/` folders and `routines/`.
+1. Fetch `tools/`, `command-center/`, `departments/operations/`, every `departments/*/README.md`, `brand/friction-points.md`, the new `knowledge/` folders and `routines/`.
 2. Add the new empty sections, At a Glance blocks and Updates logs to `business.md` and the files in `brand/`, keeping every word you already wrote.
 3. Fetch the new `AGENTS.md`, every `team.md`, and the new skills (write-headlines, edit-a-draft). Update every team member file's header: `**Status:**` becomes `seeded` or `live` (a `staffed` member is `live`), then a `**Team:**` line, then the read-first line from AGENTS.md. Add an `output/` folder next to each.
 4. Delete the old version-2 copies in BOTH `.claude/skills/` and `.agents/skills/`: add-a-key, audit-my-site, brain-dump-your-business, company-brain-dump, connect-a-tool, make-this-a-pdf, run-my-marketing-checkup, set-up-my-code-base, ship-my-landing-page. They all live inside `departments/` now. Any skill a lesson saved straight into those folders (for example staff-your-writer or web-copywriter) moves into its owner: the classroom's version-3 docs say where, and two skills doing one job become one.

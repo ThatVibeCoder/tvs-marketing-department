@@ -1,6 +1,6 @@
 # Offer: <name>
 
-**Filled by:** the Build Your Offer lesson; the headline by the Test It On Something Real lesson. Kept by the ICP & Offer Owner on the Strategy Team, once the Strategy Team's lesson builds it.
+**Filled by:** the Build Your Offer lesson; the headline in Chapter 3's Write the Top of Your Page lesson. Kept by the Company Strategist on the Strategy Team (set up in the Set Up Your Company Strategist lesson).
 
 Another thing you sell, in the same shape as `brand/offer.md`. `brand/offer.md` stays your main offer, the one the website team reads before building any page; this one only gets used when a job names it.
 

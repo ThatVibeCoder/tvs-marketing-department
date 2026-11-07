@@ -1,6 +1,6 @@
 # Business
 
-**Filled by:** the Brain-Dump Your Business lesson, then the Walk Your Whole Business lesson. Kept current by the Company Strategist, once the Strategy Team's lesson builds it.
+**Filled by:** the Brain-Dump Your Business lesson, then the Walk Your Whole Business lesson. Kept current by the Company Strategist on the Strategy Team (set up in the Set Up Your Company Strategist lesson).
 
 What your business is, in your own words. Don't fill it in by hand: open your AI (Claude Code, Codex, Gemini CLI, Cursor or Grok Build) in this folder and talk it in. The Brain-Dump Your Business lesson's skill writes what you say into the sections below.
 

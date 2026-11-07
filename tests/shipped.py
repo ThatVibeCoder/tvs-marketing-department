@@ -40,7 +40,7 @@ def _empty_dir(rel, keep=("README.md", "_template.md", ".gitkeep")):
 def as_shipped():
     return (_teams() == ["dev-team"]
             and all(_blank(f) for f in ("business.md", "brand/icp.md", "brand/offer.md", "brand/friction-points.md", "brand/contrarian-take.md"))
-            and all(_empty_dir(d) for d in ("brand/personas", "brand/icps", "brand/offers", "knowledge/competitors")))
+            and all(_empty_dir(d) for d in ("brand/icps", "brand/offers", "knowledge/competitors")))
 
 
 AS_SHIPPED = as_shipped()

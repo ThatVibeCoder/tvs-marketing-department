@@ -38,7 +38,11 @@ class FrontDoorTest(unittest.TestCase):
     def test_the_strategist_is_the_front_door_only_once_its_lesson_builds_it(self):
         text = agents_md()
         section = text.split("## The front door")[1].split("\n## ")[0]
-        self.assertIn("once its lesson builds it", section)
+        self.assertIn("Until then there's no front door", section)
+        for skill in ("set-up-your-company-strategist", "company-strategist (the front door)"):
+            self.assertIn(skill, section)
+        self.assertIn("routes every ask to the team that owns it", section)
+        self.assertIn("on its own, with nothing to register", section)  # finds teams added later
         self.assertIn(STRATEGIST, section)
         self.assertIn("talk to my company strategist", section)
         self.assertIn('says "set up my company strategist"', section)
@@ -141,6 +145,38 @@ class FilledByTest(unittest.TestCase):
             text = read(p)
             if "_Not filled in yet._" in text:
                 self.assertTrue([l for l in text.splitlines()[:5] if l.startswith("**Filled by:**")], os.path.relpath(p, ROOT))
+
+    def test_the_chapter_2_files_are_kept_by_the_company_strategist(self):
+        # every Chapter 2 interview skill lives under the Company Strategist; the old keepers and lessons are gone
+        lessons = {
+            "brand/icp.md": ["Lock In Your ICP"], "brand/contrarian-take.md": ["Contrarian Take"],
+            "brand/channels.md": ["The Everyone Trap"], "brand/friction-points.md": ["Solve 5 Friction Points"],
+            "brand/offer.md": ["Build Your Offer", "Write the Top of Your Page"],
+            "brand/voice.md": ["Round Up Your Own Words", "Build Your Voice Profile"],
+            "business.md": ["Brain-Dump Your Business", "Walk Your Whole Business"],
+            "knowledge/business-audit.md": ["Cut What You Don't Need"],
+        }
+        gone = ("ICP & Offer Owner", "Editor", "Social Manager", "Pick Your Platforms", "Test It On Something Real")
+        for rel, titles in lessons.items():
+            line = [l for l in read(os.path.join(ROOT, rel)).splitlines()[:5] if l.startswith("**Filled by:**")][0]
+            self.assertIn("Company Strategist", line, rel)
+            for title in titles:
+                self.assertIn(title, line, rel)
+            for old in gone:
+                self.assertNotIn(old, line, rel)
+
+    def test_voice_is_a_map_of_where_the_voice_lives(self):
+        text = read(os.path.join(ROOT, "brand", "voice.md"))
+        self.assertLess(text.index("## At a Glance"), text.index("## Where My Voice Lives"))
+        self.assertLess(text.index("## Where My Voice Lives"), text.index("## Voice Samples"))
+        self.assertLess(text.index("## Voice Samples"), text.index("## The Sound"))
+        self.assertLess(text.index("- **Videos, podcasts and recorded calls:**"), text.index("- **NotebookLM notebook:**"))
+        self.assertLess(text.index("- **NotebookLM notebook:**"), text.index("- **Recordings and transcripts:**"))
+
+    def test_no_buyer_personas(self):
+        self.assertFalse(os.path.exists(os.path.join(ROOT, "brand", "personas")))
+        for rel in ("AGENTS.md", "README.md", "docs/REFERENCE.md", "brand/icp.md", "brand/icps/_template.md", "knowledge/topics.md"):
+            self.assertNotIn("persona", read(os.path.join(ROOT, rel)).lower(), rel)
 
 
 class FormOwnerTest(unittest.TestCase):

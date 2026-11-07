@@ -1,6 +1,6 @@
 # Offer
 
-**Filled by:** the Build Your Offer lesson; the headline by the Test It On Something Real lesson. Kept by the ICP & Offer Owner on the Strategy Team, once the Strategy Team's lesson builds it.
+**Filled by:** the Build Your Offer lesson; the headline in Chapter 3's Write the Top of Your Page lesson. Kept by the Company Strategist on the Strategy Team (set up in the Set Up Your Company Strategist lesson).
 
 What you actually sell, in one sentence, and the headline that leads with it. The website team reads this before building any page.
 
