@@ -151,5 +151,61 @@ class F3StaleSaves(unittest.TestCase):
             self.assertIn("hash:", f.read())
 
 
+CHROME = next((p for p in ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",) if os.path.exists(p)), None) or \
+    next((p for p in (__import__("shutil").which("google-chrome"), __import__("shutil").which("chromium")) if p), None)
+
+
+@unittest.skipUnless(CHROME, "Google Chrome isn't installed (only this test needs it)")
+class F4OfferBuilderKeepsStructure(unittest.TestCase):
+    """The offer builder flattened ### subheads into bullets and dropped the 'and how' text of each friction line."""
+
+    def test_structured_sections_survive_a_save(self):
+        import json, re, shutil, subprocess, tempfile
+        tmp = tempfile.mkdtemp()
+        try:
+            repo = os.path.join(tmp, "repo")
+            shutil.copytree(ROOT, repo, ignore=shutil.ignore_patterns(".git", "__pycache__", ".env", "settings.json"))
+            sys.path.insert(0, os.path.join(repo, "tools"))
+            get = "Core:\n- 6 calls\n### Bonus (first 10 buyers)\n- template pack"
+            fr = "- Friction 1: Is it on time? Answered by the 2-day promise.\nThe rest is content."
+            t = b.read("brand/offer.md")
+            t = b.apply(t, {"sections": {"What They Get": get, "Friction It Answers": fr, "How It Works": "1. Pick\n2. Pay"}}, b.guides_for("offer"), DAY)
+            with open(os.path.join(repo, "brand", "offer.md"), "w", encoding="utf-8") as f:
+                f.write(t)
+            subprocess.run([sys.executable, "tools/sync.py"], cwd=repo, capture_output=True)
+            probe = """<!doctype html><meta charset="utf-8"><body><iframe id="f" src="index.html#/business/offers" style="width:1400px;height:1200px"></iframe><script>
+const f = document.getElementById("f");
+f.addEventListener("load", () => setTimeout(() => {
+  const w = f.contentWindow, d = f.contentDocument, sent = [];
+  w.eval("state.server = {}; api = async (path, body) => { window.__sent.push(body); return null; }; render();"); w.__sent = sent;
+  setTimeout(() => {
+    const areas = [...d.querySelectorAll('.offer-form textarea')].map((x) => x.value);
+    const chips = [...d.querySelectorAll('.offer-form .chip-link')]; chips[1].click();
+    const price = d.querySelectorAll('.offer-form input.field')[1]; price.value = "$99"; price.dispatchEvent(new Event("input"));
+    d.querySelector('.offer-form .btn-primary').click();
+    setTimeout(() => { const r = d.createElement ? document.createElement("pre") : null; r.id = "result"; r.textContent = JSON.stringify({ areas, sent }); document.body.append(r); }, 300);
+  }, 300);
+}, 800));
+</script>"""
+            with open(os.path.join(repo, "command-center", "probe.html"), "w", encoding="utf-8") as f:
+                f.write(probe)
+            r = subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-first-run", f"--user-data-dir={tmp}/chrome",
+                                "--allow-file-access-from-files", "--virtual-time-budget=6000", "--dump-dom",
+                                "file://" + os.path.join(repo, "command-center", "probe.html")], capture_output=True, text=True, timeout=60)
+            m = re.search(r'<pre id="result">([^<]*)', r.stdout)
+            self.assertIsNotNone(m, "the probe page didn't finish")
+            out = json.loads(m.group(1).replace("&quot;", '"').replace("&amp;", "&").replace("&gt;", ">").replace("&lt;", "<"))
+            self.assertIn(get, out["areas"], "What They Get isn't a plain list, so it's edited as text, structure and all")
+            ch = out["sent"][0]["changes"]
+            self.assertEqual(ch["glance"]["Price"], "$99")
+            self.assertNotIn("What They Get", ch.get("sections", {}))       # untouched stays untouched
+            self.assertNotIn("How It Works", ch.get("sections", {}))
+            got = ch["sections"]["Friction It Answers"].split("\n")
+            self.assertEqual(got[:2], ["- Friction 1: Is it on time? Answered by the 2-day promise.", "The rest is content."])
+            self.assertTrue(got[2].startswith("- Friction 2"))
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+
+
 if __name__ == "__main__":
     unittest.main()

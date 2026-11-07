@@ -20,6 +20,9 @@ const bizDoc = (kind, slug) => { const list = { icp: biz().icps, offer: biz().of
 const filledCount = (doc) => { const ss = (doc.sections || []).filter((s) => s.title !== "Updates" && s.title !== "What Changed"); return [ss.filter((s) => s.body).length, ss.length]; };
 const isUnsolved = (v) => /^unsolved\b/i.test((v || "").trim());
 const initials = (name) => (name || "?").replace(/[^\p{L}\p{N}\s]/gu, " ").split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join("");
+// A section the list editor may rewrite: empty, or every line already a list item. Anything else (a ### subhead,
+// a lead-in line) is edited as plain text so its shape survives.
+const isPlainList = (text) => (text || "").split("\n").filter((l) => l.trim()).every((l) => /^\s*([-*+]|\d+[.)])\s+/.test(l));
 const listLines = (text) => (text || "").split("\n").map((l) => l.replace(/^\s*([-*]|\d+[.)])\s+/, "").trim()).filter(Boolean);
 
 // Long text stays short: three lines and a "more" that opens the rest.
@@ -225,6 +228,8 @@ function offerModel(doc) {
     name: gv(doc, "Name") || (doc.main ? "" : docName(doc, "Offer")), offer: gv(doc, "The offer") || secBody(doc, "The Offer"), price: gv(doc, "Price"), timeline: gv(doc, "Timeline"),
     guarantee: gv(doc, "Guarantee"), headline: gv(doc, "The headline") || secBody(doc, "The Headline"), promise: secBody(doc, "The Promise"),
     get: listLines(secBody(doc, "What They Get")), steps: listLines(secBody(doc, "How It Works")), ifNot: secBody(doc, "What Happens If It Does Not Work"),
+    getText: secBody(doc, "What They Get"), stepsText: secBody(doc, "How It Works"), frictionText: secBody(doc, "Friction It Answers"),
+    getIsList: isPlainList(secBody(doc, "What They Get")), stepsIsList: isPlainList(secBody(doc, "How It Works")),
     friction: [...new Set(((secBody(doc, "Friction It Answers") || "").match(/friction\s*(\d)/gi) || []).map((m) => +m.replace(/\D/g, "")))],
     frictionSay: (n) => fieldOf(fr, `Friction ${n}`, "What they say") || gv(fr, `Friction ${n}`)
   };
@@ -269,6 +274,8 @@ function offerBuilder(slug) {
     el.addEventListener("input", () => { m[key] = el.value; redraw(); });
     return h("label", { class: "pf-field" }, [h("span", { class: "pf-label" }, label), el]);
   };
+  // a section with more than list items in it (a ### subhead, a lead-in line) is edited as the text it is
+  const textList = (key, listKey) => { const t = area(m[key], { placeholder: "Not filled in yet" }); t.addEventListener("input", () => { m[key] = t.value; m[listKey] = listLines(t.value.replace(/^#+\s.*$/gm, "")); redraw(); }); return h("div", {}, [t, h("p", { class: "tiny-sub mt1" }, "Edited as text, because it has more than list items in it.")]); };
   const fr = biz().friction;
   const frPick = h("div", { class: "row wrap gap2" }, [1, 2, 3, 4, 5].map((n) => {
     const say = m.frictionSay(n);
@@ -286,9 +293,17 @@ function offerBuilder(slug) {
     };
     set("name", "Name"); set("offer", "The offer", "The Offer"); set("price", "Price", "What It Costs"); set("timeline", "Timeline", "Timeline"); set("guarantee", "Guarantee");
     set("headline", "The headline", "The Headline"); set("promise", null, "The Promise"); set("ifNot", null, "What Happens If It Does Not Work");
-    set("get", null, "What They Get", (v) => v.filter((x) => x.trim()).map((x) => `- ${x.trim()}`).join("\n"));
-    set("steps", null, "How It Works", (v) => v.filter((x) => x.trim()).map((x, i) => `${i + 1}. ${x.trim()}`).join("\n"));
-    set("friction", null, "Friction It Answers", (v) => v.map((n) => `- Friction ${n}: ${m.frictionSay(n) || "answered by this offer"}`).join("\n"));
+    if (m.getIsList) set("get", null, "What They Get", (v) => v.filter((x) => x.trim()).map((x) => `- ${x.trim()}`).join("\n"));
+    else if (m.getText !== was.getText) ch.sections["What They Get"] = m.getText;
+    if (m.stepsIsList) set("steps", null, "How It Works", (v) => v.filter((x) => x.trim()).map((x, i) => `${i + 1}. ${x.trim()}`).join("\n"));
+    else if (m.stepsText !== was.stepsText) ch.sections["How It Works"] = m.stepsText;
+    // friction: keep every line as written (its "and how" too), drop only the lines of points you un-picked, add the new ones
+    set("friction", null, "Friction It Answers", (v) => {
+      const lines = (m.frictionText || "").split("\n"), numOf = (l) => { const x = l.match(/friction\s*(\d)/i); return x ? +x[1] : null; };
+      const kept = lines.filter((l) => numOf(l) === null || v.includes(numOf(l)));
+      const have = new Set(kept.map(numOf).filter((n) => n !== null));
+      return [...kept, ...v.filter((n) => !have.has(n)).map((n) => `- Friction ${n}: ${m.frictionSay(n) || "answered by this offer"}`)].join("\n").trim();
+    });
     if (!doc.main && m.name.trim() && m.name.trim() !== was.name) ch.title = `Offer: ${m.name.trim()}`;
     if (!Object.keys(ch.glance).length) delete ch.glance; if (!Object.keys(ch.sections).length) delete ch.sections;
     if (!Object.keys(ch).length) return toast("Nothing changed.");
@@ -301,8 +316,8 @@ function offerBuilder(slug) {
         h("div", { class: "row" }, [h("p", { class: "overline" }, doc.main ? "Main offer · brand/offer.md" : doc.path), h("button", { type: "button", class: "btn-primary ml-auto", disabled: state.server ? null : "", onclick: save }, [svgIcon("checkMark"), "Save"])]),
         h("div", { class: "biz-grid2 mt4" }, [input("name", "Name", "Starter kit"), input("price", "Price", "$497, or 3 × $175"), input("timeline", "Timeline", "Live in 14 days"), input("guarantee", "Guarantee", "Your money back if…")]),
         h("div", { class: "space-y-3 mt3" }, [input("headline", "Headline", "The line the page leads with", true), input("offer", "The offer, in one sentence", "What you sell, in a sentence a stranger understands", true), input("promise", "The promise", "The result they get, and by when", true)]),
-        h("p", { class: "pf-label mt4" }, "What they get"), listEditor(m.get, "One thing that's included", redraw),
-        h("p", { class: "pf-label mt4" }, "How it works"), listEditor(m.steps, "A step, from yes to done", redraw, true),
+        h("p", { class: "pf-label mt4" }, "What they get"), m.getIsList ? listEditor(m.get, "One thing that's included", redraw) : textList("getText", "get"),
+        h("p", { class: "pf-label mt4" }, "How it works"), m.stepsIsList ? listEditor(m.steps, "A step, from yes to done", redraw, true) : textList("stepsText", "steps"),
         h("div", { class: "mt4" }, input("ifNot", "What happens if it doesn't work", "The guarantee in full, or the honest answer", true)),
         h("p", { class: "pf-label mt4" }, "The friction points it answers"), fr ? frPick : h("p", { class: "tiny-sub" }, "brand/friction-points.md is missing."),
         h("p", { class: "tiny-sub mt4" }, "Saving writes the At a Glance lines and the matching sections. The landing page and every skill read brand/offer.md, so your main offer lives there.")
