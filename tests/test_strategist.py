@@ -79,6 +79,15 @@ class StrategistSkillsTest(unittest.TestCase):
         self.assertEqual(step1["skill"], "company-strategist")
         self.assertTrue(os.path.isfile(os.path.join(ROOT, LIB_MEMBER, "skills", step1["skill"], "SKILL.md")))
 
+    def test_team_md_never_tells_the_owner_to_run_a_skill_that_isnt_there(self):
+        # cold test A7: team.md said "run the speed-run-your-team skill", which exists nowhere
+        team = os.path.join(ROOT, "library/teams/operations/strategy-team")
+        body = read(os.path.join(team, "team.md"))
+        for name in re.findall(r"run the ([a-z0-9-]+) skill", body):
+            self.assertTrue(glob.glob(os.path.join(team, "*", "skills", name, "SKILL.md")), name)
+        self.assertIn("Setting up a seeded team member", body)
+        self.assertIn("Setting up a seeded team member", read(os.path.join(ROOT, "AGENTS.md")))
+
     def test_not_ready_says_what_is_still_missing_not_the_old_gap(self):
         nr = read(os.path.join(ROOT, "library/teams/operations/strategy-team/NOT-READY.md"))
         self.assertNotIn("doesn't exist", nr)

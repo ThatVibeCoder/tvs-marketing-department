@@ -28,7 +28,7 @@ When: Any time you want the strategist's one pick for the next move, usually at 
 ### Brief
 3. **Company Strategist** writes the brief to `departments/operations/strategy-team/company-strategist/briefs/<YYYY-MM-DD>-<team-member>.md`, in the shape `briefs/README.md` gives.
 
-To set up the rest of this team and wake the team member the strategist picked, run the speed-run-your-team skill (the Speed Run a Team Member lesson installs it).
+To wake the team member the brief names, set it up the way AGENTS.md says under "Setting up a seeded team member": fill in its job in its own file from the brief, change its Status to `live`, then run sync. (A speed-run-your-team skill that does this for you comes with the Speed Run a Team Member lesson. It isn't in this repo yet, so don't look for it before then.)
 
 ## Memory
 Habits every team member on this team should share land here. A correction about one team member goes in that member's own file instead.
