@@ -1127,7 +1127,7 @@ const AI_AGENTS = [
     open: "grok",
     summon: 'say "run my example team"',
     files: ["AGENTS.md (read directly)"],
-    note: "Early beta. It reads AGENTS.md; it has no command folder we could confirm, so ask for a team in plain words. Install: curl -fsSL https://x.ai/cli/install.sh | bash (Mac, Linux) or irm https://x.ai/cli/install.ps1 | iex (Windows PowerShell). Run grok inspect to see what it picked up.",
+    note: "Early beta. It reads AGENTS.md and loads the shortcuts in .agents/skills once you trust this folder, so /content-team works. Install: curl -fsSL https://x.ai/cli/install.sh | bash (Mac, Linux) or irm https://x.ai/cli/install.ps1 | iex (Windows PowerShell). Run grok inspect to see what it picked up.",
   },
 ];
 function renderAgentSettings() {
