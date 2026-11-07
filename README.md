@@ -46,7 +46,7 @@ Once a team is added, type its command to summon it, say one of its workflows ou
 | Marketing | Website Team | "add the website team" | Ready |
 | Marketing | Follow-Up Team | "add the follow-up team" | Ready |
 | Marketing | Ads Team | "add the ads team" | Ready |
-| Marketing | Research Team | "add the research team" | Not ready yet |
+| Marketing | Research Team | "add the research team" | Ready |
 | Marketing | Newsletter Team | "add the newsletter team" | Not ready yet |
 | Sales | Sales Team | "add the sales team" | Ready |
 | IT / Systems | Dev Team | "add the dev team" | Ready (its Payments Agent isn't yet) |

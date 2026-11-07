@@ -34,7 +34,7 @@ Every piece of information has exactly one home. Find it in this table and add t
 | Colors, fonts, logos | `brand/colors.md`, `brand/typography.md`, `brand/assets/` | Designer |
 | Your business audit: tools, hours, what to cut and hand off | `knowledge/business-audit.md` | Company Strategist |
 | Your goals: the wins, numbers and things you want running next, crossed off as they land | `knowledge/goals.md` | Company Strategist |
-| Competitors (one file each: website, where they post and how often, what they lead with), swipes, outliers | `knowledge/competitors/<name>.md`, `knowledge/swipes/`, `knowledge/outliers.md` | Researcher (scan-my-competitors for the first look, competitor-check for the deeper read) |
+| Competitors (one file each: website, where they post and how often, what they lead with), swipes, outliers | `knowledge/competitors/<name>.md`, `knowledge/swipes/`, `knowledge/outliers.md` | Researcher (scan-my-competitors for the first look, competitor-check for the deeper read, collect-swipes for swipes, find-outliers for outliers) |
 | Reports (site audits, checkups, traffic) | `knowledge/reports/` | the workflow that made it |
 | Your ads: the ready check and the weekly read | `knowledge/reports/ads-ready-<YYYY-MM-DD>.md`, `knowledge/reports/ads-<YYYY-MM-DD>.md` | Growth Lead |
 | Your ad tests: the plan, the campaign (built paused, you turn it on), the tracking setup, each ad batch | `output/` next to the Growth Lead (`test-plan-<date>.md`), the Ads Manager (`campaign-<date>.md`, `tracking.md`) and the Ad Writer (`batch-<date>.md`) | the Ads Team |

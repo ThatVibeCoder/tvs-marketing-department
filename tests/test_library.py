@@ -34,8 +34,27 @@ class ShippedTest(unittest.TestCase):
         lib = os.path.join(ROOT, "library/teams")
         teams = {t for d in os.listdir(lib) if os.path.isdir(os.path.join(lib, d)) for t in os.listdir(os.path.join(lib, d))}
         self.assertEqual(len(teams), 10)
-        for nr in ("marketing/newsletter-team", "marketing/research-team", "operations/strategy-team", "it-systems/dev-team/payments-agent"):
+        for nr in ("marketing/newsletter-team", "operations/strategy-team", "it-systems/dev-team/payments-agent"):
             self.assertTrue(os.path.isfile(os.path.join(lib, nr, "NOT-READY.md")), nr)
+        self.assertFalse(os.path.isfile(os.path.join(lib, "marketing/research-team/NOT-READY.md")))
+        data = read(os.path.join(ROOT, "command-center/data/data.js"))
+        lib_index = json.loads(data[data.index("{"):data.rindex(";")])["library"]
+        ready = {t["id"]: t["ready"] for t in lib_index}  # the Agent Teams "Add a team" card reads this
+        self.assertTrue(ready["research-team"])
+        self.assertFalse(ready["newsletter-team"])
+
+    def test_research_skills_are_built_to_the_same_depth(self):
+        skills = os.path.join(ROOT, "library/teams/marketing/research-team/researcher/skills")
+        for name in ("find-outliers", "collect-swipes", "scan-my-competitors"):
+            text = read(os.path.join(skills, name, "SKILL.md"))
+            for part in ("## Read first", "## Say this first", "## Steps", "## Worked example", "## The ending", "## Rules"):
+                self.assertIn(part, text, f"{name}: {part}")
+            self.assertIn("never a menu", text, name)
+            self.assertIn("no paid", text.lower(), name)       # free tools only: public pages, no logins
+            self.assertIn("never log in", text.lower(), name)
+        for path in ("knowledge/outliers.md", "knowledge/swipes/README.md", "knowledge/swipes/_template.md",
+                     "knowledge/competitors/README.md", "knowledge/competitors/_template.md"):
+            self.assertTrue(os.path.isfile(os.path.join(ROOT, path)), path)  # every path the skills save to exists
 
 
 @unittest.skipUnless(AS_SHIPPED, WHY)
@@ -87,8 +106,18 @@ class AddTeamTest(unittest.TestCase):
         self.assertFalse(os.path.exists(os.path.join(self.repo, "departments/it-systems/dev-team/payments-agent")))
         self.assertFalse(os.path.exists(os.path.join(self.repo, "departments/it-systems/dev-team/NOT-READY.md")))
 
+    def test_research_team_adds_without_anyway_and_shows_ready(self):
+        code, out = self.run_tool("tools/add_team.py")
+        self.assertRegex(out, r"research-team\s+ready\b")
+        code, out = self.run_tool("tools/add_team.py", "research-team")
+        self.assertEqual(code, 0, out)
+        team = os.path.join(self.repo, "departments/marketing/research-team")
+        for skill in ("find-outliers", "collect-swipes", "competitor-check", "scan-my-competitors"):
+            self.assertTrue(os.path.isfile(os.path.join(team, "researcher/skills", skill, "SKILL.md")), skill)
+            self.assertTrue(os.path.isdir(os.path.join(self.repo, ".claude/skills", skill)), skill)
+
     def test_every_ready_team_adds_cleanly_alone(self):
-        for team in ("content-team", "editing-team", "ads-team", "follow-up-team", "sales-team"):
+        for team in ("content-team", "editing-team", "ads-team", "follow-up-team", "sales-team", "research-team"):
             code, out = self.run_tool("tools/add_team.py", team)
             self.assertEqual(code, 0, out)
         code, out = self.run_tool("tools/sync.py", "--check")
