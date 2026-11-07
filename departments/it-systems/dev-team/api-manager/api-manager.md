@@ -3,7 +3,7 @@
 **Status:** live
 **Team:** Dev Team
 
-Before any job, read `business.md` and everything in `brand/`, then this file. Stay inside this file's edges.
+Before any job, read only the files the skill you're running names, never all of `brand/`. Stay inside this file's edges.
 
 Owns the doors. Every tool the department talks to (connectors, APIs, CLIs) is a door, and this team member knows which doors exist, who uses each, and whether they still open. The keys agent HOLDS the keys; this team member decides which doors get wired and keeps the roster honest.
 

@@ -4,11 +4,11 @@ These are the rules for any AI working in this repo. Codex, Cursor and Grok Buil
 
 This is the owner's company, built as files. It starts as a skeleton on purpose: `departments/` holds one team, the Dev Team (`departments/it-systems/dev-team/`), because it's the plumbing every other team needs: saving work to GitHub, keys, connecting tools, shipping pages. Every other team comes from the classroom. At the bottom of each lesson is a skill doc the owner gives their AI, and that doc builds one team (or adds to one) in `departments/` from the owner's own answers. Teams arrive one lesson at a time. Nothing gets made up in a random place.
 
-## Read first, every session
+## Read only what the job needs
 
-Before any writing, planning or building, read `business.md` and everything in `brand/`. That's the shared brain, and everything you make has to match it.
+Read the files the skill you're running names, and nothing else up front. A skill names the `brand/` files and the parts of `business.md` it needs; a skill that names none needs none. Installing a skill (saving its `SKILL.md` and running sync) reads nothing from `business.md` or `brand/`. If a skill writes words, plans or pages for the business and names no files, read `business.md` and the one `brand/` file the job is about (`voice.md` for words, `offer.md` for what you sell, `icp.md` for who it's for), never the whole folder.
 
-**A file or section that still says `_Not filled in yet._` counts as missing.** So does a file that's only the template's own explanation with nothing filled in. Stop, name what's missing and the lesson that fills it (by the lesson's title, never a day number), and ask. Generic work written around a missing file is worse than a question. **The one exception:** when the skill you're running says what to do with a missing or empty file (set-up-your-company-strategist and the brain-dump skills do, and so does any skill with its own "If ... still says `_Not filled in yet._`" line), follow the skill for that file instead of stopping. It was written knowing the file might be empty.
+**A file or section that still says `_Not filled in yet._` counts as missing**, when the job reads it. So does a file that's only the template's own explanation with nothing filled in. Stop, name what's missing and the lesson that fills it (by the lesson's title, never a day number), and ask. Generic work written around a missing file is worse than a question. **The one exception:** when the skill you're running says what to do with a missing or empty file (set-up-your-company-strategist and the brain-dump skills do, and so does any skill with its own "If ... still says `_Not filled in yet._`" line), follow the skill for that file instead of stopping. It was written knowing the file might be empty.
 
 ## The front door: your Company Strategist (once its lesson builds it)
 
@@ -84,7 +84,7 @@ departments/<department>/                 a department (marketing, sales, it-sys
   4. **Page Builder** hands it to the next team, with no skill named.
   ```
   Phases are `###` headings. A step is numbered `1. **Team member** · skill-name · what happens` when it runs a skill, or `1. **Team member** what happens` when that member does it without a skill. `[you approve]` marks a stop where the owner has to say yes. `Also say:` lists other ways the owner might ask for it.
-- **A team member's file** starts with `**Status:** seeded` (its folder is waiting; a lesson sets it up) or `**Status:** live` (set up and working), then `**Team:**`, then this exact line: "Before any job, read `business.md` and everything in `brand/`, then this file. Stay inside this file's edges." When asked to act as a team member, read its file first and stay inside its edges.
+- **A team member's file** starts with `**Status:** seeded` (its folder is waiting; a lesson sets it up) or `**Status:** live` (set up and working), then `**Team:**`, then this exact line: "Before any job, read only the files the skill you're running names, never all of `brand/`. Stay inside this file's edges." When asked to act as a team member, read its file first and stay inside its edges.
 - **A skill** is a folder inside the team member that owns it, with one `SKILL.md` that starts with `name:` (the same as its folder) and `description:` (what it does and the words that should trigger it). Skill names are unique across the whole repo.
 
 ## Commands: every team and every skill can be summoned

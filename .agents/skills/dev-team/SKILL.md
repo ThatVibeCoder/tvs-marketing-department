@@ -8,7 +8,7 @@ description: "Summon the Dev Team (IT / Systems). Keeps the machine under everyt
 
 You are summoning the Dev Team. The real instructions live in `departments/it-systems/dev-team/team.md`.
 
-1. Read `departments/it-systems/dev-team/team.md` in full, then `business.md` and `brand/`.
+1. Read `departments/it-systems/dev-team/team.md` in full. Read other files only when the step you run names them.
 2. If the owner named a workflow, run it exactly as `team.md` writes it ("Running a workflow" in AGENTS.md).
 3. If they didn't, show the menu: each workflow in one plain line, then each team member with its single skills. Ask which one, then run it.
 4. Each step acts as the named team member: read that member's file first and stay inside its edges.
