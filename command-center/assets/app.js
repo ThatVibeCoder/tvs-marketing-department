@@ -997,7 +997,7 @@ function parseRoute() {
   state.route = { parts, query: new URLSearchParams(queryRaw) };
 }
 
-// ---- The shell: the Command Center's side panel (Dashboard · Overview · WORKSPACE: Content, Web & Analytics,
+// ---- The shell: the Command Center's side panel (Dashboard · Agent · WORKSPACE: Content, Web & Analytics,
 // Automations · Settings at the bottom) and the floating top bar. A module's sub-items drop down under it: always
 // when you're inside it, or when you open it with its arrow (remembered on this computer).
 const RAIL_KEY = "cc-sidepanel-collapsed",
@@ -1021,7 +1021,7 @@ const store = {
 };
 const UTILITY = [
   ["/dashboard", "Dashboard", "gauge"],
-  ["/overview", "Overview", "layoutGrid"],
+  ["/agent", "Agent", "sparkles"],
 ];
 const MODULES = [
   {
@@ -1244,7 +1244,7 @@ function renderShell() {
   rail.replaceChildren(h("div", { class: "dash-rail" }, inner));
   const titles = {
     dashboard: "Dashboard",
-    overview: "Overview",
+    agent: "Agent",
     settings: "Settings",
     content: "Content",
     web: "Web & Analytics",
@@ -1277,7 +1277,8 @@ function render() {
   else if (p[0] === "settings") view = renderSettings(p);
   else if (p[0] === "web") view = renderWeb(p);
   else if (p[0] === "dashboard") view = renderDashboard();
-  else if (p[0] === "overview") view = renderGlance();
+  else if (p[0] === "agent") view = renderAgent();
+  else if (p[0] === "overview") view = renderDashboard(); // the old Overview page: its links land on the Dashboard
   else view = renderAutomations();
   renderShell();
   document.body.classList.remove("drawer-open");
