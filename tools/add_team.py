@@ -24,6 +24,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 import urllib.error
 import urllib.request
 
@@ -121,27 +122,45 @@ def _get(url):
 
 
 def fetch_from_github(team):
-    """Download library/teams/<dept>/<team>/ into the local library, file by file, read-only. Returns its dept."""
+    """Download library/teams/<dept>/<team>/ from the public template, read-only, into this repo's library. It never
+    writes over anything: if that library folder is already here it stops, and every file lands in a temp folder
+    first, so a dropped connection leaves nothing half-fetched. Returns the team's department."""
     try:
         depts = [d["name"] for d in json.loads(_get(REPO_API + "library/teams")) if d.get("type") == "dir"]
         for dept in depts:
             names = [d["name"] for d in json.loads(_get(REPO_API + f"library/teams/{dept}")) if d.get("type") == "dir"]
             if team in names:
-                _fetch_dir(f"library/teams/{dept}/{team}")
+                final = os.path.join(LIBRARY, dept, team)
+                if os.path.exists(final):
+                    raise SystemExit(f"library/teams/{dept}/{team}/ is already here, so nothing was fetched. Compare it with "
+                                     "the public template before replacing anything.")
+                os.makedirs(os.path.dirname(final), exist_ok=True)
+                tmp = tempfile.mkdtemp(prefix=f".{team}-", dir=os.path.dirname(final))
+                try:
+                    _fetch_dir(f"library/teams/{dept}/{team}", f"library/teams/{dept}/{team}", tmp)
+                    os.rename(tmp, final)
+                finally:
+                    if os.path.isdir(tmp):
+                        shutil.rmtree(tmp, ignore_errors=True)
                 return dept
     except (urllib.error.URLError, ValueError) as e:
         raise SystemExit(f"Couldn't reach the public template on GitHub ({e}). Check your internet connection and try again.")
     return None
 
 
-def _fetch_dir(path):
+def _fetch_dir(path, top, into):
+    """Every file under `top`, written below `into` at the same relative place. Refuses any path that would
+    land outside it."""
     for item in json.loads(_get(REPO_API + path)):
+        rel = os.path.normpath(os.path.relpath(item.get("path", ""), top))
+        if rel.startswith(os.pardir) or os.path.isabs(rel):
+            raise SystemExit(f"The template listed {item.get('path')!r}, which isn't inside the team, so nothing was fetched.")
         if item.get("type") == "dir":
-            _fetch_dir(item["path"])
+            _fetch_dir(item["path"], top, into)
         elif item.get("type") == "file":
-            dest = os.path.join(ROOT, *item["path"].split("/"))
+            dest = os.path.join(into, rel)
             os.makedirs(os.path.dirname(dest), exist_ok=True)
-            with open(dest, "wb") as f:
+            with open(dest, "xb") as f:  # "x": never over an existing file
                 f.write(_get(REPO_RAW + item["path"]))
 
 
