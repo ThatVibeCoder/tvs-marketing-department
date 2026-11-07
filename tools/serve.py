@@ -231,6 +231,24 @@ def duplicate_post(pid):
 
 
 # ---------- settings ----------
+# what a pasted secret looks like: provider prefixes, a private key, a Google or Meta token, a long token-ish run
+KEY_SHAPE = re.compile(r"\b(?:sk|rk|pk)_(?:live|test)_[A-Za-z0-9]{10,}|-----BEGIN [A-Z ]*KEY-----|\"?private_key\"?\s*:|"
+                       r"\bghp_[A-Za-z0-9]{20,}|\bgithub_pat_[A-Za-z0-9_]{20,}|\bAIza[0-9A-Za-z_-]{30,}|\bEAA[A-Za-z0-9]{24,}|"
+                       r"\bxox[abposr]-[A-Za-z0-9-]{10,}|\bsk-(?:ant-)?[A-Za-z0-9_-]{20,}|(?=[A-Za-z0-9+/_-]*\d)(?=[A-Za-z0-9+/_-]*[A-Z])[A-Za-z0-9+/_-]{40,}")
+
+
+def strings_in(value):
+    """Every text value inside a settings object, however deep."""
+    if isinstance(value, str):
+        yield value
+    elif isinstance(value, dict):
+        for v in value.values():
+            yield from strings_in(v)
+    elif isinstance(value, list):
+        for v in value:
+            yield from strings_in(v)
+
+
 SETTING_KEYS = ("account", "workspace", "brands", "accounts", "poster", "cadence", "skoolCategories", "web", "payments")
 
 
@@ -262,10 +280,11 @@ def merge3(current, base, new):
 def save_settings(data):
     if not isinstance(data, dict):
         raise ValueError("Settings must be an object.")
-    blob = json.dumps(data)
-    for k in ALL_KEYS:
-        if k in blob:
-            raise ValueError("Keys never go in settings.json. Save them under Connected Accounts instead.")
+    named = re.compile(r"\b(?:" + "|".join(map(re.escape, ALL_KEYS)) + r")\s*[=:]\s*\S")  # a pasted .env line
+    for v in strings_in(data):
+        if KEY_SHAPE.search(v) or named.search(v):
+            raise ValueError("That looks like a key. Keys never go in settings.json (it's saved to GitHub): paste it under "
+                             "Connected Accounts, Payments or Web connections, which keep it in .env.")
     base = data.get("_base") if isinstance(data.get("_base"), dict) else None  # what the page had when it changed it
     current = sync.load_settings()
     for k in SETTING_KEYS:

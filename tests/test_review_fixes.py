@@ -388,6 +388,35 @@ class F7BadInputIsAPlainError(ServerCase):
         self.assertIn("- `two-lines.md`: Two lines\n", self.text("brand/personas/README.md"))
 
 
+class F11KeyLookingValues(unittest.TestCase):
+    """settings.json is saved to GitHub, and the guard only looked for key NAMES, not key values."""
+
+    def setUp(self):
+        import tempfile
+        import serve, sync
+        self.serve, self.sync = serve, sync
+        self.tmp = os.path.realpath(tempfile.mkdtemp())
+        self._old = (sync.SETTINGS_FILE, serve.business.ROOT)
+        sync.SETTINGS_FILE = os.path.join(self.tmp, "settings.json")
+        serve.business.ROOT = self.tmp
+
+    def tearDown(self):
+        import shutil
+        self.sync.SETTINGS_FILE, self.serve.business.ROOT = self._old
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def test_a_pasted_secret_is_refused(self):
+        for v in ("rk_live_51Hxyzabcdefghijklmnop", "sk_test_" + "a1" * 12, "-----BEGIN PRIVATE KEY-----", "ghp_" + "A1b2" * 9,
+                  "AIza" + "Sy" * 18, "EAAB" + "cd34" * 8, "xoxb-1234-5678-abcdefghij", "sk-ant-api03-" + "x9" * 15):
+            with self.assertRaisesRegex(ValueError, "looks like a key", msg=v):
+                self.serve.save_settings({"account": {"name": v}})
+        self.assertFalse(os.path.exists(self.sync.SETTINGS_FILE))
+
+    def test_ordinary_words_that_name_a_key_are_fine(self):
+        self.serve.save_settings({"account": {"name": "Notes about STRIPE_RESTRICTED_KEY setup", "role": "Owner"}})
+        self.serve.save_settings({"web": {"siteDomain": "www.my-long-business-name-that-goes-on.example"}})
+
+
 CHROME = next((p for p in ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",) if os.path.exists(p)), None) or \
     next((p for p in (__import__("shutil").which("google-chrome"), __import__("shutil").which("chromium")) if p), None)
 
