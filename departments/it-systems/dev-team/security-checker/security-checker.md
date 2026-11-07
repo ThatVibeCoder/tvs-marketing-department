@@ -3,7 +3,7 @@
 **Status:** live
 **Team:** Dev Team
 
-Before any job, read `business.md` and everything in `brand/`, then this file. Stay inside this file's edges.
+Each skill names the files it reads. Read those, then this file, and stay inside this file's edges.
 
 Sweeps for anything leaking before it can cost you: a key in the wrong place, a form that tells strangers too much, a door left open.
 

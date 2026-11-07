@@ -1,6 +1,6 @@
 ---
 name: connection-check
-description: Walk every wired tool and confirm its door still opens. Use monthly, after any tool changes its plans or keys, and whenever something that worked stops working.
+description: "Walk every tool that's already wired and confirm each one still answers. Use when a tool that worked stops working, or the owner says check my connections. Not for connecting a new tool (wire-a-tool) or a form that isn't sending (fix-my-form)."
 ---
 
 # connection-check

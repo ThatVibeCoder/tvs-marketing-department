@@ -1,6 +1,6 @@
 ---
 name: pre-ship-check
-description: Check a thing right before it ships or right after setup, like a stranger would use it. Use before any page goes live, after any key or account setup, before any routine gets a schedule.
+description: "Use the thing that's about to ship the way a stranger would (click the links, send the form, run the routine once) and report WORKS or what broke. Use right before a page goes live, a form gets shared or a routine gets a schedule, and at the Check step of set up my code base. Not for leaks or secrets (security-sweep), the security baseline (harden-the-basics) or reading the code (review-changes)."
 ---
 
 # pre-ship-check
@@ -10,7 +10,7 @@ The stranger test. Report what broke, plainly, before it ships.
 ## Steps
 1. Name what's being checked and what "working" means for it, in one line each.
 2. Use it like a stranger: click the links, submit the form with a real-shaped answer, load it fresh. For a key: make its simplest real call. For a routine: run it once by hand.
-3. Check the quiet failures too: does the page load on a phone-sized window, does the form actually deliver its answer somewhere, did anything secret end up visible.
+3. Check the quiet failures too: does the page load on a phone-sized window, does the form actually deliver its answer somewhere. (Secrets and leaks are security-sweep's job.)
 4. Report: WORKS, or a short list of what broke, each with where it lives. No jargon, no maybes.
 
 ## Rules

@@ -1,6 +1,6 @@
 ---
 name: ship-a-page
-description: Put a page from this repo onto the live internet and hand back the URL. Use when the owner says "ship it", "put it live", or the landing page from Build Your Landing Page is ready.
+description: "Put a page from this repo onto the live internet and hand back the URL. Use when the owner says ship it or put it live, or the landing page from Build Your Landing Page is ready. Not for testing it (pre-ship-check) or saving it (save-work)."
 ---
 
 # ship-a-page

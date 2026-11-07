@@ -30,7 +30,7 @@ When: The one-time setup that connects your repo, hosting, database and tools. E
 ### Plan
 1. **Planner** · one-plan · writes the one-page plan of what's about to happen. You say go. [you approve]
 ### Connect
-2. **GitHub Agent** · set-up-repo · confirms your repo is cloned, connected and saving. save-work is your end-of-session habit from here on.
+2. **GitHub Agent** · set-up-repo · confirms your repo is cloned, connected and saving. From here on, say "save my work" whenever something changed.
 3. **API Manager** · pick-the-door · picks the right connection for each tool: a connector beats a command line tool beats a key.
 4. **Keys Agent** · add-a-key · stores anything secret in the `.env` file and proves the save skips it.
 5. **Supabase Agent** · set-up-project · connects your free Supabase account so it's ready the day something needs storing.

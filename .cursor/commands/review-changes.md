@@ -3,7 +3,5 @@
 
 This skill belongs to the Code Reviewer on the Dev Team.
 
-1. Read `departments/it-systems/dev-team/code-reviewer/code-reviewer.md` first and act as that team member, inside its edges.
-2. Read `departments/it-systems/dev-team/code-reviewer/skills/review-changes/SKILL.md` and follow it exactly. That file is the real skill.
-
-The real file is `departments/it-systems/dev-team/code-reviewer/skills/review-changes/SKILL.md`. Follow AGENTS.md.
+1. Read `departments/it-systems/dev-team/code-reviewer/code-reviewer.md` and act as that team member, inside its edges.
+2. Read `departments/it-systems/dev-team/code-reviewer/skills/review-changes/SKILL.md` once and follow it exactly. This shortcut is the only pointer to it.

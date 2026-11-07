@@ -2,5 +2,3 @@
 # set up my code base
 
 This is a workflow of the Dev Team. Read `departments/it-systems/dev-team/team.md`, find "## Workflow: set up my code base", and run it as "Running a workflow" in AGENTS.md says: each step acts as its team member (read their file first), a step with a skill runs that skill, and every step marked you approve waits for the owner's yes.
-
-The real file is `departments/it-systems/dev-team/team.md`. Follow AGENTS.md.

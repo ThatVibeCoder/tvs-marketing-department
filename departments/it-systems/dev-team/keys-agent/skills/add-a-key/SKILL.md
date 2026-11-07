@@ -1,6 +1,6 @@
 ---
 name: add-a-key
-description: Put a new API key somewhere safe and prove the save skips it, the only way a key gets stored in this department. Use when a tool just handed the owner a key, they're wondering where an API key goes, whether their key is safe, or they say "here's the key" or ask how to save credentials.
+description: "Put a new API key in the .env file and prove the save skips it, the only way a key gets stored here. Use when a tool just handed the owner a key, they say here's the key, or ask where an API key goes or how to save credentials. Not for connecting the tool itself (wire-a-tool) or hunting for leaks (security-sweep)."
 ---
 
 # add-a-key

@@ -1,6 +1,6 @@
 ---
 name: pick-the-door
-description: Choose the right kind of connection for a new tool before wiring anything. Use at the start of wire-a-tool, or when the owner asks "how should my AI talk to X".
+description: "Choose the right kind of connection for one new tool before anything is wired. Use as wire-a-tool's first step, or when the owner asks how should my AI talk to X. Not for doing the wiring (wire-a-tool)."
 ---
 
 # pick-the-door

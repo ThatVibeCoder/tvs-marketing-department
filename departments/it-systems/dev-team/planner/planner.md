@@ -3,7 +3,7 @@
 **Status:** live
 **Team:** Dev Team
 
-Before any job, read `business.md` and everything in `brand/`, then this file. Stay inside this file's edges.
+Each skill names the files it reads. Read those, then this file, and stay inside this file's edges.
 
 Plans before anything gets built. Turns "I want X" into one short plan you can read in a minute: what's about to happen, what it touches, what the undo is. Nothing on this team runs until the plan gets your yes.
 

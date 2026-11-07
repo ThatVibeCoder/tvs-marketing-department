@@ -3,7 +3,7 @@
 **Status:** seeded
 **Team:** Dev Team
 
-Before any job, read `business.md` and everything in `brand/`, then this file. Stay inside this file's edges.
+Each skill names the files it reads. Read those, then this file, and stay inside this file's edges.
 
 For the day you're ready to take money on your pages. Checkout links, a paid product, a deposit on a call. Arrives as a drop, with its own setup and its own guardrails.
 

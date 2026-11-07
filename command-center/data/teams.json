@@ -67,7 +67,7 @@
         "name": "connection-check",
         "command": "/connection-check",
         "seat": "API Manager",
-        "owns": "Walk every wired tool and confirm its door still opens. Use monthly, after any tool changes its plans or keys, and whenever something that worked stops working."
+        "owns": "Walk every tool that's already wired and confirm each one still answers. Use when a tool that worked stops working, or the owner says check my connections. Not "
       },
       {
         "name": "fix-my-form",
@@ -79,19 +79,19 @@
         "name": "pick-the-door",
         "command": "/pick-the-door",
         "seat": "API Manager",
-        "owns": "Choose the right kind of connection for a new tool before wiring anything. Use at the start of wire-a-tool, or when the owner asks \"how should my AI talk to X\"."
+        "owns": "Choose the right kind of connection for one new tool before anything is wired. Use as wire-a-tool's first step, or when the owner asks how should my AI talk to "
       },
       {
         "name": "wire-a-tool",
         "command": "/wire-a-tool",
         "seat": "API Manager",
-        "owns": "Connect a new tool or service so your AI can use it, the proper way: pick the right kind of connection, get a key on the free plan if one's needed, store it saf"
+        "owns": "Connect one new tool or service so your AI can use it, the proper way: pick the connection, get a key on the free plan if one's needed, store it safely, and pro"
       },
       {
         "name": "review-changes",
         "command": "/review-changes",
         "seat": "Code Reviewer",
-        "owns": "Read the session's changes before they're saved to GitHub. Use before save-work on any session that built or changed pages, skills, or wiring."
+        "owns": "Read the session's changed files before they're saved to GitHub. Use before save-work when the session built or changed pages, skills or wiring. Not for running"
       },
       {
         "name": "add-from-template",
@@ -103,55 +103,55 @@
         "name": "save-work",
         "command": "/save-work",
         "seat": "GitHub Agent",
-        "owns": "Save the session's work to GitHub with history you can undo to. Use when the owner says \"save my work\", at the end of every session, and after anything worth ke"
+        "owns": "Save the work to GitHub as one checkpoint you can undo to. Use when the owner says save my work. Not for first-time setup (set-up-repo)."
       },
       {
         "name": "set-up-repo",
         "command": "/set-up-repo",
         "seat": "GitHub Agent",
-        "owns": "First-time setup, get the owner's department repo cloned, connected, and proving it can save. Use during Set Up Your Dev Team, or whenever someone arrives with "
+        "owns": "First-time setup: get the owner's department repo cloned, connected to GitHub and proving it can save. Use during Set Up Your Dev Team, or when someone arrives "
       },
       {
         "name": "add-a-key",
         "command": "/add-a-key",
         "seat": "Keys Agent",
-        "owns": "Put a new API key somewhere safe and prove the save skips it, the only way a key gets stored in this department. Use when a tool just handed the owner a key, th"
+        "owns": "Put a new API key in the .env file and prove the save skips it, the only way a key gets stored here. Use when a tool just handed the owner a key, they say here'"
       },
       {
         "name": "one-plan",
         "command": "/one-plan",
         "seat": "Planner",
-        "owns": "Turn any build request into a one-page plan for the owner's yes. Use before every dev-team job of more than one step."
+        "owns": "Turn a build request into a one-page plan for the owner's yes. Use before any dev-team job of more than one step. Not for one-step jobs."
       },
       {
         "name": "harden-the-basics",
         "command": "/harden-the-basics",
         "seat": "Security Checker",
-        "owns": "The standing security baseline for everything this department ships. Use once when the first page goes live, and again whenever something new starts talking to "
+        "owns": "Set the security baseline (keys server-side, nothing secret in page code, private form delivery, https) on something new that talks to the internet, as a fine-o"
       },
       {
         "name": "security-sweep",
         "command": "/security-sweep",
         "seat": "Security Checker",
-        "owns": "Sweep the repo and anything about to go public for leaks. Use before sharing any live URL, after adding any key, and any time something feels off."
+        "owns": "Look for leaked keys and anything exposed in the files that changed, or in the page or connection the owner names, and report CLEAN or exactly where. Use before"
       },
       {
         "name": "set-up-project",
         "command": "/set-up-project",
         "seat": "Supabase Agent",
-        "owns": "Stand up the owner's Supabase project the first time something needs online storage. Use when a build actually calls for a database, not before."
+        "owns": "Stand up the owner's Supabase project the first time something needs online storage. Use when a build actually calls for a database, not before. Not for storing"
       },
       {
         "name": "pre-ship-check",
         "command": "/pre-ship-check",
         "seat": "Test Agent",
-        "owns": "Check a thing right before it ships or right after setup, like a stranger would use it. Use before any page goes live, after any key or account setup, before an"
+        "owns": "Use the thing that's about to ship the way a stranger would (click the links, send the form, run the routine once) and report WORKS or what broke. Use right bef"
       },
       {
         "name": "ship-a-page",
         "command": "/ship-a-page",
         "seat": "Vercel Agent",
-        "owns": "Put a page from this repo onto the live internet and hand back the URL. Use when the owner says \"ship it\", \"put it live\", or the landing page from Build Your La"
+        "owns": "Put a page from this repo onto the live internet and hand back the URL. Use when the owner says ship it or put it live, or the landing page from Build Your Land"
       },
       {
         "name": "set-up-my-code-base",
@@ -202,8 +202,8 @@
           "title": "GitHub Agent",
           "stat": "set-up-repo",
           "tone": "default",
-          "hint": "confirms your repo is cloned, connected and saving. save-work is your ",
-          "detail": "confirms your repo is cloned, connected and saving. save-work is your end-of-session habit from here on."
+          "hint": "confirms your repo is cloned, connected and saving. From here on, say ",
+          "detail": "confirms your repo is cloned, connected and saving. From here on, say \"save my work\" whenever something changed."
         },
         {
           "id": "w0s3",

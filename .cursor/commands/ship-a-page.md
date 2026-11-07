@@ -3,7 +3,5 @@
 
 This skill belongs to the Vercel Agent on the Dev Team.
 
-1. Read `departments/it-systems/dev-team/vercel-agent/vercel-agent.md` first and act as that team member, inside its edges.
-2. Read `departments/it-systems/dev-team/vercel-agent/skills/ship-a-page/SKILL.md` and follow it exactly. That file is the real skill.
-
-The real file is `departments/it-systems/dev-team/vercel-agent/skills/ship-a-page/SKILL.md`. Follow AGENTS.md.
+1. Read `departments/it-systems/dev-team/vercel-agent/vercel-agent.md` and act as that team member, inside its edges.
+2. Read `departments/it-systems/dev-team/vercel-agent/skills/ship-a-page/SKILL.md` once and follow it exactly. This shortcut is the only pointer to it.

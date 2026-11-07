@@ -1,6 +1,6 @@
 ---
 name: harden-the-basics
-description: The standing security baseline for everything this department ships. Use once when the first page goes live, and again whenever something new starts talking to the internet.
+description: "Set the security baseline (keys server-side, nothing secret in page code, private form delivery, https) on something new that talks to the internet, as a fine-or-fixed checklist. Use when something new starts talking to the internet, the first live page included. Not for checking a change for leaks (security-sweep) or testing that it works (pre-ship-check)."
 ---
 
 # harden-the-basics

@@ -3,7 +3,7 @@
 **Status:** seeded
 **Team:** Dev Team
 
-Before any job, read `business.md` and everything in `brand/`, then this file. Stay inside this file's edges.
+Each skill names the files it reads. Read those, then this file, and stay inside this file's edges.
 
 Puts your pages on the live internet. Free plan covers everything this department does for a long time.
 
