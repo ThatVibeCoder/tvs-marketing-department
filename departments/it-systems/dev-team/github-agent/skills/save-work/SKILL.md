@@ -5,7 +5,7 @@ description: "Save the work to GitHub as one checkpoint you can undo to. Use whe
 
 # save-work
 
-The end-of-session habit. One line from the owner, everything safe.
+One line from the owner, everything safe.
 
 ## Steps
 0. Run the sync check: `python3 tools/sync.py --check` on a Mac or Linux, `py tools/sync.py --check` on Windows. If Python isn't installed, follow "If none of those work" in AGENTS.md: give the owner the one install command for their computer, then stop and wait. If it says something is out of date, run `python3 tools/sync.py` once and include what it rebuilt. If it prints a FIX line, show the owner that exact line and stop: don't save, don't edit and rerun, and never rerun on an error nothing has changed.

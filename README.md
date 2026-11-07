@@ -5,7 +5,7 @@ This is your company, built as files instead of headcount. Open your AI (Claude 
 ## Start here
 
 1. Open your AI in this folder: Claude Code, Codex, Gemini CLI, Cursor or Grok Build all work (the Command Center's Settings → AI Agents shows how for each).
-2. Say "set up my code base." Your Dev Team (the one team that ships in your folder) connects GitHub, your keys and your hosting. From then on, say "save my work" at the end of every session.
+2. Say "set up my code base." Your Dev Team (the one team that ships in your folder) connects GitHub, your keys and your hosting. From then on, say "save my work" whenever something changed.
 3. Open `command-center/index.html` in your browser to see your whole company: your agent teams, and your content on every platform as those teams arrive.
 4. When you want to approve and edit posts from there, run `python3 tools/serve.py` (Windows: `py tools/serve.py`) and open the link it prints.
 

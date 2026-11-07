@@ -202,8 +202,8 @@
           "title": "GitHub Agent",
           "stat": "set-up-repo",
           "tone": "default",
-          "hint": "confirms your repo is cloned, connected and saving. save-work is your ",
-          "detail": "confirms your repo is cloned, connected and saving. save-work is your end-of-session habit from here on."
+          "hint": "confirms your repo is cloned, connected and saving. From here on, say ",
+          "detail": "confirms your repo is cloned, connected and saving. From here on, say \"save my work\" whenever something changed."
         },
         {
           "id": "w0s3",
