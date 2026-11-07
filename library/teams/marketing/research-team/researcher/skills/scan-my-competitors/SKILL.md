@@ -1,6 +1,6 @@
 ---
 name: scan-my-competitors
-description: "First look at every competitor: what their website looks like and pushes, and which platforms they post on most and how often. One file each in knowledge/competitors/, shown in the Command Center under My Business, Competitors. Free tools only. Use when the owner says scan my competitors, who are my competitors, what are my competitors posting, or where do my competitors post."
+description: "First look at every competitor: what their website looks like and pushes, and which platforms they post on most and how often. One file each in knowledge/competitors/, where every team reads them. Free tools only. Use when the owner says scan my competitors, who are my competitors, what are my competitors posting, or where do my competitors post."
 ---
 
 # scan-my-competitors
