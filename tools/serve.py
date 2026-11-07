@@ -420,6 +420,18 @@ class Handler(BaseHTTPRequestHandler):
             return self.send_json(400, {"error": "Send one JSON object."})
         path = urlparse(self.path).path
         try:
+            # the Google calls can take 30 seconds: they run before the lock, so a save never waits on them
+            if path == "/api/web/test":
+                result = {"test": pull_web.test_connection()}
+                print(f"  {datetime.datetime.now():%H:%M:%S}  tested the Google connection", flush=True)
+                result.update({"ok": True, "state": state()})
+                return self.send_json(200, result)
+            pulled = None
+            if path == "/api/web/pull":
+                try:
+                    pulled = pull_web.pull()
+                except pull_web.WebPullError as e:
+                    raise ValueError(str(e))
             with LOCK:
                 m = re.match(r"^/api/posts/([a-z0-9-]+)(/duplicate)?$", path)
                 if path == "/api/posts":
@@ -442,17 +454,9 @@ class Handler(BaseHTTPRequestHandler):
                         raise ValueError("That key name isn't on the list.")
                     write_key(name, clean_key(name, value))
                     result, what = {}, f"{'saved' if value else 'removed'} {name} in .env"
-                elif path == "/api/web/test":
-                    result = {"test": pull_web.test_connection()}
-                    print(f"  {datetime.datetime.now():%H:%M:%S}  tested the Google connection", flush=True)
-                    result.update({"ok": True, "state": state()})
-                    return self.send_json(200, result)
                 elif path == "/api/web/pull":
-                    try:
-                        files.writable(os.path.join(sync.CC_DATA, "web.json"))
-                        pull_web.write(pull_web.pull())
-                    except pull_web.WebPullError as e:
-                        raise ValueError(str(e))
+                    files.writable(os.path.join(sync.CC_DATA, "web.json"))
+                    pull_web.write(pulled)
                     result, what = {}, "pulled the website numbers into command-center/data/web.json"
                 else:
                     return self.send_json(404, {"error": "Not found"})
@@ -474,7 +478,10 @@ class Handler(BaseHTTPRequestHandler):
 def main():
     port = 8765
     if "--port" in sys.argv:
-        port = int(sys.argv[sys.argv.index("--port") + 1])
+        i = sys.argv.index("--port") + 1
+        if i >= len(sys.argv) or not sys.argv[i].isdigit():
+            sys.exit("--port needs a number, like: python3 tools/serve.py --port 8765")
+        port = int(sys.argv[i])
     httpd = ThreadingHTTPServer(("127.0.0.1", port), Handler)
     url = f"http://localhost:{port}/"
     print(f"Command Center with editing on: {url}")

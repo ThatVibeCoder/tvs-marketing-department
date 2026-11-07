@@ -398,3 +398,45 @@ class F13KeyParsing(unittest.TestCase):
         self.assertTrue("RFC 8017" in src and "PKCS #8" in src, "pull_web.py names the specs it follows")
 
 
+
+
+class F14SlowGoogleNeverBlocksASave(unittest.TestCase):
+    """A Pull now held the write lock for the whole Google call (up to 30 seconds), so every save waited."""
+
+    def test_a_save_goes_through_during_a_slow_pull(self):
+        import http.client, json, shutil, tempfile, threading, time
+        from unittest import mock
+        import serve, sync
+        tmp = os.path.realpath(tempfile.mkdtemp())  # macOS: /var is a link to /private/var
+        old = sync.SETTINGS_FILE, serve.files.ROOT, sync.CC_DATA
+        sync.SETTINGS_FILE = os.path.join(tmp, "settings.json")
+        sync.CC_DATA = os.path.join(tmp, "data")
+        serve.files.ROOT = tmp
+        started = threading.Event()
+
+        def slow_pull():
+            started.set(); time.sleep(3)
+            raise serve.pull_web.WebPullError("no connection in this test")
+        httpd = serve.ThreadingHTTPServer(("127.0.0.1", 0), serve.Handler)
+        port = httpd.server_address[1]
+        threading.Thread(target=httpd.serve_forever, daemon=True).start()
+
+        def post(path, body):
+            c = http.client.HTTPConnection("127.0.0.1", port, timeout=10)
+            c.request("POST", path, body=json.dumps(body).encode(), headers={"Host": "localhost", "Content-Type": "application/json"})
+            r = c.getresponse(); r.read()
+            return r.status
+        try:
+            with mock.patch.object(serve.pull_web, "pull", slow_pull), mock.patch.object(serve, "resync", lambda: False), \
+                    mock.patch.object(serve, "state", lambda: {}):
+                t = threading.Thread(target=post, args=("/api/web/pull", {}))
+                t.start()
+                self.assertTrue(started.wait(5), "the pull never started")
+                t0 = time.time()
+                self.assertEqual(post("/api/settings", {"poster": "manual"}), 200)
+                self.assertLess(time.time() - t0, 2, "the save waited on the Google call")
+                t.join(10)
+        finally:
+            httpd.shutdown()
+            sync.SETTINGS_FILE, serve.files.ROOT, sync.CC_DATA = old
+            shutil.rmtree(tmp, ignore_errors=True)
