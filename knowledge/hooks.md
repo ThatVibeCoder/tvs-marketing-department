@@ -1,6 +1,6 @@
 # Hooks
 
-**Filled by:** the Copywriter's write-hooks (To Try) and the Social Manager's read-the-stats (Openers That Won). Read by write-hooks before it writes any first line.
+**Filled by:** the Content Team lesson: its Copywriter writes To Try, and its Social Manager marks Openers That Won from your stats. The Copywriter reads it before it writes any first line.
 
 Your openers: the first lines that worked for YOUR buyer, and the ones waiting to be tested. Shapes come from the opener bank in write-hooks; this file keeps your proof.
 

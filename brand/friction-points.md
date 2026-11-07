@@ -1,6 +1,6 @@
 # Friction Points
 
-**Filled by:** the solve-friction-points skill (Solve 5 Friction Points lesson). Kept by the ICP & Offer Owner on the Strategy Team.
+**Filled by:** the Solve 5 Friction Points lesson. Kept by the ICP & Offer Owner on the Strategy Team, once the Strategy Team's lesson builds it.
 
 The five things that stop your buyer from saying yes, in their words, and your honest answer to each. Your offer gets checked against these, and your writers use them as ammunition.
 

@@ -1,6 +1,6 @@
 # Goals
 
-**Filled by:** the Future Achievements lesson ("talk out the wins you want next ... save it all as a goals file"). Kept by the Company Strategist, who reads it before every brief.
+**Filled by:** the Future Achievements lesson ("talk out the wins you want next ... save it all as a goals file"). Kept by the Company Strategist (once the Strategy Team's lesson builds it), who reads it before every brief.
 
 What you're going after next, in your own words: the wins you want, the number you want to hit, the thing you want running, the client you want back. When one lands, it moves to Crossed Off with the date and the receipt.
 

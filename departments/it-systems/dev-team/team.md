@@ -7,21 +7,21 @@ purpose: "Keeps the machine under everything running: your repo, your live site,
 ---
 # Dev Team
 
-What this team owns: the machine under everything else. The repo, the live site, the database, the keys, and the checks that keep them honest. The content team writes the words; this team keeps the lights on.
+What this team owns: the machine under everything else. The repo, the live site, the database, the keys, and the checks that keep them honest. The other teams do the marketing and the selling once their lessons build them; this team keeps the lights on.
 
-This team comes pre-built. You don't design it, you summon it. Each team member already knows its job. The only thing they need from you is a connection to your own accounts, once.
+This team comes pre-built: it's the one team in your folder from Day 1, because every other team needs it (saving your work to GitHub, your keys, connecting your tools, shipping your pages). You don't design it, you summon it. Each team member already knows its job. The only thing they need from you is a connection to your own accounts, once.
 
 ## Members
 - **Planner** (`planner/`): writes a one-page plan before anything gets built.
 - **GitHub Agent** (`github-agent/`): saves your work with history you can undo to.
-- **API Manager** (`api-manager/`): picks the right connection for every tool.
+- **API Manager** (`api-manager/`): picks the right connection for every tool, and fixes a form on your site that isn't sending.
 - **Keys Agent** (`keys-agent/`): keeps every key in the `.env` file, off GitHub.
 - **Supabase Agent** (`supabase-agent/`): your online storage, when something needs it.
 - **Vercel Agent** (`vercel-agent/`): puts pages on the live internet.
 - **Test Agent** (`test-agent/`): clicks what a stranger would click.
 - **Code Reviewer** (`code-reviewer/`): reads the changes before they're saved.
 - **Security Checker** (`security-checker/`): sweeps for leaks before anything goes public.
-- **Payments Agent** (`payments-agent/`): waiting for the day you take money.
+- **Payments Agent** (`payments-agent/`): waiting for the day you take money (optional). Not ready yet: it has no skills, and `payments-agent/NOT-READY.md` says what's still missing.
 
 ## Workflow: set up my code base
 Say: "set up my code base"
@@ -41,9 +41,9 @@ When: The one-time setup that connects your repo, hosting, database and tools. E
 ## Workflow: ship my landing page
 Say: "ship my landing page"
 Also say: deploy my site, put my page live, push this to production
-When: The Website Team finished a page and it's ready to go live. If "set up my code base" never ran, run that first.
+When: A page in `site/` is ready to go live (the test page, or one the Website Team built once its lesson adds it). If "set up my code base" never ran, run that first.
 ### Plan
-1. **Planner** · one-plan · turns the website team's build into a one-page ship plan. You say go. [you approve]
+1. **Planner** · one-plan · turns the page that's ready into a one-page ship plan. You say go. [you approve]
 ### Save
 2. **Code Reviewer** · review-changes · reads every change before it's saved.
 3. **GitHub Agent** · save-work · saves it with history you can undo to.

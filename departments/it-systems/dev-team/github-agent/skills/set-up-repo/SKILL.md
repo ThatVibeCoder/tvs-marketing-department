@@ -10,7 +10,7 @@ Once, at the start. Proves the loop works before anything depends on it.
 ## Steps
 1. Confirm GitHub login works and this repo exists in their account.
 2. Confirm the repo is on this machine and your AI is running inside it.
-3. Make one tiny real change (a line in business.md is perfect), then run save-work.
+3. Make one tiny real change (any small edit the owner picks, like fixing a typo; never hand-fill business.md, because its lesson fills it), then run save-work.
 4. Have the owner open github.com and SEE the change there. Seeing it is the point: the loop is real now.
 
 ## Rules

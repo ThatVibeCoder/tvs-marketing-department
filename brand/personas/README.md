@@ -1,6 +1,6 @@
 # Personas
 
-**Filled by:** the write-to-your-personas skill (Write To Your Buyer Personas lesson). Kept by the ICP & Offer Owner on the Strategy Team.
+**Filled by:** the Write To Your Buyer Personas lesson. Kept by the ICP & Offer Owner on the Strategy Team, once the Strategy Team's lesson builds it.
 
 One file per buyer persona, named after the persona: `<first-name>-<short-label>.md`, for example `mike-the-growing-roofer.md`. Copy `_template.md` to start one. Build as many as the business really needs, usually 2 to 4.
 

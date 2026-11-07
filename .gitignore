@@ -22,3 +22,11 @@ credentials.*
 # Python cache files
 __pycache__/
 *.pyc
+
+# Your website's numbers from tools/pull_web.py stay on your computer
+command-center/data/web.json
+command-center/data/web.js
+
+# Your revenue from the Payments Agent stays on your computer too
+command-center/data/payments.json
+command-center/data/payments.js

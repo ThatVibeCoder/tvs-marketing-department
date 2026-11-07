@@ -1,6 +1,6 @@
 # Contrarian Take
 
-**Filled by:** the find-your-contrarian-take skill (Contrarian Take lesson). Kept by the ICP & Offer Owner on the Strategy Team.
+**Filled by:** the Contrarian Take lesson. Kept by the ICP & Offer Owner on the Strategy Team, once the Strategy Team's lesson builds it.
 
 The thing you believe about your industry that most people in it get wrong. It's the spine of your content and the reason anyone remembers you. If it doesn't make somebody disagree, it isn't contrarian yet.
 

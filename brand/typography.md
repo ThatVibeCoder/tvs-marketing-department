@@ -1,5 +1,7 @@
 # Typography
 
+**Filled by:** the colors and fonts step in the Build Your Landing Page lesson (your AI reads the fonts from your site or logo, or picks them with you), before the page gets built. Kept by the Designer on the Content Team, once the Content Team lesson builds it.
+
 This gets filled before your first page gets built, worked out with your AI when you get there. Your fonts, so pages and graphics stop guessing.
 
 How it gets filled: if you have a site, your AI reads the real fonts from it. If you don't, you pick two with your AI: one with personality for headlines, one plain and readable for everything else.

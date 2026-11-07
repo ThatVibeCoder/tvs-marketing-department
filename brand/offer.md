@@ -1,6 +1,6 @@
 # Offer
 
-**Filled by:** the build-your-offer skill (Build Your Offer lesson); the headline by the Page Builder's write-headlines skill. Kept by the ICP & Offer Owner on the Strategy Team.
+**Filled by:** the Build Your Offer lesson; the headline by the Test It On Something Real lesson. Kept by the ICP & Offer Owner on the Strategy Team, once the Strategy Team's lesson builds it.
 
 What you actually sell, in one sentence, and the headline that leads with it. The website team reads this before building any page.
 
@@ -22,7 +22,7 @@ What you sell, in one sentence a stranger understands.
 _Not filled in yet._
 
 ## The Headline
-The line that leads with the offer. Written and graded by write-headlines; the winner lives here.
+The line that leads with the offer. Written in the Write the Top of Your Page lesson; the winner lives here.
 
 _Not filled in yet._
 

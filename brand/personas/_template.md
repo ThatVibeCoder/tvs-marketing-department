@@ -1,5 +1,7 @@
 # <Name>, <short label>
 
+**Filled by:** the Write To Your Buyer Personas lesson, once for each persona. Kept by the ICP & Offer Owner on the Strategy Team, once the Strategy Team's lesson builds it.
+
 ## At a Glance
 ```
 Who: _Not filled in yet._

@@ -1,6 +1,6 @@
 # ICP: Who You Serve
 
-**Filled by:** the lock-your-icp skill (Lock In Your ICP lesson). Kept by the ICP & Offer Owner on the Strategy Team.
+**Filled by:** the Lock In Your ICP lesson. Kept by the ICP & Offer Owner on the Strategy Team, once the Strategy Team's lesson builds it.
 
 The one person you sell to, in their own words. Every writer, page and offer reads this file first.
 
@@ -60,6 +60,20 @@ _Not filled in yet._
 5 to 10 lines copied word for word from where they actually talk: reviews, DMs, groups, support emails. Copy gets built from these, not written fresh.
 
 _Not filled in yet._
+
+## Profile Data (optional)
+Optional, laid out like the Ideal Customer Profile template: fill in what you know and leave the rest blank. An empty line here never stops anyone. Personas lists the buyer files in `brand/personas/` that belong to this ICP.
+
+**Age range:**
+**Income:**
+**Locations:**
+**Motivations:**
+**Values:**
+**Problems they have:**
+**Reasons they buy:**
+**Solutions you give them:**
+**Positioning:**
+**Personas:**
 
 ## Updates
 Every change to this file gets one dated line here, newest on top: what changed and why (for example `2026-11-02: added the price, owner confirmed`). This is how the file keeps itself current instead of going stale.
