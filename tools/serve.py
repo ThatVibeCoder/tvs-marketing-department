@@ -104,8 +104,7 @@ def write_key(name, value):
     lines = [ln for ln in lines if not pat.match(ln)]
     if value:
         lines.append(f"{name}={value}")
-    with open(business.writable(ENV_FILE), "w", encoding="utf-8") as f:
-        f.write("\n".join(lines) + ("\n" if lines else ""))
+    business.atomic_write(ENV_FILE, "\n".join(lines) + ("\n" if lines else ""), mode=0o600)  # .env: yours only, never half-written
 
 
 # ---------- post files ----------
@@ -131,8 +130,7 @@ def write_post(pid, meta, body):
     lines.append("---")
     text = "\n".join(lines) + "\n" + body.replace("\r\n", "\n").rstrip("\n") + "\n"
     os.makedirs(sync.POSTS_DIR, exist_ok=True)
-    with open(business.writable(post_path(pid)), "w", encoding="utf-8") as f:
-        f.write(text)
+    business.atomic_write(post_path(pid), text)
 
 
 def load_post_meta(pid):
@@ -249,8 +247,7 @@ def save_settings(data):
     for k in SETTING_KEYS:
         if k in data:
             current[k] = merge3(current.get(k), base[k], data[k]) if base is not None and k in base else data[k]
-    with open(business.writable(sync.SETTINGS_FILE), "w", encoding="utf-8") as f:
-        f.write(json.dumps(current, indent=2, ensure_ascii=False) + "\n")
+    business.atomic_write(sync.SETTINGS_FILE, json.dumps(current, indent=2, ensure_ascii=False) + "\n")
     return current
 
 

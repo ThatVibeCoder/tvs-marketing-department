@@ -12,6 +12,10 @@ import datetime
 import hashlib
 import os
 import re
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import sync  # noqa: E402  (its write(): whole-file, atomic)
 
 ROOT = os.path.realpath(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 MARKER = "_Not filled in yet._"
@@ -52,6 +56,11 @@ def writable(path):
     if rel.startswith(os.pardir) or os.path.isabs(rel) or real != os.path.join(ROOT, rel) or os.path.islink(p):
         raise ValueError(f"{rel} is a link to somewhere else, so it isn't saved. Keep the real file in the repo.")
     return p
+
+
+def atomic_write(path, text, mode=None):
+    """Every write from the dashboard: inside the repo, never through a link, all at once."""
+    sync.write(writable(path), text, mode)
 
 
 def read(rel):
@@ -443,8 +452,7 @@ def save(rel, changes, today=None, expect=None):
     if expect and content_hash(current) != expect:
         raise Stale(STALE)
     text = apply(current, changes, guides_for(kind) if kind else None, today)
-    with open(writable(p), "w", encoding="utf-8") as f:
-        f.write(text)
+    atomic_write(p, text)
     return rel
 
 
@@ -469,8 +477,7 @@ def create(kind, name, today=None):
     text = re.sub(r"^# .*$", "# " + heading, text, count=1, flags=re.M)
     text = apply(text, {"update": "made in the Command Center"}, guides_for(kind), today)
     os.makedirs(os.path.dirname(p), exist_ok=True)
-    with open(writable(p), "w", encoding="utf-8") as f:
-        f.write(text)
+    atomic_write(p, text)
     _list_in_readme(k["folder"], slug, name, kind)
     return rel
 
@@ -495,5 +502,4 @@ def _list_in_readme(folder, slug, name, kind):
     lines.insert(end, f"- `{slug}.md`: {name}")
     if end < len(lines) - 1 and lines[end + 1].strip():
         lines.insert(end + 1, "")
-    with open(writable(readme), "w", encoding="utf-8") as f:
-        f.write("\n".join(lines) + "\n")
+    atomic_write(readme, "\n".join(lines) + "\n")

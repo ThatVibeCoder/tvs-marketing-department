@@ -402,11 +402,11 @@ def test_connection(cfg=None):
 def write(snapshot):
     os.makedirs(DATA, exist_ok=True)
     text = json.dumps(snapshot, indent=2, ensure_ascii=False) + "\n"
-    with open(os.path.join(DATA, "web.json"), "w", encoding="utf-8") as f:
-        f.write(text)
-    with open(os.path.join(DATA, "web.js"), "w", encoding="utf-8") as f:
-        f.write("// written by tools/pull_web.py so the Web pages open straight from the folder. Stays on this computer.\n"
-                "window.CC_WEB = " + json.dumps(snapshot, ensure_ascii=False) + ";\n")
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import sync  # its write(): the whole file at once, so the page never reads half a snapshot
+    sync.write(os.path.join(DATA, "web.json"), text)
+    sync.write(os.path.join(DATA, "web.js"), "// written by tools/pull_web.py so the Web pages open straight from the folder. Stays on this computer.\n"
+               "window.CC_WEB = " + json.dumps(snapshot, ensure_ascii=False) + ";\n")
 
 
 def main():

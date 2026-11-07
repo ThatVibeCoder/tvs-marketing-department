@@ -229,6 +229,44 @@ class F9OriginAndType(ServerCase):
         self.assertEqual(self.post(f"http://127.0.0.1:{self.port}", "application/json", {"name": "BLOTATO_API_KEY", "value": ""}), 200)
 
 
+class F10AtomicWrites(unittest.TestCase):
+    """.env was written in place (a crash left half a file) and readable by everyone on the computer."""
+
+    def setUp(self):
+        import tempfile
+        import serve
+        self.serve = serve
+        self.tmp = os.path.realpath(tempfile.mkdtemp())
+        self._old = (serve.ENV_FILE, serve.business.ROOT)
+        serve.ENV_FILE = os.path.join(self.tmp, ".env")
+        serve.business.ROOT = self.tmp
+
+    def tearDown(self):
+        import shutil
+        self.serve.ENV_FILE, self.serve.business.ROOT = self._old
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def test_env_is_private(self):
+        import stat
+        self.serve.write_key("BLOTATO_API_KEY", "abc12345")
+        self.assertEqual(stat.S_IMODE(os.stat(self.serve.ENV_FILE).st_mode), 0o600)
+
+    def test_a_failed_write_leaves_the_old_file_whole(self):
+        from unittest import mock
+        self.serve.write_key("BLOTATO_API_KEY", "first123")
+        with mock.patch("os.replace", side_effect=OSError("disk full")):
+            with self.assertRaises(OSError):
+                self.serve.write_key("AYRSHARE_API_KEY", "second12")
+        with open(self.serve.ENV_FILE, encoding="utf-8") as f:
+            self.assertEqual(f.read(), "BLOTATO_API_KEY=first123\n")
+        self.assertEqual(sorted(os.listdir(self.tmp)), [".env"])          # no half-written temp file left behind
+
+    def test_every_server_write_is_atomic(self):
+        for rel in ("tools/serve.py", "tools/business.py", "tools/pull_web.py"):
+            with open(os.path.join(ROOT, rel), encoding="utf-8") as f:
+                plain = [ln.strip() for ln in f if "open(" in ln and '"w"' in ln]
+            self.assertEqual(plain, [], f"{rel} still writes a file in place")
+
 CHROME = next((p for p in ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",) if os.path.exists(p)), None) or \
     next((p for p in (__import__("shutil").which("google-chrome"), __import__("shutil").which("chromium")) if p), None)
 

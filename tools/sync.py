@@ -51,10 +51,23 @@ def read(p):
         return f.read()
 
 
-def write(p, text):
-    os.makedirs(os.path.dirname(p), exist_ok=True)
-    with open(p, "w", encoding="utf-8") as f:
-        f.write(text)
+def write(p, text, mode=None):
+    """Write a whole file at once: into a temp file next to it, then swapped in, so a crash (or an AI reading at
+    that moment) never sees half a file. mode=0o600 keeps a file private to you (.env)."""
+    import tempfile
+    d = os.path.dirname(p)
+    os.makedirs(d, exist_ok=True)
+    fd, tmp = tempfile.mkstemp(dir=d, prefix="." + os.path.basename(p) + ".", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8", newline="") as f:
+            f.write(text)
+        if mode is not None:
+            os.chmod(tmp, mode)
+        os.replace(tmp, p)
+    except BaseException:
+        if os.path.exists(tmp):
+            os.remove(tmp)
+        raise
 
 
 def frontmatter(text):
