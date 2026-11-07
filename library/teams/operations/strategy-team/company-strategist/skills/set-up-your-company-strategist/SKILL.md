@@ -26,14 +26,14 @@ Look for `departments/operations/strategy-team/team.md`.
 ## 2. Check the business files it reads
 The strategist reads `business.md` first, every time. Open it.
 - **If the At a Glance block and What You Sell still say `_Not filled in yet._`,** stop here. Say the strategist has nothing to work from yet, and that the Brain-Dump Your Business lesson fills it. Offer to run the brain-dump-your-business skill now, then come back to this one.
-- **If `business.md` is filled but files in `brand/` are still empty,** keep going. That's normal this early, and the strategist's job is to say what's thin. Note each empty one for step 3.
+- **If `business.md` is filled but files in `brand/` are still empty, or only partly filled,** keep going. That's normal this early, and the strategist's job is to say what's thin. Note each one for step 3.
 
 ## 3. Fill in the strategist's file
 Open `departments/operations/strategy-team/company-strategist/company-strategist.md`. Never copy facts from `business.md` or `brand/` into it: every fact has one home, and copies drift. Fill in only what's the strategist's own:
 1. Change `**Status:** seeded` to `**Status:** live`.
 2. In the first paragraph, put the business's name where it says "Runs the room", from Business name in `business.md`'s At a Glance: "Runs the room for <Business name>."
 3. If the owner wants to call it something ("call it Sam"), add a `**Name:** Sam` line under the Team line. Its role name keeps working too.
-4. Add a `## Watching` section above `## Output`, dated, with what it found today, one line each with the file: every brand file still empty, every `Still to Answer` line in `business.md`, and any two files that disagree (show the owner both lines and ask which is true; don't pick). Name the lesson that fills each one from that file's own **Filled by:** line, for example: `- 2026-11-07: brand/voice.md is still empty (the Round Up Your Own Words lesson fills it).` It clears a line once the file is filled.
+4. Add a `## Watching` section above `## Output`, dated, with what it found today, one line each with the file: every brand file still empty, every brand file only partly filled (one line naming its sections that still say `_Not filled in yet._`, like `brand/offer.md: Friction It Answers, Left For Content and Headlines We Tried are still empty`), every `Still to Answer` line in `business.md`, and any two files that disagree (show the owner both lines and ask which is true; don't pick). Name the lesson that fills each one from that file's own **Filled by:** line, for example: `- 2026-11-07: brand/voice.md is still empty (the Round Up Your Own Words lesson fills it).` Skip `_template.md` and `README.md` files: they're shapes and notes, not things to fill. It clears a line once the file is filled.
 
 Don't write a list of teams into it. The strategist reads `departments/` fresh on every ask, so a team added next week is found without touching this file.
 
