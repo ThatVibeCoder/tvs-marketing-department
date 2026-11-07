@@ -819,6 +819,51 @@ def sync_payments():
               "window.CC_PAYMENTS = " + json.dumps(data, ensure_ascii=False) + ";\n")
 
 
+# ---------- landing pages (knowledge/landing-pages.json, written by the Website Team's build-a-page and ship-a-page;
+# kept out of site/ so the list of drafts never goes live with the pages) ----------
+PAGES_FILE = os.path.join(ROOT, "knowledge", "landing-pages.json")
+PAGE_KINDS = ("landing", "product", "form", "thank-you", "upsell", "other")
+
+
+def landing_pages():
+    """The landing page registry, checked: every page has an id, a kind, and a parent that exists. A bad entry
+    is still shown and named in a NOTE, never dropped silently."""
+    if not os.path.isfile(PAGES_FILE):
+        return {"pages": [], "registry": False}
+    try:
+        raw = json.loads(read(PAGES_FILE))
+    except ValueError as e:
+        warnings.append(f"knowledge/landing-pages.json isn't valid JSON ({e}). The Landing Pages page shows nothing until it is.")
+        return {"pages": [], "registry": True}
+    pages = raw.get("pages") if isinstance(raw, dict) else None
+    if not isinstance(pages, list):
+        warnings.append('knowledge/landing-pages.json should look like {"pages": [...]} (see knowledge/README.md).')
+        return {"pages": [], "registry": True}
+    out, ids = [], set()
+    for i, p in enumerate(pages):
+        if not isinstance(p, dict) or not str(p.get("id", "")).strip():
+            warnings.append(f"knowledge/landing-pages.json page {i + 1} has no id, so it's skipped.")
+            continue
+        pid = str(p["id"]).strip()
+        if pid in ids:
+            warnings.append(f"knowledge/landing-pages.json has two pages with the id {pid}; the second is skipped.")
+            continue
+        ids.add(pid)
+        kind = str(p.get("kind") or "landing")
+        if kind not in PAGE_KINDS:
+            warnings.append(f"knowledge/landing-pages.json page {pid}: kind {kind!r} isn't one of {', '.join(PAGE_KINDS)}; shown as other.")
+            kind = "other"
+        out.append({"id": pid, "title": str(p.get("title") or pid), "kind": kind, "parent": str(p.get("parent") or "") or None,
+                    "url": str(p.get("url") or ""), "domain": str(p.get("domain") or ""), "route": str(p.get("route") or ""),
+                    "file": str(p.get("file") or ""), "offer": str(p.get("offer") or ""), "purpose": str(p.get("purpose") or ""),
+                    "status": "live" if p.get("status") == "live" else "draft", "built": str(p.get("built") or ""), "shipped": str(p.get("shipped") or "")})
+    for p in out:
+        if p["parent"] and p["parent"] not in ids:
+            warnings.append(f"knowledge/landing-pages.json page {p['id']}: its parent {p['parent']} isn't in the list, so it shows as a page of its own.")
+            p["parent"] = None
+    return {"pages": out, "registry": True}
+
+
 def business_files():
     """The My Business pages: brand/ ICPs, offers, buyers, friction, contrarian take, competitors (tools/business.py)."""
     sys.path.insert(0, os.path.join(ROOT, "tools"))
@@ -837,7 +882,8 @@ def sync_cc(data, check):
                         "window.CC_DATA = " + json.dumps({"teams": data["teams.json"], "automations": data["automations.json"],
                                                           "executions": executions, "content": data["content.json"],
                                                           "settings": load_settings(), "agents": detect_agents(),
-                                                          "library": library_index(), "business": business_files()},
+                                                          "library": library_index(), "business": business_files(),
+                                                          "landingPages": landing_pages()},
                                                          ensure_ascii=False) + ";\n")
 
     def strip_dates(s):

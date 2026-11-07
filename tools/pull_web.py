@@ -308,7 +308,7 @@ def pull(cfg=None):
     recent = [{"startDate": "30daysAgo", "endDate": "yesterday"}]
     ranges = {f"{d}d": pull_range(token, prop, today, d) for d in (7, 30, 90)}
     pages = ga_report(token, prop, {"dateRanges": recent, "dimensions": [{"name": "pagePath"}, {"name": "pageTitle"}],
-                                    "metrics": [{"name": "screenPageViews"}], "orderBys": [{"metric": {"metricName": "screenPageViews"}, "desc": True}], "limit": 8})
+                                    "metrics": [{"name": "screenPageViews"}], "orderBys": [{"metric": {"metricName": "screenPageViews"}, "desc": True}], "limit": 50})
     sources = ga_report(token, prop, {"dateRanges": recent, "dimensions": [{"name": "sessionDefaultChannelGroup"}],
                                       "metrics": [{"name": "sessions"}], "orderBys": [{"metric": {"metricName": "sessions"}, "desc": True}], "limit": 10})
     # Countries and US states come from their own country- and region-level queries, never summed from city rows

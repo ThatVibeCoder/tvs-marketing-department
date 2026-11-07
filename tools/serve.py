@@ -277,8 +277,9 @@ def state():
     content = sync.build_content()
     problems = list(dict.fromkeys(sync.errors))
     sync.errors.clear()
+    sync.warnings.clear()  # notes are for the terminal; the server would only pile them up
     return {"content": content, "settings": sync.load_settings(), "keys": key_presence(), "problems": problems, "web": web_snapshot(),
-            "payments": sync.load_payments()[0], "business": business.build(),
+            "payments": sync.load_payments()[0], "business": business.build(), "landingPages": sync.landing_pages(),
             "server": {"python": sys.version.split()[0], "root": os.path.basename(ROOT),
                        "envFile": os.path.isfile(ENV_FILE), "version": read_version()}}
 

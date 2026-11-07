@@ -11,7 +11,8 @@ From files in the repo to a URL you can send someone.
 1. Confirm the page work is SAVED first (save-work). Never ship unsaved work.
 2. Connect the repo to Vercel if this is the first time. It watches GitHub and rebuilds on every save after that. Shipping runs through the Vercel CLI, so it is one command rather than a website safari. If the CLI is not logged in yet, run `vercel login` first and follow the prompt. That needs a Vercel account, free to make, linked to the same GitHub account holding this repo.
 3. Ship it, wait for the build, and open the live URL yourself before handing it over.
-4. Give the owner the URL and one line: what's live, and that every future save updates it automatically.
+4. Mark it live in `knowledge/landing-pages.json`: on that page's entry (and on every page under it that shipped with it), set `status: "live"`, the live `url`, its `domain`, and today's date as `shipped`. If the page isn't on the list yet, add it the way build-a-page does (the shape is in `knowledge/README.md`). Then run `python3 tools/sync.py`.
+5. Give the owner the URL and one line: what's live, and that every future save updates it automatically.
 
 ## Rules
 - Free plan until the owner says otherwise. If anything would cost money, that goes through a one-plan first.
