@@ -307,3 +307,94 @@ class F12GithubFetchNeverOverwrites(unittest.TestCase):
         finally:
             add_team.ROOT, add_team.LIBRARY = old
             shutil.rmtree(tmp, ignore_errors=True)
+
+
+def _test_rsa_pem():
+    """A throwaway 1024-bit RSA key built in the test from a fixed seed (no key is stored in the repo), as PKCS#1 PEM."""
+    import base64, random
+    rnd = random.Random(20261107)
+
+    def is_prime(n):
+        if n < 2 or n % 2 == 0:
+            return n == 2
+        d, r = n - 1, 0
+        while d % 2 == 0:
+            d //= 2; r += 1
+        for a in (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37):
+            x = pow(a, d, n)
+            if x in (1, n - 1):
+                continue
+            for _ in range(r - 1):
+                x = pow(x, 2, n)
+                if x == n - 1:
+                    break
+            else:
+                return False
+        return True
+
+    def prime(bits):
+        while True:
+            c = rnd.getrandbits(bits) | (1 << (bits - 1)) | 1
+            if is_prime(c):
+                return c
+    e = 65537
+    while True:
+        p, q = prime(512), prime(512)
+        phi = (p - 1) * (q - 1)
+        if p != q and phi % e:
+            break
+    n, d = p * q, pow(e, -1, phi)
+
+    def der_int(v):
+        b = v.to_bytes((v.bit_length() + 8) // 8 or 1, "big")
+        return b"\x02" + der_len(len(b)) + b
+
+    def der_len(L):
+        if L < 128:
+            return bytes([L])
+        b = L.to_bytes((L.bit_length() + 7) // 8, "big")
+        return bytes([0x80 | len(b)]) + b
+    body = b"".join(der_int(v) for v in (0, n, e, d, p, q, d % (p - 1), d % (q - 1), pow(q, -1, p)))
+    der = b"\x30" + der_len(len(body)) + body
+    pem = "-----BEGIN RSA PRIVATE KEY-----\n" + base64.b64encode(der).decode() + "\n-----END RSA PRIVATE KEY-----\n"
+    return pem, n, e
+
+
+class F13KeyParsing(unittest.TestCase):
+    """A truncated or garbled private key crashed the pull instead of saying the key is damaged."""
+
+    def test_a_truncated_key_never_signs(self):
+        """Cut short anywhere (and still valid base64), the key used to sign with garbage or crash."""
+        import base64, pull_web
+        pem, n, e = _test_rsa_pem()
+        der = base64.b64decode(pem.split("\n")[1])
+        for cut in range(1, len(der), 7):
+            broken = "-----BEGIN RSA PRIVATE KEY-----\n" + base64.b64encode(der[:cut]).decode() + "\n-----END RSA PRIVATE KEY-----"
+            with self.assertRaises(pull_web.WebPullError, msg=f"cut at {cut}"):
+                pull_web.rs256(b"msg", broken)
+
+    def test_a_damaged_key_is_a_plain_error(self):
+        import pull_web
+        pem, n, e = _test_rsa_pem()
+        body = pem.split("\n")[1]
+        for broken in (pem.replace(body, body[: len(body) // 3]), pem.replace(body, body[:40]), "-----BEGIN PRIVATE KEY-----\nAAAA\n-----END PRIVATE KEY-----",
+                       pem.replace(body, "MII" + "A" * 60), "not a key at all"):
+            with self.assertRaises(pull_web.WebPullError, msg=broken[:60]):
+                pull_web.rs256(b"msg", broken)
+
+    def test_rs256_known_answer(self):
+        import hashlib, pull_web
+        pem, n, e = _test_rsa_pem()
+        sig = pull_web.rs256(b"header.claims", pem)
+        k = (n.bit_length() + 7) // 8
+        em = pow(int.from_bytes(sig, "big"), e, n).to_bytes(k, "big")   # verify: EMSA-PKCS1-v1_5, RFC 8017 9.2
+        digest_info = bytes.fromhex("3031300d060960864801650304020105000420") + hashlib.sha256(b"header.claims").digest()
+        self.assertEqual(em, b"\x00\x01" + b"\xff" * (k - len(digest_info) - 3) + b"\x00" + digest_info)
+        self.assertEqual(hashlib.sha256(sig).hexdigest()[:16], "63664769ca43e724")  # the same key and message always sign the same
+
+    def test_the_spec_is_named(self):
+        with open(os.path.join(ROOT, "tools", "pull_web.py"), encoding="utf-8") as f:
+            src = f.read()
+        self.assertTrue("RFC 8017" in src and "PKCS #8" in src, "pull_web.py names the specs it follows")
+
+

@@ -87,22 +87,37 @@ def config():
 
 
 # ---------- RS256, standard library only ----------
+# The signature Google's service-account login wants (a JWT signed "RS256") is RSASSA-PKCS1-v1_5 with SHA-256,
+# RFC 8017 section 8.2: build EMSA-PKCS1-v1_5 (section 9.2: 0x00 0x01, 0xFF padding, 0x00, the SHA-256
+# DigestInfo, then the hash) and raise it to d mod n. The key comes as PEM: Google's "BEGIN PRIVATE KEY" is
+# PKCS #8 (RFC 5208), a wrapper whose OCTET STRING holds the PKCS #1 RSAPrivateKey (RFC 8017 appendix A.1.2:
+# version, n, e, d, p, q, ...). The DER reader below is strict: any length that runs past the data means the
+# key is damaged, never a guess.
+DAMAGED = "The private key in the JSON is damaged. Download a fresh JSON key."
+
+
 def _der(data, i):
-    """Read one DER item at i: (tag, value bytes, next index)."""
-    tag, i = data[i], i + 1
-    length = data[i]
-    i += 1
+    """Read one DER item at i: (tag, value bytes, next index). A length past the end is a damaged key."""
+    if i + 2 > len(data):
+        raise WebPullError(DAMAGED)
+    tag, length, i = data[i], data[i + 1], i + 2
     if length & 0x80:
         n = length & 0x7F
+        if not 1 <= n <= 4 or i + n > len(data):
+            raise WebPullError(DAMAGED)
         length = int.from_bytes(data[i:i + n], "big")
         i += n
+    if i + length > len(data):
+        raise WebPullError(DAMAGED)
     return tag, data[i:i + length], i + length
 
 
 def _der_seq(data):
-    tag, body, _ = _der(data, 0)
+    tag, body, end = _der(data, 0)
     if tag != 0x30:
         raise WebPullError("The private key in the JSON isn't a key this can read.")
+    if end != len(data):
+        raise WebPullError(DAMAGED)
     items, i = [], 0
     while i < len(body):
         t, v, i = _der(body, i)
@@ -111,23 +126,23 @@ def _der_seq(data):
 
 
 def rsa_private_numbers(pem):
-    """n and d from a PEM private key (PKCS#8 like Google's 'BEGIN PRIVATE KEY', or PKCS#1)."""
+    """n and d from a PEM private key (PKCS #8 like Google's 'BEGIN PRIVATE KEY', or PKCS #1)."""
     body = re.sub(r"-----[^-]+-----|\s", "", pem.replace("\\n", "\n"))
     try:
-        der = base64.b64decode(body)
+        der = base64.b64decode(body, validate=True)
     except ValueError:
-        raise WebPullError("The private key in the JSON is damaged. Download a fresh JSON key.")
+        raise WebPullError(DAMAGED)
     items = _der_seq(der)
-    if len(items) == 3 and items[2][0] == 0x04:  # PKCS#8 wraps the PKCS#1 key in an OCTET STRING
+    if len(items) == 3 and items[2][0] == 0x04:  # PKCS #8 wraps the PKCS #1 key in an OCTET STRING
         items = _der_seq(items[2][1])
     ints = [int.from_bytes(v, "big") for t, v in items if t == 0x02]
-    if len(ints) < 4:
+    if len(ints) < 9 or ints[1].bit_length() < 1024 or not 1 < ints[3] < ints[1]:  # all nine PKCS #1 numbers, a real-size n
         raise WebPullError("The private key in the JSON isn't an RSA key.")
     return ints[1], ints[3]  # version, n, e, d, ...
 
 
 def rs256(message, pem):
-    """RSASSA-PKCS1-v1_5 with SHA-256 (what Google's service-account login expects)."""
+    """RSASSA-PKCS1-v1_5 with SHA-256 (RFC 8017 8.2, what Google's service-account login expects)."""
     n, d = rsa_private_numbers(pem)
     k = (n.bit_length() + 7) // 8
     digest_info = bytes.fromhex("3031300d060960864801650304020105000420") + hashlib.sha256(message).digest()
