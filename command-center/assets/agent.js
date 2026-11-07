@@ -1,10 +1,10 @@
 // Agent: a chat with your own AI, the way the Claude desktop app looks. DESIGN ONLY for now: nothing here runs
 // a command or calls an AI. Until it's switched on, members use their AI of choice in the terminal, in this repo.
 const AGENT_SUGGESTIONS = [
-  ["pencil", "Write this week's Threads post"],
-  ["globe", "How did my website do this week?"],
   ["checkCircle", "Save my work"],
-  ["calendarDays", "What's on my content calendar?"],
+  ["key", "Check my repo for leaked keys"],
+  ["plug", "Connect a new tool"],
+  ["list", "Plan a change before I build it"],
 ];
 
 function renderAgent() {

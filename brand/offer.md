@@ -22,7 +22,7 @@ What you sell, in one sentence a stranger understands.
 _Not filled in yet._
 
 ## The Headline
-The line that leads with the offer. Written and graded by write-headlines; the winner lives here.
+The line that leads with the offer. Written in the Write the Top of Your Page lesson; the winner lives here.
 
 _Not filled in yet._
 
