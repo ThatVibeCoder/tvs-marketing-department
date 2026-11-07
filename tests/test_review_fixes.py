@@ -203,6 +203,32 @@ class F8Symlinks(ServerCase):
             proc.terminate(); proc.wait(5)
 
 
+class F9OriginAndType(ServerCase):
+    """A page on another localhost port (a dev server) could write keys with a 'simple' Content-Type."""
+
+    def post(self, origin, ctype, body):
+        import http.client, json
+        c = http.client.HTTPConnection("127.0.0.1", self.port, timeout=10)
+        h = {"Host": f"localhost:{self.port}", "Content-Type": ctype}
+        if origin:
+            h["Origin"] = origin
+        c.request("POST", "/api/keys", body=json.dumps(body).encode(), headers=h)
+        r = c.getresponse(); r.read()
+        return r.status
+
+    def test_another_localhost_port_is_refused(self):
+        self.assertEqual(self.post("http://localhost:3000", "application/json", {"name": "BLOTATO_API_KEY", "value": "attacker1"}), 403)
+        self.assertEqual(self.post("http://127.0.0.1:5173", "application/json", {"name": "BLOTATO_API_KEY", "value": "attacker1"}), 403)
+        self.assertFalse(os.path.exists(os.path.join(self.repo, ".env")))
+
+    def test_a_smuggled_content_type_is_refused(self):
+        self.assertEqual(self.post(f"http://localhost:{self.port}", "text/plain; x=application/json", {"name": "BLOTATO_API_KEY", "value": "attacker1"}), 415)
+
+    def test_this_page_still_saves(self):
+        self.assertEqual(self.post(f"http://localhost:{self.port}", "application/json; charset=utf-8", {"name": "BLOTATO_API_KEY", "value": "mine1234"}), 200)
+        self.assertEqual(self.post(f"http://127.0.0.1:{self.port}", "application/json", {"name": "BLOTATO_API_KEY", "value": ""}), 200)
+
+
 CHROME = next((p for p in ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",) if os.path.exists(p)), None) or \
     next((p for p in (__import__("shutil").which("google-chrome"), __import__("shutil").which("chromium")) if p), None)
 

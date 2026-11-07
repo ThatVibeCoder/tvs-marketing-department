@@ -379,10 +379,14 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         if not self.allowed_host():
             return self.send_json(403, {"error": "Open this from localhost."})
+        # a browser always says where a request comes from: only this page (this server's own address and port)
+        # may change files. Another site, or another local dev server on a different port, gets a 403.
         origin = self.headers.get("Origin")
-        if origin and urlparse(origin).hostname not in ("localhost", "127.0.0.1"):
+        port = self.server.server_address[1]
+        if origin and origin not in (f"http://localhost:{port}", f"http://127.0.0.1:{port}"):
             return self.send_json(403, {"error": "Only this page can make changes."})
-        if "application/json" not in (self.headers.get("Content-Type") or ""):
+        # the exact media type: a "simple" text/plain (which a browser sends cross-site without asking) never counts
+        if (self.headers.get("Content-Type") or "").split(";")[0].strip().lower() != "application/json":
             return self.send_json(415, {"error": "Send JSON."})
         try:
             length = int(self.headers.get("Content-Length") or 0)
