@@ -1,6 +1,6 @@
 ---
 name: save-work
-description: Save the session's work to GitHub with history you can undo to. Use when the owner says "save my work", at the end of every session, and after anything worth keeping.
+description: "Save the work to GitHub as one checkpoint you can undo to. Use when the owner says save my work. Not for first-time setup (set-up-repo)."
 ---
 
 # save-work

@@ -1,6 +1,6 @@
 ---
 name: set-up-project
-description: Stand up the owner's Supabase project the first time something needs online storage. Use when a build actually calls for a database, not before.
+description: "Stand up the owner's Supabase project the first time something needs online storage. Use when a build actually calls for a database, not before. Not for storing keys (add-a-key)."
 ---
 
 # set-up-project

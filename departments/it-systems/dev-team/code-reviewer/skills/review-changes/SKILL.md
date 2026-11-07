@@ -1,6 +1,6 @@
 ---
 name: review-changes
-description: Read the session's changes before they're saved to GitHub. Use before save-work on any session that built or changed pages, skills, or wiring.
+description: "Read the session's changed files before they're saved to GitHub. Use before save-work when the session built or changed pages, skills or wiring. Not for running the thing (pre-ship-check) or hunting leaks (security-sweep)."
 ---
 
 # review-changes

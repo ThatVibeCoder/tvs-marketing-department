@@ -1,6 +1,6 @@
 ---
 name: one-plan
-description: Turn any build request into a one-page plan for the owner's yes. Use before every dev-team job of more than one step.
+description: "Turn a build request into a one-page plan for the owner's yes. Use before any dev-team job of more than one step. Not for one-step jobs."
 ---
 
 # one-plan

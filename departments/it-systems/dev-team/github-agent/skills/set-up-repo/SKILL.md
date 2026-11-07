@@ -1,6 +1,6 @@
 ---
 name: set-up-repo
-description: First-time setup, get the owner's department repo cloned, connected, and proving it can save. Use during Set Up Your Dev Team, or whenever someone arrives with nothing set up yet.
+description: "First-time setup: get the owner's department repo cloned, connected to GitHub and proving it can save. Use during Set Up Your Dev Team, or when someone arrives with nothing set up yet. Not for everyday saves (save-work)."
 ---
 
 # set-up-repo

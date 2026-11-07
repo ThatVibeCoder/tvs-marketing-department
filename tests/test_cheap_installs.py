@@ -50,6 +50,30 @@ class TaskBasedReadsTest(unittest.TestCase):
         self.assertNotIn(BLANKET, read(os.path.join(ROOT, "AGENTS.md")))
 
 
+class OneJobPerSkillTest(unittest.TestCase):
+    """Overlapping descriptions made the AI load three security skills for one ask. Each Dev Team skill has one job,
+    one trigger and a Not for line that names the skill that owns the neighbouring job."""
+
+    def test_every_dev_team_skill_says_what_its_not_for(self):
+        paths = glob.glob(os.path.join(ROOT, "departments", "it-systems", "dev-team", "*", "skills", "*", "SKILL.md"))
+        self.assertGreater(len(paths), 10)
+        for p in paths:
+            meta, _ = sync.frontmatter(read(p))
+            self.assertIn("Not for", meta["description"], meta["name"])
+            self.assertLess(len(meta["description"]), sync.MAX_DESC, meta["name"])
+
+    def test_the_three_check_skills_point_at_each_other(self):
+        def desc(member, name):
+            p = os.path.join(ROOT, "departments/it-systems/dev-team", member, "skills", name, "SKILL.md")
+            return sync.frontmatter(read(p))[0]["description"].split("Not for")[1]
+        self.assertIn("security-sweep", desc("test-agent", "pre-ship-check"))
+        self.assertIn("harden-the-basics", desc("test-agent", "pre-ship-check"))
+        self.assertIn("harden-the-basics", desc("security-checker", "security-sweep"))
+        self.assertIn("pre-ship-check", desc("security-checker", "security-sweep"))
+        self.assertIn("security-sweep", desc("security-checker", "harden-the-basics"))
+        self.assertIn("pre-ship-check", desc("security-checker", "harden-the-basics"))
+
+
 class OldReadLineTest(unittest.TestCase):
     """A lesson doc written before this change still writes the old line; sync swaps it instead of failing."""
 
