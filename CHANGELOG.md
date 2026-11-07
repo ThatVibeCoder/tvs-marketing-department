@@ -38,6 +38,12 @@ The `VERSION` file at the root holds one number: the generation your repo was cl
 5. Run the sync command. It writes `GEMINI.md`, the Cursor rule and the Gemini and Cursor command folders for the teams you have.
 None of this rewrites what's already in your `business.md` or your brand files.
 
+**Added 2026-11-07 (the Chapter 2 files match the lessons).**
+- The top notes in `business.md`, `knowledge/business-audit.md` and `brand/` say the Company Strategist keeps them, and name the lesson that fills each one by its title. Every Chapter 2 interview skill is saved under the Company Strategist.
+- `brand/voice.md` is now a map of where your real voice lives: two new sections, Where My Voice Lives and Voice Samples, and a "Read the real thing first" line in At a Glance.
+- Buyer personas are gone: `brand/personas/` and the Personas line in Profile Data. No lesson fills them.
+To take it, say to your AI: "Add the 2026-11-07 Chapter 2 fixes from the template changelog." It updates the top notes, adds the two voice sections to your `brand/voice.md` if they aren't there, and fetches the new `AGENTS.md`, `docs/REFERENCE.md` and `tests/`, keeping every word you already wrote. If your `brand/personas/` has files you filled in, it asks you before removing anything.
+
 ---
 
 _Version 3 and older describe teams the template shipped back then. From version 4 those teams come from their classroom lessons instead, so an older entry's "take it" line can no longer fetch a team from the template: do that team's lesson._
