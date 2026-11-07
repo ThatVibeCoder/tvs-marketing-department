@@ -207,6 +207,34 @@ def duplicate_post(pid):
 
 
 # ---------- settings ----------
+SETTING_KEYS = ("account", "workspace", "brands", "accounts", "poster", "cadence", "skoolCategories", "web", "payments")
+
+
+def merge3(current, base, new):
+    """What the page changed (base -> new), applied on top of what the file holds now, so a tab opened before
+    someone else edited settings.json can't put the old values back. Lists merge by item (added and removed
+    items), objects by field; a plain value is just the new one."""
+    if new == base:
+        return current
+    if current == base:
+        return new
+    if isinstance(new, dict) and isinstance(base, dict) and isinstance(current, dict):
+        out = dict(current)
+        for k in set(base) | set(new):
+            if new.get(k) == base.get(k):
+                continue
+            if k not in new:
+                out.pop(k, None)
+            else:
+                out[k] = merge3(current.get(k), base.get(k), new[k])
+        return out
+    if isinstance(new, list) and isinstance(base, list) and isinstance(current, list):
+        removed = [x for x in base if x not in new]
+        added = [x for x in new if x not in base]
+        return [x for x in current if x not in removed] + [x for x in added if x not in current]
+    return new
+
+
 def save_settings(data):
     if not isinstance(data, dict):
         raise ValueError("Settings must be an object.")
@@ -214,10 +242,11 @@ def save_settings(data):
     for k in ALL_KEYS:
         if k in blob:
             raise ValueError("Keys never go in settings.json. Save them under Connected Accounts instead.")
+    base = data.get("_base") if isinstance(data.get("_base"), dict) else None  # what the page had when it changed it
     current = sync.load_settings()
-    for k in ("account", "workspace", "brands", "accounts", "poster", "cadence", "skoolCategories", "web", "payments"):
+    for k in SETTING_KEYS:
         if k in data:
-            current[k] = data[k]
+            current[k] = merge3(current.get(k), base[k], data[k]) if base is not None and k in base else data[k]
     with open(sync.SETTINGS_FILE, "w", encoding="utf-8") as f:
         f.write(json.dumps(current, indent=2, ensure_ascii=False) + "\n")
     return current

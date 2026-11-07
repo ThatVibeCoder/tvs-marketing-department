@@ -76,7 +76,8 @@ const COMMON_TZ = ["America/New_York", "America/Chicago", "America/Denver", "Ame
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 async function saveSettings(patch, msg) {
-  const r = await api("/api/settings", patch);
+  // _base = what this page had, so the server applies only this change on top of the file as it is now
+  const r = await api("/api/settings", { ...patch, _base: Object.fromEntries(Object.keys(patch).map((k) => [k, settings()[k] === undefined ? null : settings()[k]])) });
   if (r) { toast(msg || "Saved to command-center/settings.json."); render(); }
 }
 function settingsPane(title, description, children) {
