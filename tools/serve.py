@@ -38,7 +38,7 @@ for _s in (sys.stdout, sys.stderr):
     except Exception:
         pass
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT = os.path.realpath(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # real path, so a symlinked folder still serves
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import sync  # noqa: E402  (the same readers the folder view uses)
 import pull_web  # noqa: E402  (the Web pages' Google pull)
@@ -104,7 +104,7 @@ def write_key(name, value):
     lines = [ln for ln in lines if not pat.match(ln)]
     if value:
         lines.append(f"{name}={value}")
-    with open(ENV_FILE, "w", encoding="utf-8") as f:
+    with open(business.writable(ENV_FILE), "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + ("\n" if lines else ""))
 
 
@@ -131,7 +131,7 @@ def write_post(pid, meta, body):
     lines.append("---")
     text = "\n".join(lines) + "\n" + body.replace("\r\n", "\n").rstrip("\n") + "\n"
     os.makedirs(sync.POSTS_DIR, exist_ok=True)
-    with open(post_path(pid), "w", encoding="utf-8") as f:
+    with open(business.writable(post_path(pid)), "w", encoding="utf-8") as f:
         f.write(text)
 
 
@@ -249,7 +249,7 @@ def save_settings(data):
     for k in SETTING_KEYS:
         if k in data:
             current[k] = merge3(current.get(k), base[k], data[k]) if base is not None and k in base else data[k]
-    with open(sync.SETTINGS_FILE, "w", encoding="utf-8") as f:
+    with open(business.writable(sync.SETTINGS_FILE), "w", encoding="utf-8") as f:
         f.write(json.dumps(current, indent=2, ensure_ascii=False) + "\n")
     return current
 
@@ -365,14 +365,14 @@ class Handler(BaseHTTPRequestHandler):
             return self.send_json(200, state())
         if path.startswith("/repo/"):  # media a post points at, inside this repo only
             target = os.path.realpath(os.path.join(ROOT, path[len("/repo/"):]))
-            if (not target.startswith(ROOT + os.sep) or not target.lower().endswith(MEDIA_EXT)
+            if (os.path.commonpath([ROOT, target]) != ROOT or target == ROOT or not target.lower().endswith(MEDIA_EXT)
                     or any(part.startswith(".") for part in os.path.relpath(target, ROOT).split(os.sep))
                     or not os.path.isfile(target)):
                 return self.send_json(404, {"error": "Not found"})
             return self.send_file(target)
         rel_path = "index.html" if path in ("", "/") else path.lstrip("/")
         target = os.path.realpath(os.path.join(CC, rel_path))
-        if not target.startswith(CC + os.sep) or not os.path.isfile(target):
+        if os.path.commonpath([CC, target]) != CC or not os.path.isfile(target):
             return self.send_json(404, {"error": "Not found"})
         return self.send_file(target)
 
@@ -431,6 +431,7 @@ class Handler(BaseHTTPRequestHandler):
                     return self.send_json(200, result)
                 elif path == "/api/web/pull":
                     try:
+                        business.writable(os.path.join(sync.CC_DATA, "web.json"))
                         pull_web.write(pull_web.pull())
                     except pull_web.WebPullError as e:
                         raise ValueError(str(e))

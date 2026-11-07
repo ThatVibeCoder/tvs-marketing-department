@@ -71,8 +71,8 @@ class F2Fences(unittest.TestCase):
             b._answer_span(["# X", "## A", "text"], "Nope", None)
 
 
-class F3StaleSaves(unittest.TestCase):
-    """A save from a page opened before someone else edited the file used to wipe their edit. Now it's a 409."""
+class ServerCase(unittest.TestCase):
+    """A throwaway copy of the repo with the Content Team added and tools/serve.py running on it."""
 
     def setUp(self):
         import shutil, subprocess, tempfile, time, socket
@@ -113,6 +113,11 @@ class F3StaleSaves(unittest.TestCase):
         with open(os.path.join(self.repo, rel), encoding="utf-8") as f:
             return f.read()
 
+
+
+class F3StaleSaves(ServerCase):
+    """A save from a page opened before someone else edited the file used to wipe their edit. Now it's a 409."""
+
     def test_business_save_after_an_outside_edit_is_refused(self):
         code, st = self.call("GET", "/api/state")
         doc = st["business"]["offers"][0]
@@ -149,6 +154,53 @@ class F3StaleSaves(unittest.TestCase):
             self.assertIn("hash: doc.hash", f.read())
         with open(os.path.join(ROOT, "command-center", "assets", "editor.js"), encoding="utf-8") as f:
             self.assertIn("hash:", f.read())
+
+
+class F8Symlinks(ServerCase):
+    """The repo couldn't be served from a symlinked folder, and saves followed symlinks out of the repo."""
+
+    def test_writes_never_follow_a_symlink(self):
+        outside = os.path.join(self.tmp, "outside.md")
+        with open(outside, "w", encoding="utf-8") as f:
+            f.write("# ICP: outside\n\n## Updates\nDated lines.\n")
+        os.symlink(outside, os.path.join(self.repo, "brand", "icps", "linked.md"))
+        code, res = self.call("POST", "/api/business/save", {"path": "brand/icps/linked.md", "changes": {"title": "ICP: hacked"}})
+        self.assertEqual(code, 400, res)
+        with open(outside, encoding="utf-8") as f:
+            self.assertIn("ICP: outside", f.read())
+        # a post file that's a link
+        code, res = self.call("POST", "/api/posts", {"platform": "threads", "body": "Real."})
+        pid = res["id"]; rel = [p for p in res["state"]["content"]["posts"] if p["id"] == pid][0]["path"]
+        target = os.path.join(self.repo, rel)
+        os.remove(target); os.symlink(outside, target)
+        code, res = self.call("POST", "/api/posts/" + pid, {"body": "Overwrite?"})
+        self.assertEqual(code, 400, res)
+        # .env that's a link
+        envout = os.path.join(self.tmp, "elsewhere.env")
+        open(envout, "w").close()
+        os.symlink(envout, os.path.join(self.repo, ".env"))
+        code, res = self.call("POST", "/api/keys", {"name": "BLOTATO_API_KEY", "value": "abc12345"})
+        self.assertEqual(code, 400, res)
+        self.assertEqual(os.path.getsize(envout), 0)
+
+    def test_served_from_a_symlinked_folder(self):
+        import subprocess, socket, time
+        link = os.path.join(self.tmp, "via-link")
+        os.symlink(self.repo, link)
+        s = socket.socket(); s.bind(("127.0.0.1", 0)); port = s.getsockname()[1]; s.close()
+        proc = subprocess.Popen([sys.executable, os.path.join(link, "tools", "serve.py"), "--port", str(port)], cwd=link,
+                                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        try:
+            import http.client
+            for _ in range(50):
+                try:
+                    c = http.client.HTTPConnection("127.0.0.1", port, timeout=5); c.request("GET", "/", headers={"Host": "localhost"}); r = c.getresponse(); r.read()
+                    break
+                except OSError:
+                    time.sleep(0.1)
+            self.assertEqual(r.status, 200)
+        finally:
+            proc.terminate(); proc.wait(5)
 
 
 CHROME = next((p for p in ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",) if os.path.exists(p)), None) or \

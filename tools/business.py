@@ -13,7 +13,7 @@ import hashlib
 import os
 import re
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT = os.path.realpath(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 MARKER = "_Not filled in yet._"
 FENCE = "```"
 FIELD = re.compile(r"^\*\*([^*]+?):\*\*\s?(.*)$")
@@ -41,6 +41,17 @@ STALE = ("This file changed since you opened it (your AI may have edited it). Re
 def content_hash(text):
     """What the page sends back with a save, so a save can tell the file changed under it."""
     return hashlib.sha1(text.encode("utf-8")).hexdigest()[:16]
+
+
+def writable(path):
+    """Refuse a write that would go through a symlink or land outside the repo: the path, as written, must be the
+    same as where it really points. serve.py runs every write through this."""
+    p = os.path.abspath(path)
+    rel = os.path.relpath(p, ROOT)
+    real = os.path.realpath(p)
+    if rel.startswith(os.pardir) or os.path.isabs(rel) or real != os.path.join(ROOT, rel) or os.path.islink(p):
+        raise ValueError(f"{rel} is a link to somewhere else, so it isn't saved. Keep the real file in the repo.")
+    return p
 
 
 def read(rel):
@@ -432,7 +443,7 @@ def save(rel, changes, today=None, expect=None):
     if expect and content_hash(current) != expect:
         raise Stale(STALE)
     text = apply(current, changes, guides_for(kind) if kind else None, today)
-    with open(p, "w", encoding="utf-8") as f:
+    with open(writable(p), "w", encoding="utf-8") as f:
         f.write(text)
     return rel
 
@@ -458,7 +469,7 @@ def create(kind, name, today=None):
     text = re.sub(r"^# .*$", "# " + heading, text, count=1, flags=re.M)
     text = apply(text, {"update": "made in the Command Center"}, guides_for(kind), today)
     os.makedirs(os.path.dirname(p), exist_ok=True)
-    with open(p, "w", encoding="utf-8") as f:
+    with open(writable(p), "w", encoding="utf-8") as f:
         f.write(text)
     _list_in_readme(k["folder"], slug, name, kind)
     return rel
@@ -484,5 +495,5 @@ def _list_in_readme(folder, slug, name, kind):
     lines.insert(end, f"- `{slug}.md`: {name}")
     if end < len(lines) - 1 and lines[end + 1].strip():
         lines.insert(end + 1, "")
-    with open(readme, "w", encoding="utf-8") as f:
+    with open(writable(readme), "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
