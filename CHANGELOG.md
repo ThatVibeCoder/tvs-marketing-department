@@ -17,6 +17,7 @@ The `VERSION` file at the root holds one number: the generation your repo was cl
 - **A team library.** Every full team (its team members, skills and workflows) now waits in `library/teams/<department>/<team>/`. A new copy of the template starts with just the Example Team in `departments/`, a small demo that shows how a team is built. When the classroom gets to a team, say "add the website team" (or run `python3 tools/add_team.py website-team`): the whole team lands in `departments/`, sync runs, and it shows up as a command and in the Command Center. `python3 tools/add_team.py` on its own lists every team and whether it's ready.
 
 - **A new look.** Dark glass by default, a warm light mode (the sun and moon button in the top bar), and a sidebar on the left: **Dashboard** and **Overview** at the top, then **Content**, **Web & Analytics** and **Automations** (Agent Teams, Automations, Executions, the same pages as before), each opening into its pages, with **Settings** at the bottom. Collapse it to icons with the button at its top.
+- **My Business.** A new first section in the sidebar shows your business the way the classroom builds it. Its Overview is a set of tiles you click into: your ICP's one-liner and the one person, their problem and what they want instead, your contrarian take, the five friction points (solved or UNSOLVED), your offer, your buyers and your competitors. The section also has ICPs (more than one now: `brand/icp.md` stays the main one, extras go in `brand/icps/`, with optional profile fields like age, income and positioning), Buyers, Friction Points, an offer builder with a live preview (`brand/offer.md` plus extras in `brand/offers/`), and Competitors. Every page edits your files in place and keeps their shape. A new Researcher skill, scan-my-competitors, looks at each competitor's website and finds where they post most.
 - **Content.** An Overview (posts out, what's waiting on you, every platform, when posts go out), a Calendar (month and list, your open posting times, drag a post to move it), Research (your outliers, topics, openers, competitors and swipes from `knowledge/`), and one page per platform: TikTok, Instagram, X, Threads, YouTube, Skool and LinkedIn. Each has an Overview, a Review queue (Approve, Reject, or the A and R keys) and its Calendar.
 - **An editor that shows exactly what it looks like.** Open any post and edit it next to a live preview drawn the way that platform draws it, on a phone or a desktop, with its character counter, Threads and X chains, the Skool title and category, and the YouTube title.
 - **Posts are files.** Each post is one file in `departments/marketing/content-team/social-manager/posts/`. The Content Team's draft-post, plan-the-week and post-content skills write and read them, and the Command Center edits them.
@@ -28,11 +29,12 @@ The `VERSION` file at the root holds one number: the generation your repo was cl
 **Who it's for.** Everyone. Say "update my department to version 4" to take it.
 
 **How to update.**
-1. Add `tools/add_team.py`, `tools/serve.py`, `tools/pull_web.py` and the new `tools/sync.py`, then the new `command-center/` files (everything except `command-center/data/` and your `settings.json`, if you have one).
+1. Add `tools/add_team.py`, `tools/serve.py`, `tools/pull_web.py`, `tools/business.py` and the new `tools/sync.py`, then the new `command-center/` files (everything except `command-center/data/` and your `settings.json`, if you have one).
 2. Keep every team you already have exactly where it is. Nothing in this version removes or replaces a team in your `departments/`; the library only adds teams you don't have yet. To get one, say "add the <name> team".
 3. If you already have the Content Team, add `posts/` (with its README) next to the Social Manager, and take the new draft-post, plan-the-week and post-content only if you haven't changed yours; if you have, compare them first. Same for the Traffic Agent's weekly-traffic-read and seo-foundations.
-4. Run the sync command. It writes `GEMINI.md`, the Cursor rule and the Gemini and Cursor command folders for the teams you have.
-It never touches `business.md` or `brand/`.
+4. Add the new empty folders `brand/icps/` and `brand/offers/` (each a README and a `_template.md`) and the new `knowledge/competitors/_template.md`. If you have the Research Team, add its new scan-my-competitors skill. Your own `brand/icp.md` gets the optional Profile Data section the first time you fill one of those fields on the ICPs page.
+5. Run the sync command. It writes `GEMINI.md`, the Cursor rule and the Gemini and Cursor command folders for the teams you have.
+None of this rewrites what's already in your `business.md` or your brand files.
 
 ---
 
