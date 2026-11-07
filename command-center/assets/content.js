@@ -76,6 +76,14 @@ function toast(text, action) {
 
 // Posting cadence → open slots. A slot is one weekday + time for one platform (Settings → Posting Cadence).
 function cadenceFor(platform) { return (settings().cadence || []).filter((s) => !platform || s.platform === platform); }
+// A day with no time yet gets one: that day's first posting time for the platform, else its first posting time on
+// any day, else 9:00 AM. A scheduled post always has a time.
+function defaultTimeFor(platform, dateKey) {
+  const hm = (t) => `${pad2(Number(String(t).split(":")[0]))}:${String(t).split(":")[1] || "00"}`;
+  const all = cadenceFor(platform).map((s) => ({ wd: Number(s.weekday), t: hm(s.time) })).sort((x, y) => x.t.localeCompare(y.t));
+  const sameDay = dateKey ? all.find((s) => s.wd === weekdayOf(dateKey)) : null;
+  return (sameDay || all[0] || {}).t || "09:00";
+}
 function openSlots(platform, fromKey, days, taken) {
   const out = [], now = todayParts();
   for (let i = 0; i < days; i++) {
@@ -366,6 +374,7 @@ const reviewUi = { active: null, undo: null };
 async function decide(post, status, slot) {
   const body = { status };
   if (status === "approved" && !post.date && slot) Object.assign(body, { date: slot.date, time: slot.time });
+  else if (status === "approved" && post.date && !post.time) body.time = defaultTimeFor(post.platform, post.date);
   const before = { status: post.status, date: post.date, time: post.time };
   const r = await api(`/api/posts/${post.id}`, body);
   if (r) {

@@ -16,7 +16,7 @@ function openComposer(opts) {
   } else {
     const c = opts.create || {};
     comp = { mode: "create", source: "calendar", platform: c.platform || "instagram", status: "draft", segments: [""], title: "", category: (settings().skoolCategories || [])[0] || "General discussion",
-      media: "", mediaType: "image", date: c.date || now.key, time: c.time || "", notes: "" };
+      media: "", mediaType: "image", date: c.date || now.key, time: c.time || defaultTimeFor(c.platform || "instagram", c.date || now.key), notes: "" };
   }
   Object.assign(comp, { activeTab: 0, device: "mobile", showNotes: false, showMedia: false, saving: false, error: null, touched: false, dirty: false, saveMode: "draft", modeMenu: false });
   comp.initial = JSON.stringify(snapshot());
