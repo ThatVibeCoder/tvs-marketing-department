@@ -160,6 +160,21 @@ class ServeTest(RepoCopy):
         code, _ = self.call("POST", "/api/settings", {"account": {"name": "BLOTATO_API_KEY=abc"}})
         self.assertEqual(code, 400)
 
+    def test_web_key_is_checked_folded_and_never_echoed(self):
+        self.assertEqual(self.call("POST", "/api/keys", {"name": "GA_SERVICE_ACCOUNT_KEY", "value": "not json"})[0], 400)
+        sa = {"type": "service_account", "client_email": "reader@example.iam.gserviceaccount.com",
+              "private_key": "-----BEGIN PRIVATE KEY-----\nAAAA\n-----END PRIVATE KEY-----\n"}
+        code, res = self.call("POST", "/api/keys", {"name": "GA_SERVICE_ACCOUNT_KEY", "value": json.dumps(sa, indent=2)})
+        self.assertEqual(code, 200, res)
+        env = self.read(".env")
+        self.assertEqual(len([ln for ln in env.splitlines() if ln.startswith("GA_SERVICE_ACCOUNT_KEY=")]), 1)
+        self.assertNotIn("reader@example", json.dumps(res))
+        self.assertEqual(self.call("POST", "/api/keys", {"name": "GA_PROPERTY_ID", "value": "G-ABC123"})[0], 400)
+        code, res = self.call("POST", "/api/web/test", {})
+        self.assertEqual(code, 200, res)
+        self.assertIn("property id", res["test"]["analytics"])  # stops before calling Google
+        self.assertIsNone(res["state"]["web"])
+
     def test_only_localhost_and_only_the_repo(self):
         self.assertEqual(self.call("GET", "/api/state", host="evil.example")[0], 403)
         self.assertEqual(self.call("GET", "/../tools/serve.py")[0], 404)

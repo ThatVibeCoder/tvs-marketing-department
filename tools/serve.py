@@ -41,6 +41,7 @@ for _s in (sys.stdout, sys.stderr):
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import sync  # noqa: E402  (the same readers the folder view uses)
+import pull_web  # noqa: E402  (the Web pages' Google pull)
 
 CC = os.path.join(ROOT, "command-center")
 ENV_FILE = os.path.join(ROOT, ".env")
@@ -57,6 +58,7 @@ KEYS = {
     "linkedin": ["LINKEDIN_ACCESS_TOKEN"],
     "youtube": ["YOUTUBE_CLIENT_ID", "YOUTUBE_CLIENT_SECRET"],
     "tiktok": ["TIKTOK_CLIENT_KEY", "TIKTOK_CLIENT_SECRET"],
+    "web": ["GA_SERVICE_ACCOUNT_KEY", "GA_PROPERTY_ID", "GSC_SITE"],
 }
 ALL_KEYS = [k for v in KEYS.values() for k in v]
 EDITABLE = ["status", "date", "time", "title", "category", "account", "media", "media_type", "job",
@@ -199,7 +201,7 @@ def save_settings(data):
         if k in blob:
             raise ValueError("Keys never go in settings.json. Save them under Connected Accounts instead.")
     current = sync.load_settings()
-    for k in ("account", "workspace", "brands", "accounts", "poster", "cadence", "skoolCategories"):
+    for k in ("account", "workspace", "brands", "accounts", "poster", "cadence", "skoolCategories", "web"):
         if k in data:
             current[k] = data[k]
     with open(sync.SETTINGS_FILE, "w", encoding="utf-8") as f:
@@ -214,12 +216,40 @@ def resync():
     return {"ok": r.returncode == 0, "fix": fixes[:5]}
 
 
+def web_snapshot():
+    p = os.path.join(sync.CC_DATA, "web.json")
+    try:
+        with open(p, encoding="utf-8") as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return None
+
+
+def clean_key(name, value):
+    """One-line values only; the service-account JSON is checked and folded onto one line."""
+    if name == "GA_SERVICE_ACCOUNT_KEY" and value:
+        try:
+            sa = json.loads(value)
+        except ValueError:
+            raise ValueError("That isn't the JSON key file. Open the .json file Google downloaded and paste all of it.")
+        if not (isinstance(sa, dict) and sa.get("type") == "service_account" and sa.get("client_email") and sa.get("private_key")):
+            raise ValueError("That JSON isn't a service-account key. In Google Cloud: the service account, Keys, Add key, JSON.")
+        return json.dumps(sa, separators=(",", ":"))
+    if name == "GA_PROPERTY_ID" and value and not re.match(r"^(properties/)?\d+$", value):
+        raise ValueError("The GA4 property id is a number only, from Admin → Property details (not the G- measurement id).")
+    if name == "GSC_SITE" and value and not re.match(r"^(sc-domain:[a-z0-9.-]+|https?://\S+/)$", value):
+        raise ValueError("Write it the way Search Console shows it: sc-domain:yoursite.com, or https://www.yoursite.com/ with the last slash.")
+    if re.search(r"[\r\n]", value):
+        raise ValueError("A key is one line.")
+    return value
+
+
 def state():
     sync.errors.clear()
     content = sync.build_content()
     problems = list(dict.fromkeys(sync.errors))
     sync.errors.clear()
-    return {"content": content, "settings": sync.load_settings(), "keys": key_presence(), "problems": problems,
+    return {"content": content, "settings": sync.load_settings(), "keys": key_presence(), "problems": problems, "web": web_snapshot(),
             "server": {"python": sys.version.split()[0], "root": os.path.basename(ROOT),
                        "envFile": os.path.isfile(ENV_FILE), "version": read_version()}}
 
@@ -318,10 +348,19 @@ class Handler(BaseHTTPRequestHandler):
                     name, value = str(data.get("name", "")), str(data.get("value", "")).strip()
                     if name not in ALL_KEYS:
                         raise ValueError("That key name isn't on the list.")
-                    if re.search(r"[\r\n]", value):
-                        raise ValueError("A key is one line.")
-                    write_key(name, value)
+                    write_key(name, clean_key(name, value))
                     result, what = {}, f"{'saved' if value else 'removed'} {name} in .env"
+                elif path == "/api/web/test":
+                    result = {"test": pull_web.test_connection()}
+                    print(f"  {datetime.datetime.now():%H:%M:%S}  tested the Google connection", flush=True)
+                    result.update({"ok": True, "state": state()})
+                    return self.send_json(200, result)
+                elif path == "/api/web/pull":
+                    try:
+                        pull_web.write(pull_web.pull())
+                    except pull_web.WebPullError as e:
+                        raise ValueError(str(e))
+                    result, what = {}, "pulled the website numbers into command-center/data/web.json"
                 else:
                     return self.send_json(404, {"error": "Not found"})
                 synced = resync()

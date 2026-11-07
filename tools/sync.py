@@ -465,6 +465,7 @@ DEFAULT_SETTINGS = {
     "poster": "manual",
     "cadence": [],
     "skoolCategories": ["General discussion", "Announcements", "Wins"],
+    "web": {"siteDomain": ""},
 }
 
 
