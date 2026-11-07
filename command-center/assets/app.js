@@ -573,6 +573,7 @@ const MODULES = [
     match: ["/agent-teams", "/automations", "/executions"],
     children: [["/agent-teams", "Agent Teams"], ["/automations", "Automations"], ["/executions", "Executions"]] }
 ];
+let clickedSection = null; // { key, path }: the section opened by a click on this page (the pill moves to it)
 let lastSection = null; // the section the previous screen was in (reset on every page load = first load opens it)
 function sectionPrefs() { try { const v = JSON.parse(store.get(OPEN_KEY) || "{}"); return v && typeof v === "object" && !Array.isArray(v) ? v : {}; } catch { return {}; } }
 function railLink(path, label, ic, active, extraCls) {
@@ -603,16 +604,17 @@ function renderShell() {
     if (current && current.key !== lastSection) { prefs[current.key] = "open"; for (const o of MODULES) if (o.key !== current.key) prefs[o.key] = "closed"; store.set(OPEN_KEY, JSON.stringify(prefs)); } // entering a section opens it
     lastSection = current ? current.key : null;
     const isOpen = (m) => (prefs[m.key] ? prefs[m.key] === "open" : (m.match || [m.href]).some(under));
-    // The pill follows the section that's open (one at a time). With every section closed, or icons only,
-    // it marks the section of the page you're on.
-    const openMod = collapsed ? null : MODULES.find(isOpen);
+    // The pill marks the section of the page you're on, and moves to a section you open from here (one at a
+    // time). A section left open from an earlier visit isn't lit; nor is anything in icons-only mode but the page's own.
+    if (clickedSection && clickedSection.path !== path) clickedSection = null;
+    const openMod = collapsed || !clickedSection ? null : MODULES.find((m) => m.key === clickedSection.key && isOpen(m));
     const modBlock = (m) => {
       const active = (m.match || [m.href]).some(under);
       const open = isOpen(m);
       const lit = openMod ? openMod.key === m.key : active;
       return h("li", {}, [
         h("button", { type: "button", class: cls("rail-link mod rail-mod-btn", lit && "in-section"), "aria-current": active ? "true" : null, "aria-expanded": open ? "true" : "false", title: m.label,
-          onclick: () => { const pr = sectionPrefs(); pr[m.key] = open ? "closed" : "open"; if (!open) for (const o of MODULES) if (o.key !== m.key) pr[o.key] = "closed"; /* accordion: one open at a time */ store.set(OPEN_KEY, JSON.stringify(pr)); if (store.get(RAIL_KEY) === "1" && !open) { /* icons-only: opening goes to the section */ location.hash = `#${m.href}`; } renderShell(); } }, [
+          onclick: () => { const pr = sectionPrefs(); pr[m.key] = open ? "closed" : "open"; clickedSection = open ? null : { key: m.key, path }; if (!open) for (const o of MODULES) if (o.key !== m.key) pr[o.key] = "closed"; /* accordion: one open at a time */ store.set(OPEN_KEY, JSON.stringify(pr)); if (store.get(RAIL_KEY) === "1" && !open) { /* icons-only: opening goes to the section */ location.hash = `#${m.href}`; } renderShell(); } }, [
           h("span", { class: "rail-ic", html: lineIcon(m.icon) }), h("span", { class: "rail-label truncate" }, m.label), h("span", { class: cls("rail-caret", open && "open"), html: lineIcon("chevronDown"), "aria-hidden": "true" })]),
         open ? h("ul", { class: "rail-children" }, m.children.map(([href, label, ic, platform, exact]) => {
           const on = exact ? path === href : under(href);

@@ -26,7 +26,7 @@ f.addEventListener("load", () => setTimeout(function next() {
   out.push(lit() + "/" + cur());
   const s = steps.shift();
   if (!s) { const r = document.createElement("pre"); r.id = "result"; r.textContent = out.join("|"); document.body.append(r); return; }
-  doc().querySelector('button.rail-mod-btn[title="' + s + '"]').click();
+  if (s.startsWith("#")) f.contentWindow.location.hash = s; else doc().querySelector('button.rail-mod-btn[title="' + s + '"]').click();
   setTimeout(next, 250);
 }, 800));
 </script>"""
@@ -61,3 +61,10 @@ class SidebarHighlight(unittest.TestCase):
     def test_every_section(self):
         out = self.run_probe("/dashboard", ["My Business", "Content", "Web & Analytics", "Automations"])
         self.assertEqual(out, ["/", "My Business/", "Content/", "Web & Analytics/", "Automations/"])
+
+    def test_a_section_left_open_isnt_lit_on_another_page(self):
+        # on a Web page Web is open; go to the Dashboard: Web stays open (remembered) but nothing is lit
+        start, dash, opened = self.run_probe("/web/traffic", ["#/dashboard", "Content"])
+        self.assertEqual(start, "Web & Analytics/Traffic")
+        self.assertEqual(dash, "/")
+        self.assertEqual(opened, "Content/")
