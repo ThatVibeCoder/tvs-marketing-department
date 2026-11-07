@@ -145,6 +145,13 @@ class AgentsFrontDoorTest(unittest.TestCase):
         dump, _ = sync.frontmatter(read(os.path.join(ROOT, LIB_MEMBER, "skills/company-brain-dump/SKILL.md")))
         self.assertIn("change my price", dump["description"])
 
+    def test_member_facing_notes_name_every_ai_not_two(self):
+        notes = glob.glob(os.path.join(ROOT, "library", "teams", "*", "*", "*", "skills", "README.md")) + [os.path.join(ROOT, "business.md")]
+        for p in notes:
+            text = read(p)
+            self.assertNotIn("Claude Code and Codex", text, os.path.relpath(p, ROOT))
+            self.assertNotIn("Claude Code or Codex", text, os.path.relpath(p, ROOT))
+
     def test_agents_md_fits_codex(self):
         # Codex stops reading project instructions at project_doc_max_bytes, 32 KiB by default
         self.assertLess(os.path.getsize(os.path.join(ROOT, "AGENTS.md")), 32 * 1024)

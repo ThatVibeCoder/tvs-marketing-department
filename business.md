@@ -2,7 +2,7 @@
 
 **Filled by:** the brain-dump-your-business skill (Brain-Dump Your Business lesson), then walk-your-business (Walk Your Whole Business lesson). Kept current by the company-brain-dump skill.
 
-What your business is, in your own words. Don't fill it in by hand: open Claude Code or Codex in this folder and talk it in. The skill writes what you say into the sections below.
+What your business is, in your own words. Don't fill it in by hand: open your AI (Claude Code, Codex, Gemini CLI, Cursor or Grok Build) in this folder and talk it in. The skill writes what you say into the sections below.
 
 A section that still says _Not filled in yet._ counts as missing: every team member stops and asks instead of guessing.
 
