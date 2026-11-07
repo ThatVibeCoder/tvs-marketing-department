@@ -86,15 +86,21 @@ def _paragraphs(lines):
     return out
 
 
+def _looks_like_guide(text):
+    """A guide is one plain paragraph: not the marker, not a field, a list, a quote or code."""
+    return MARKER not in text and not re.match(r"^(\*\*|[-*+] |\d+[.)] |>|```|~~~|#)", text)
+
+
 def _guide_count(title, body_lines, guides):
-    """How many leading paragraphs are the template's guide (kept as is, never shown as the answer): the
-    section's guide from the template, plus the italic `_How to fill this..._` line some sections carry."""
+    """How many leading paragraphs are the section's guide (kept as is, never shown as the answer): the guide
+    the template has for it, or, when there's no template or the guide was reworded, the first plain paragraph
+    when more follows it (an answer or the marker); plus the italic `_How to fill this..._` line some carry."""
     paras = _paragraphs(body_lines)
     n = 0
     want = (guides or {}).get(title)
-    for a, b in paras:
+    for i, (a, b) in enumerate(paras):
         text = "\n".join(body_lines[a:b]).strip()
-        if n == 0 and want and text == want:
+        if n == 0 and i == 0 and (text == want or (len(paras) > 1 and _looks_like_guide(text) and not text.startswith("_How to fill this"))):
             n += 1
             continue
         if text.startswith("_How to fill this") and text.endswith("_"):
