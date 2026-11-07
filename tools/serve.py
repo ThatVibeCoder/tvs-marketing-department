@@ -42,6 +42,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import sync  # noqa: E402  (the same readers the folder view uses)
 import pull_web  # noqa: E402  (the Web pages' Google pull)
+import business  # noqa: E402  (the My Business pages' files)
 
 CC = os.path.join(ROOT, "command-center")
 ENV_FILE = os.path.join(ROOT, ".env")
@@ -259,13 +260,17 @@ def clean_key(name, value):
     return value
 
 
+def short(key):
+    return business.short_key(key)
+
+
 def state():
     sync.errors.clear()
     content = sync.build_content()
     problems = list(dict.fromkeys(sync.errors))
     sync.errors.clear()
     return {"content": content, "settings": sync.load_settings(), "keys": key_presence(), "problems": problems, "web": web_snapshot(),
-            "payments": sync.load_payments()[0],
+            "payments": sync.load_payments()[0], "business": business.build(),
             "server": {"python": sys.version.split()[0], "root": os.path.basename(ROOT),
                        "envFile": os.path.isfile(ENV_FILE), "version": read_version()}}
 
@@ -366,6 +371,19 @@ class Handler(BaseHTTPRequestHandler):
                         raise ValueError("That key name isn't on the list.")
                     write_key(name, clean_key(name, value))
                     result, what = {}, f"{'saved' if value else 'removed'} {name} in .env"
+                elif path == "/api/business/save":
+                    rel = str(data.get("path", ""))
+                    changes = data.get("changes") or {}
+                    if not isinstance(changes, dict):
+                        raise ValueError("Nothing to save.")
+                    clean = {k: changes[k] for k in ("title", "glance", "sections", "fields") if k in changes}
+                    what_changed = [*(clean.get("glance") or {}), *(clean.get("sections") or {}), *[f for fs in (clean.get("fields") or {}).values() for f in fs]]
+                    clean["update"] = "edited in the Command Center: " + ", ".join(dict.fromkeys(short(x) for x in what_changed))[:300] if what_changed else None
+                    business.save(rel, clean)
+                    result, what = {"path": rel}, f"saved {rel}"
+                elif path == "/api/business/new":
+                    rel = business.create(str(data.get("kind", "")), str(data.get("name", "")))
+                    result, what = {"path": rel}, f"made {rel}"
                 elif path == "/api/web/test":
                     result = {"test": pull_web.test_connection()}
                     print(f"  {datetime.datetime.now():%H:%M:%S}  tested the Google connection", flush=True)
