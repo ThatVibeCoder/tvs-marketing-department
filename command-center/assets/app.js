@@ -1,10 +1,10 @@
 const $ = (sel, root = document) => root.querySelector(sel);
 const app = $("#app");
 const DASH = "—";
+// Routine areas come from each routine's `team:` line; anything not listed here is shown as written.
 const AREA_LABEL = {
-  content: "Content", proposals: "Proposals", reactivation: "Reactivation", web: "Web",
-  notion: "Notion", reviews: "Reviews", agency: "Agency", community: "Community", email: "Email",
-  marketing: "Marketing", operations: "Operations", sales: "Sales"
+  content: "Content", web: "Web", email: "Email", community: "Community",
+  marketing: "Marketing", operations: "Operations", sales: "Sales", routines: "Routines"
 };
 const DEPARTMENT_LABEL = {
   sales: "Sales", marketing: "Marketing", operations: "Operations", engineering: "IT / Systems",
@@ -647,6 +647,7 @@ const MODULES = [
     match: ["/agent-teams", "/automations", "/executions"],
     children: [["/agent-teams", "Agent Teams"], ["/automations", "Automations"], ["/executions", "Executions"]] }
 ];
+let lastSection = null; // the section the previous screen was in (reset on every page load = first load opens it)
 function sectionPrefs() { try { const v = JSON.parse(store.get(OPEN_KEY) || "{}"); return v && typeof v === "object" && !Array.isArray(v) ? v : {}; } catch { return {}; } }
 function railLink(path, label, ic, active, extraCls) {
   return h("a", { href: `#${path}`, class: cls("rail-link", extraCls), "aria-current": active ? "page" : null, title: label }, [
@@ -672,6 +673,9 @@ function renderShell() {
     // A section header is a button: it opens and closes its pages. The section you're in starts open;
     // what you open or close is remembered on this computer ("open" / "closed" per section).
     const prefs = sectionPrefs();
+    const current = MODULES.find((m) => (m.match || [m.href]).some(under));
+    if (current && current.key !== lastSection) { prefs[current.key] = "open"; store.set(OPEN_KEY, JSON.stringify(prefs)); } // entering a section opens it
+    lastSection = current ? current.key : null;
     const modBlock = (m) => {
       const active = (m.match || [m.href]).some(under);
       const open = prefs[m.key] ? prefs[m.key] === "open" : active;
