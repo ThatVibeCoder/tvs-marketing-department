@@ -21,6 +21,8 @@ import unittest
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import business as b  # noqa: E402
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from shipped import AS_SHIPPED, WHY  # noqa: E402  (template-only tests skip in a member's repo)
 
 DAY = datetime.date(2026, 11, 7)
 FILES = ["business.md", "brand/icp.md", "brand/offer.md", "brand/friction-points.md", "brand/contrarian-take.md",
@@ -33,6 +35,7 @@ def changed_lines(a, c):
     return [ln for ln in difflib.ndiff(a.splitlines(), c.splitlines()) if ln[:1] in "+-"]
 
 
+@unittest.skipUnless(AS_SHIPPED, WHY)
 class Shapes(unittest.TestCase):
     def test_nothing_changes_without_a_change(self):
         for f in FILES:
@@ -130,6 +133,7 @@ class BusinessCopy(unittest.TestCase):
             return f.read()
 
 
+@unittest.skipUnless(AS_SHIPPED, WHY)
 class Creating(BusinessCopy):
     def test_new_persona_is_named_and_listed(self):
         self.run_py("print(b.create('persona', 'Mia, the busy gift buyer', datetime.date(2026, 11, 7)))")
@@ -238,6 +242,7 @@ class Saving(BusinessCopy):
 
 
 @unittest.skipUnless(CHROME, "Google Chrome isn't installed (only this test needs it)")
+@unittest.skipUnless(AS_SHIPPED, WHY)
 class PageDraws(BusinessCopy):
     def dom(self, route):
         subprocess.run([sys.executable, "tools/sync.py"], cwd=self.repo, capture_output=True, check=True)

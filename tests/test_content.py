@@ -13,11 +13,14 @@ import sys
 import tempfile
 import time
 import unittest
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from shipped import AS_SHIPPED, WHY  # noqa: E402  (template-only tests skip in a member's repo)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 POSTS = "departments/marketing/content-team/social-manager/posts"
 
 
+@unittest.skipUnless(AS_SHIPPED, WHY)
 class RepoCopy(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.mkdtemp()

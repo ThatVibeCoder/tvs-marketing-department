@@ -10,6 +10,8 @@ import subprocess
 import sys
 import tempfile
 import unittest
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from shipped import AS_SHIPPED, WHY  # noqa: E402  (template-only tests skip in a member's repo)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -19,6 +21,7 @@ def read(p):
         return f.read()
 
 
+@unittest.skipUnless(AS_SHIPPED, WHY)
 class ShippedTest(unittest.TestCase):
     def test_department_ships_only_the_example_team(self):
         teams = json.loads(read(os.path.join(ROOT, "command-center/data/teams.json")))
@@ -35,6 +38,7 @@ class ShippedTest(unittest.TestCase):
             self.assertTrue(os.path.isfile(os.path.join(lib, nr, "NOT-READY.md")), nr)
 
 
+@unittest.skipUnless(AS_SHIPPED, WHY)
 class AddTeamTest(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.mkdtemp()

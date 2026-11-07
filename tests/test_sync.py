@@ -9,12 +9,15 @@ import subprocess
 import sys
 import tempfile
 import unittest
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from shipped import AS_SHIPPED, WHY  # noqa: E402  (template-only tests skip in a member's repo)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 COPYWRITER = "departments/marketing/content-team/copywriter/copywriter.md"
 SKILL = "departments/marketing/content-team/copywriter/skills/draft-post/SKILL.md"
 
 
+@unittest.skipUnless(AS_SHIPPED, WHY)
 class SyncTest(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.mkdtemp()
