@@ -46,7 +46,7 @@ Every team, workflow and skill gets a shortcut that sync writes (`.claude/skills
 
 ## Keep it in sync: run the sync command
 
-Run it when a team, team member, skill, workflow or routine is added, renamed or removed, and before every save. It checks the structure and rebuilds every shortcut, pointer and the Command Center. **Run it once.** If it prints a line starting with FIX, show the owner that exact line and stop. Never fix-and-rerun on your own, and never run it again on an error nothing has changed. `--check` changes nothing and fails if anything is out of date; save-work runs it.
+Run it when a team, team member, skill, workflow or routine is added, renamed or removed, and before every save. It checks the structure and rebuilds every shortcut, pointer and the Command Center. **Run it once.** If it prints a line starting with FIX, show the owner that exact line and stop. If it prints BLOCKED, your AI's safety settings stopped the write (Codex keeps `.agents/` read-only): ask the owner to approve the command once, or to run it in their own terminal, then run it once more. Never fix-and-rerun on your own, and never run it again on an error nothing has changed. `--check` changes nothing and fails if anything is out of date; save-work runs it.
 
 **Which command, by computer** (check which one the owner is on first):
 - **Mac or Linux:** `python3 tools/sync.py`

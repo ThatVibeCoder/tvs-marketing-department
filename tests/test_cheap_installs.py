@@ -155,3 +155,27 @@ class OldReadLineTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class BlockedWriteIsOneLine(unittest.TestCase):
+    """Codex's sandbox keeps .agents/ read-only: sync used to crash with a Python traceback there."""
+
+    def test_permission_error_prints_blocked_and_exits(self):
+        import shutil, subprocess, tempfile, stat
+        tmp = os.path.realpath(tempfile.mkdtemp())
+        try:
+            repo = os.path.join(tmp, "repo")
+            shutil.copytree(ROOT, repo, ignore=shutil.ignore_patterns(".git", "__pycache__"))
+            d = os.path.join(repo, "departments", "it-systems", "dev-team", "planner", "skills", "a-new-one")
+            os.makedirs(d)
+            with open(os.path.join(d, "SKILL.md"), "w") as f:
+                f.write("---\nname: a-new-one\ndescription: A test skill. Not for anything real.\n---\n\n# a-new-one\n")
+            agents = os.path.join(repo, ".agents", "skills")
+            os.chmod(agents, stat.S_IRUSR | stat.S_IXUSR)
+            r = subprocess.run([sys.executable, "tools/sync.py"], cwd=repo, capture_output=True, text=True)
+            os.chmod(agents, stat.S_IRWXU)
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("BLOCKED:", r.stdout)
+            self.assertNotIn("Traceback", r.stderr)
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)

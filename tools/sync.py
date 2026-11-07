@@ -938,4 +938,10 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except PermissionError as e:  # an AI's sandbox (Codex's keeps .agents/ read-only) blocked a write: say so, once, and stop
+        where = os.path.relpath(getattr(e, "filename", "") or ROOT, ROOT)
+        print(f"BLOCKED: your AI isn't allowed to write {where}. Ask the owner to approve this command once "
+              "(or to run it themselves in a terminal in this folder), then run it again. Don't try to work around it.")
+        sys.exit(1)
