@@ -8,8 +8,8 @@ and before every save. From the real folders, it:
      Team and read-first lines, a skill's name and description, workflow steps, name clashes,
      a skill saved in the wrong place).
   2. Rebuilds the shortcuts in .claude/skills/ (Claude Code) and .agents/skills/ (Codex), the same files in
-     both: one per team (/content-team), one per workflow (/build-my-landing-page), one per team member
-     skill (/draft-post). The real files stay inside departments/.
+     both: one per team (/dev-team), one per workflow (/ship-my-landing-page), one per team member
+     skill (/save-work). The real files stay inside departments/.
   3. Rebuilds the Command Center data (command-center/data/) so the dashboard shows every team,
      workflow, team member, skill and routine.
   4. If command-center/data/payments.json is there (the Payments Agent fills it), checks it and copies it to
@@ -286,31 +286,8 @@ def all_skills(depts):
     return [s for d in depts for t in d["teams"] for m in t["members"] for s in m["skills"]]
 
 
-LIBRARY = os.path.join(ROOT, "library", "teams")
-
-
-def library_owners():
-    """member names and skill names in the team library -> the library team that has them (for friendly notes)."""
-    out = {}
-    for dept in sorted(os.listdir(LIBRARY)) if os.path.isdir(LIBRARY) else []:
-        for team in sorted(os.listdir(os.path.join(LIBRARY, dept))) if os.path.isdir(os.path.join(LIBRARY, dept)) else []:
-            tdir = os.path.join(LIBRARY, dept, team)
-            for m in sorted(os.listdir(tdir)) if os.path.isdir(tdir) else []:
-                mp = os.path.join(tdir, m, m + ".md")
-                if not os.path.isfile(mp):
-                    continue
-                title = re.search(r"^# (.+)$", read(mp), re.M)
-                for a in member_aliases(m, title.group(1).strip() if title else m, read(mp)):
-                    out.setdefault(a, team)
-                sk = os.path.join(tdir, m, "skills")
-                for s in os.listdir(sk) if os.path.isdir(sk) else []:
-                    out.setdefault(s, team)
-    return out
-
-
 def validate(depts):
     names = {s["name"] for s in all_skills(depts)}
-    lib = library_owners()
     member_names = {a for d in depts for t in d["teams"] for m in t["members"] for a in m["aliases"]} | {"you"}
     ids = {}
 
@@ -334,17 +311,15 @@ def validate(depts):
                 if not w["steps"]:
                     errors.append(f"{t['path']}: workflow '{w['name']}' has no numbered steps under a ### phase")
                 for st in w["steps"]:
-                    if st["member"].lower() not in member_names and st["member"].lower() in lib:
-                        warnings.append(f"{t['path']}: workflow '{w['name']}' step {st['n']} is done by the "
-                                        f"{st['member']}, who joins when you add the {lib[st['member'].lower()]} "
-                                        f"(python3 tools/add_team.py {lib[st['member'].lower()]}); until then that step is skipped")
-                    elif st["member"].lower() not in member_names:
-                        errors.append(f"{t['path']}: workflow '{w['name']}' step {st['n']} names team member "
-                                      f"`{st['member']}`, who doesn't exist in any team")
+                    if st["member"].lower() not in member_names:
+                        # Lessons build teams one at a time, and a workflow may hand a step to a team member whose
+                        # team's lesson hasn't happened yet. That's a note, not a stop; a typo reads the same way.
+                        warnings.append(f"{t['path']}: workflow '{w['name']}' step {st['n']} is done by "
+                                        f"`{st['member']}`, who isn't on any team in departments/ yet. If a later lesson "
+                                        f"builds that team member, the step is skipped until then; if it's a typo, fix the name")
                     if st["skill"] and st["skill"] not in names:
-                        where = f"it comes with the {lib[st['skill']]}" if st["skill"] in lib else "a classroom lesson adds it"
                         warnings.append(f"{t['path']}: workflow '{w['name']}' step {st['n']} uses skill `{st['skill']}`, "
-                                        f"which isn't installed yet ({where})")
+                                        f"which isn't installed yet (a classroom lesson adds it)")
             for m in t["members"]:
                 for s in m["skills"]:
                     claim(s["name"], f"skill {s['path']}")
@@ -488,22 +463,6 @@ def sync_agent_files(check):
             if not check:
                 write(p, text)
     return stale
-
-
-def library_index():
-    """The team library for the Command Center's Add a team card: name, purpose, ready or not, added or not."""
-    out = []
-    for dept in sorted(os.listdir(LIBRARY)) if os.path.isdir(LIBRARY) else []:
-        ddir = os.path.join(LIBRARY, dept)
-        for team in sorted(os.listdir(ddir)) if os.path.isdir(ddir) else []:
-            tp = os.path.join(ddir, team, "team.md")
-            if not os.path.isfile(tp):
-                continue
-            meta, _ = frontmatter(read(tp))
-            out.append({"id": team, "department": dept, "name": meta.get("name", team), "purpose": meta.get("purpose", ""),
-                        "ready": not os.path.isfile(os.path.join(ddir, team, "NOT-READY.md")),
-                        "added": os.path.isfile(os.path.join(DEPTS, dept, team, "team.md"))})
-    return out
 
 
 def detect_agents():
@@ -673,7 +632,8 @@ def build_cc(depts, today):
 
 # ---------- 3. Content data (the Content pages of the Command Center) ----------
 # Every post is one file in departments/marketing/content-team/social-manager/posts/<id>.md: a small header, then the post.
-# The content team's skills write them, tools/serve.py edits them, and this reads them for the dashboard.
+# The Content Team's skills write them once its lesson builds the team (until then there are none), tools/serve.py
+# edits them, and this reads them for the dashboard.
 POSTS_DIR = os.path.join(DEPTS, "marketing", "content-team", "social-manager", "posts")
 SETTINGS_FILE = os.path.join(ROOT, "command-center", "settings.json")
 PLATFORMS = ["tiktok", "instagram", "twitter", "threads", "youtube", "skool", "linkedin"]
@@ -897,7 +857,6 @@ def sync_cc(data, check):
                         "window.CC_DATA = " + json.dumps({"teams": data["teams.json"], "automations": data["automations.json"],
                                                           "executions": executions, "content": data["content.json"],
                                                           "settings": load_settings(), "agents": detect_agents(),
-                                                          "library": library_index(),
                                                           "landingPages": landing_pages()},
                                                          ensure_ascii=False) + ";\n")
 
