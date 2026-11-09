@@ -1,7 +1,7 @@
 """Tests for the Content pages' data and tools/serve.py. Run: python3 -m unittest discover tests
 
-Each test copies the repo into a temp folder, writes or edits post files the way the Content Team
-and the Command Center's editor do, and checks what lands on disk. Your own repo is never touched.
+Each test copies the repo into a temp folder, writes or edits post files the way your AI and the
+dashboard's editor do, and checks what lands on disk. Your own repo is never touched.
 """
 import http.client
 import json
@@ -14,21 +14,21 @@ import tempfile
 import time
 import unittest
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from shipped import AS_SHIPPED, WHY  # noqa: E402  (template-only tests skip in a member's repo)
-from fixtures import add_content_team  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-POSTS = "departments/marketing/content-team/social-manager/posts"
+POSTS = "posts"
 
 
-@unittest.skipUnless(AS_SHIPPED, WHY)
 class RepoCopy(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.mkdtemp()
         self.repo = os.path.join(self.tmp, "repo")
         shutil.copytree(ROOT, self.repo, ignore=shutil.ignore_patterns(".git", "__pycache__", ".env", "settings.json"))
-        # posts live with the Content Team's Social Manager; its lesson builds it, so write a stand-in
-        add_content_team(self.repo)
+        # start from the template as shipped: no posts (a filled-in repo's own posts never leak into a test)
+        for f in os.listdir(os.path.join(self.repo, POSTS)):
+            if f.endswith(".md") and f != "README.md":
+                os.remove(os.path.join(self.repo, POSTS, f))
+        subprocess.run([sys.executable, "tools/sync.py"], cwd=self.repo, capture_output=True)
 
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)
@@ -85,11 +85,15 @@ class ContentTest(RepoCopy):
         self.assertIn("FIX:", out)
         self.assertIn("bad.md", out)
 
-    def test_research_reads_knowledge(self):
-        self.sync()
-        research = self.content()["research"]
-        self.assertEqual(research["topics"]["path"], "knowledge/topics.md")
-        self.assertEqual(research["competitors"], [])  # the _template.md and README never count
+    def test_calendars_are_listed_and_never_read_as_posts(self):
+        self.write(f"{POSTS}/calendars/calendar-2026-11.md", "# November\n")
+        code, out = self.sync()
+        self.assertEqual(code, 0, out)
+        c = self.content()
+        self.assertEqual(c["calendars"], ["posts/calendars/calendar-2026-11.md"])
+        self.assertEqual(c["posts"], [])
+        self.assertNotIn("research", c)
+
 
 
 def free_port():

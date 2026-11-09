@@ -1,8 +1,8 @@
 """The sidebar's highlighted pill follows the section you open. Run: python3 -m unittest discover tests
 
-Brian's report: on a Web page, he opened My Business (its pages dropped down) and the pill stayed on
+An owner's report: on a Web page, they opened My Business (its pages dropped down) and the pill stayed on
 Web & Analytics. This opens the real page in headless Chrome inside a small probe page, clicks the section
-header the way he did, and reads which section is lit. Skipped when Chrome isn't installed.
+header the way they did, and reads which section is lit. Skipped when Chrome isn't installed.
 """
 import os
 import re
@@ -55,7 +55,7 @@ class SidebarHighlight(unittest.TestCase):
     def test_opening_another_section_moves_the_pill(self):
         start, content, closed = self.run_probe("/web/traffic", ["Content", "Content"])
         self.assertEqual(start, "Web & Analytics/Traffic")      # on a Web page: Web is lit, Traffic is the current page
-        self.assertEqual(content, "Content/")                  # Brian's click: the pill moves; no Content page is current
+        self.assertEqual(content, "Content/")                  # the owner's click: the pill moves; no Content page is current
         self.assertEqual(closed, "Web & Analytics/")           # every section closed: back to the page's own section
 
     def test_every_section(self):
@@ -70,7 +70,7 @@ class SidebarHighlight(unittest.TestCase):
         self.assertEqual(opened, "Content/")
 
     def test_one_pill_only(self):
-        # Brian's 2:16 screenshot: on the Dashboard, opening a section lit Dashboard AND the section
+        # an owner's screenshot: on the Dashboard, opening a section lit Dashboard AND the section
         start, opened, closed = self.run_probe("/dashboard", ["Content", "Content"])
         self.assertEqual(start, "Dashboard/")
         self.assertEqual(opened, "Content/")       # the section has the pill; Dashboard gave it up

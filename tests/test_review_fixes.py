@@ -15,16 +15,13 @@ DAY = datetime.date(2026, 11, 7)
 
 
 class ServerCase(unittest.TestCase):
-    """A throwaway copy of the repo with the Content Team added and tools/serve.py running on it."""
+    """A throwaway copy of the repo with tools/serve.py running on it."""
 
     def setUp(self):
         import shutil, subprocess, tempfile, time, socket
         self.tmp = tempfile.mkdtemp()
         self.repo = os.path.join(self.tmp, "repo")
         shutil.copytree(ROOT, self.repo, ignore=shutil.ignore_patterns(".git", "__pycache__", ".env", "settings.json"))
-        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-        from fixtures import add_content_team
-        add_content_team(self.repo)  # posts need a Content Team; its lesson builds it, so write a stand-in
         s = socket.socket(); s.bind(("127.0.0.1", 0)); self.port = s.getsockname()[1]; s.close()
         self.proc = subprocess.Popen([sys.executable, "tools/serve.py", "--port", str(self.port)], cwd=self.repo,
                                      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
