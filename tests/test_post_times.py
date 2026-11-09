@@ -37,14 +37,14 @@ class PostTimes(unittest.TestCase):
         shutil.rmtree(self.tmp, ignore_errors=True)
 
     def times(self, cadence, cases):
-        with open(os.path.join(self.repo, "command-center", "settings.json"), "w", encoding="utf-8") as f:
+        with open(os.path.join(self.repo, "dashboard", "settings.json"), "w", encoding="utf-8") as f:
             json.dump({"cadence": cadence}, f)
         subprocess.run([sys.executable, "tools/sync.py"], cwd=self.repo, capture_output=True)
-        with open(os.path.join(self.repo, "command-center", "probe.html"), "w", encoding="utf-8") as f:
+        with open(os.path.join(self.repo, "dashboard", "probe.html"), "w", encoding="utf-8") as f:
             f.write(PROBE % json.dumps(cases))
         r = subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-first-run", f"--user-data-dir={self.tmp}/chrome",
                             "--allow-file-access-from-files", "--virtual-time-budget=5000", "--dump-dom",
-                            "file://" + os.path.join(self.repo, "command-center", "probe.html")], capture_output=True, text=True, timeout=60)
+                            "file://" + os.path.join(self.repo, "dashboard", "probe.html")], capture_output=True, text=True, timeout=60)
         m = re.search(r'<pre id="result">([^<]*)', r.stdout)
         self.assertIsNotNone(m, "the probe page didn't finish")
         return m.group(1).split("|")
@@ -58,7 +58,7 @@ class PostTimes(unittest.TestCase):
 
     def test_approving_a_dated_post_keeps_a_time(self):
         """decide() is what the Approve button runs; the save it sends is captured instead of sent."""
-        with open(os.path.join(self.repo, "command-center", "settings.json"), "w", encoding="utf-8") as f:
+        with open(os.path.join(self.repo, "dashboard", "settings.json"), "w", encoding="utf-8") as f:
             json.dump({"cadence": [{"platform": "threads", "weekday": 3, "time": "10:00"}]}, f)
         subprocess.run([sys.executable, "tools/sync.py"], cwd=self.repo, capture_output=True)
         probe = """<!doctype html><meta charset="utf-8"><body><iframe id="f" src="index.html#/content/threads/review"></iframe><script>
@@ -71,11 +71,11 @@ f.addEventListener("load", () => setTimeout(async () => {
   const r = document.createElement("pre"); r.id = "result"; r.textContent = JSON.stringify(sent); document.body.append(r);
 }, 800));
 </script>"""
-        with open(os.path.join(self.repo, "command-center", "probe.html"), "w", encoding="utf-8") as f:
+        with open(os.path.join(self.repo, "dashboard", "probe.html"), "w", encoding="utf-8") as f:
             f.write(probe)
         r = subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-first-run", f"--user-data-dir={self.tmp}/chrome",
                             "--allow-file-access-from-files", "--virtual-time-budget=5000", "--dump-dom",
-                            "file://" + os.path.join(self.repo, "command-center", "probe.html")], capture_output=True, text=True, timeout=60)
+                            "file://" + os.path.join(self.repo, "dashboard", "probe.html")], capture_output=True, text=True, timeout=60)
         m = re.search(r'<pre id="result">([^<]*)', r.stdout)
         self.assertIsNotNone(m, "the probe page didn't finish")
         sent = json.loads(m.group(1).replace("&quot;", '"'))

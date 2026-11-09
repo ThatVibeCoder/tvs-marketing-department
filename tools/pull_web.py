@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Pull your website's numbers into the Command Center's Web pages.
+"""Pull your website's numbers into the dashboard's Web pages.
 
 Reads Google Analytics 4 and Google Search Console, read-only, with a Google service account, and
-writes command-center/data/web.json plus web.js (so the page still opens straight from the folder).
+writes dashboard/data/web.json plus web.js (so the page still opens straight from the folder).
 Both files stay on your computer: .gitignore skips them, so your traffic never lands on GitHub.
 
   python3 tools/pull_web.py           pull now (Mac and Linux)
   py tools/pull_web.py                the same on Windows (or: python tools/pull_web.py)
   ... --test                          only check the connection, write nothing
 
-What it needs, all in the .env file at the top of the repo (the Command Center's Web → Settings
+What it needs, all in the .env file at the top of the repo (the dashboard's Web → Settings
 page saves them for you, or your AI's add-a-key skill does):
   GA_SERVICE_ACCOUNT_KEY   the service account's JSON key, on one line
   GA_PROPERTY_ID           your GA4 property id, the number in Admin → Property details
@@ -39,8 +39,8 @@ for _s in (sys.stdout, sys.stderr):
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ENV_FILE = os.path.join(ROOT, ".env")
-DATA = os.path.join(ROOT, "command-center", "data")
-SETTINGS_FILE = os.path.join(ROOT, "command-center", "settings.json")
+DATA = os.path.join(ROOT, "dashboard", "data")
+SETTINGS_FILE = os.path.join(ROOT, "dashboard", "settings.json")
 TOKEN_URL = "https://oauth2.googleapis.com/token"
 SCOPES = "https://www.googleapis.com/auth/analytics.readonly https://www.googleapis.com/auth/webmasters.readonly"
 GA_BASE = "https://analyticsdata.googleapis.com/v1beta"
@@ -435,7 +435,7 @@ def main():
         write(snap)
         r30 = snap["ranges"]["30d"]["totals"]
         print(f"Pulled {snap['siteDomain'] or 'your site'}: {r30['activeUsers']} visitors in the last 30 days. "
-              f"Saved to command-center/data/web.json.")
+              f"Saved to dashboard/data/web.json.")
         if snap.get("searchNote"):
             print("Search Console: " + snap["searchNote"])
     except WebPullError as e:

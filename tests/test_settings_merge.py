@@ -1,7 +1,7 @@
 """Settings saves merge instead of overwrite. Run: python3 -m unittest discover tests
 
 The page sends what it changed and what it had (`_base`); serve.py applies only that change on top of
-command-center/settings.json as it is now. So a tab opened before your AI edited settings.json can't put the
+dashboard/settings.json as it is now. So a tab opened before your AI edited settings.json can't put the
 old values back.
 """
 import json
@@ -73,7 +73,7 @@ class StaleTab(unittest.TestCase):
         self.assertEqual(self.read()["cadence"], [B])
 
     def test_the_page_sends_its_base(self):
-        with open(os.path.join(ROOT, "command-center", "assets", "settings.js"), encoding="utf-8") as f:
+        with open(os.path.join(ROOT, "dashboard", "assets", "settings.js"), encoding="utf-8") as f:
             self.assertIn("_base: Object.fromEntries(Object.keys(patch)", f.read())
 
 

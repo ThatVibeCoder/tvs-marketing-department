@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Open the Command Center with editing turned on.
+"""Open the dashboard with editing turned on.
 
-The Command Center opens straight from the folder (command-center/index.html) and shows everything,
+The dashboard opens straight from the folder (dashboard/index.html) and shows everything,
 read-only. Run this when you want its buttons to work: Save changes in the post editor, Approve and
 Reject on the review pages, and the Settings pages. It serves the page on your own computer only, and
 every change lands in a file in this repo:
 
-  - a post edit        -> departments/marketing/content-team/social-manager/posts/<id>.md
-  - a setting          -> command-center/settings.json (nothing secret ever goes here)
+  - a post edit        -> posts/<id>.md
+  - a setting          -> dashboard/settings.json (nothing secret ever goes here)
   - an API key         -> .env at the top of the repo (skipped by every save; never sent back to the page)
 
 After each change it runs tools/sync.py, so the folder view catches up too.
@@ -17,8 +17,8 @@ After each change it runs tools/sync.py, so the folder view catches up too.
   ... --port 9000                     use another port
   ... --open                          also open it in your browser
 
-Stop it with Ctrl+C. Standard library only. Nothing here posts anywhere: posting stays with the
-post-content skill (the Content Team's, once its lesson builds it), and you send every post yourself.
+Stop it with Ctrl+C. Standard library only. Nothing here posts anywhere: you (or a routine you set up)
+send every post yourself.
 """
 import datetime
 import json
@@ -45,7 +45,7 @@ import sync  # noqa: E402  (the same readers the folder view uses)
 import pull_web  # noqa: E402  (the Web pages' Google pull)
 import files  # noqa: E402  (every write: inside the repo, no links, all at once)
 
-CC = os.path.join(ROOT, "command-center")
+CC = os.path.join(ROOT, "dashboard")
 ENV_FILE = os.path.join(ROOT, ".env")
 LOCK = threading.Lock()
 MEDIA_EXT = (".png", ".jpg", ".jpeg", ".webp", ".gif", ".mp4", ".mov", ".webm", ".m4v")
@@ -65,7 +65,7 @@ KEYS = {
     "clarity": ["CLARITY_PROJECT_ID", "CLARITY_API_TOKEN"],
     "bing": ["BING_SITE_URL", "BING_WEBMASTER_API_KEY"],
     "otherweb": ["OTHER_ANALYTICS_API_KEY"],
-    # payments: saved here for the Payments Agent; nothing in this repo calls a payment provider
+    # payments: saved here for whatever you connect to fill payments.json; nothing in this repo calls a payment provider
     "stripe": ["STRIPE_RESTRICTED_KEY"],
     "square": ["SQUARE_ACCESS_TOKEN"],
     "paypal": ["PAYPAL_CLIENT_ID", "PAYPAL_CLIENT_SECRET"],
@@ -188,8 +188,6 @@ def update_post(pid, data):
 
 
 def create_post(data):
-    if not os.path.isfile(os.path.join(os.path.dirname(os.path.dirname(sync.POSTS_DIR)), "team.md")):
-        raise ValueError("Posts belong to the Content Team, and it isn't in your folder yet: the Content Team lesson builds it.")
     data = {k: v for k, v in data.items() if v not in (None,)}
     if data.get("platform") not in sync.PLATFORMS:
         raise ValueError("Pick a platform first.")
@@ -462,7 +460,7 @@ class Handler(BaseHTTPRequestHandler):
                 elif path == "/api/web/pull":
                     files.writable(os.path.join(sync.CC_DATA, "web.json"))
                     pull_web.write(pulled)
-                    result, what = {}, "pulled the website numbers into command-center/data/web.json"
+                    result, what = {}, "pulled the website numbers into dashboard/data/web.json"
                 else:
                     return self.send_json(404, {"error": "Not found"})
                 synced = resync()
@@ -489,7 +487,7 @@ def main():
         port = int(sys.argv[i])
     httpd = ThreadingHTTPServer(("127.0.0.1", port), Handler)
     url = f"http://localhost:{port}/"
-    print(f"Command Center with editing on: {url}")
+    print(f"Dashboard with editing on: {url}")
     print("Changes land in your files. Stop with Ctrl+C.", flush=True)
     if "--open" in sys.argv:
         webbrowser.open(url)
