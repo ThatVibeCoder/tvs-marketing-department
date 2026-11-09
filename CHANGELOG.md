@@ -10,6 +10,29 @@ The `VERSION` file at the root holds one number: the generation your repo was cl
 
 ---
 
+## Version 5, 2026-11-09
+
+**What's new.** This repo is now the engine only: the dashboard, the automations, your website files and the tools that run them. Your departments, agent teams, skills, brand and company knowledge live in your company vault (a separate repo made from tvs-company-vault-template). This repo never reads it, and the vault never reads this one.
+
+- **Moved out to the company vault:** the teams and their skills, the brand and business files, the knowledge folder, the long reference doc, the AI shortcut folders and the CLAUDE.md and GEMINI.md pointers. The old org chart redirect is gone.
+- **The dashboard folder is `dashboard/`** (it was named after the Command Center before). Everything that pointed at it now points at `dashboard/`.
+- **Removed from the dashboard, because they read vault files:** the Agent Teams page and its tab, the Content section's Research page, and Settings → AI Agents. Automations, Executions, Content (posts, review, calendar), Web & Analytics, Payments and the rest of Settings stay.
+- **Posts live in `posts/`** at the top of the repo, one file each (`posts/README.md` shows the shape), and posting calendars in `posts/calendars/`. A new post can be made from the dashboard without any team folder.
+- **The landing pages list is `dashboard/landing-pages.json`.** It stays out of `site/` so the list of drafts never goes live.
+- **`tools/sync.py` builds only the dashboard data**, from routines, posts, settings, payments, landing pages and executions, all inside this repo. It no longer builds shortcuts, rewrites team member files or checks departments.
+- **Tests** cover the new layout, and a new one opens every dashboard page headless and checks for console errors. The tests that only checked vault files are gone.
+
+**Who it's for.** Anyone making a fresh copy. If your copy is older, keep it as it is until you've made your company vault from tvs-company-vault-template.
+
+**How to update.**
+1. Make your company vault first, and move your teams, brand, business and knowledge files there.
+2. Rename `command-center/` to `dashboard/` and take the new `tools/`, `dashboard/assets/`, `tests/` and `AGENTS.md`.
+3. Move your post files into `posts/` (and calendars into `posts/calendars/`), and your landing pages list to `dashboard/landing-pages.json`.
+4. Run `python3 tools/sync.py` once.
+Your `.env`, `dashboard/settings.json` and payments and web numbers stay exactly where they are.
+
+---
+
 ## Version 4, 2026-11-07
 
 **What's new.** The Command Center got a new look and a whole content system, and a new copy now starts as a skeleton plus the Dev Team: every other team comes from its classroom lesson.
