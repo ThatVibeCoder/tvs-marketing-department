@@ -43,11 +43,11 @@ class SidebarHighlight(unittest.TestCase):
         shutil.rmtree(self.tmp, ignore_errors=True)
 
     def run_probe(self, start, steps):
-        with open(os.path.join(self.repo, "command-center", "probe.html"), "w", encoding="utf-8") as f:
+        with open(os.path.join(self.repo, "dashboard", "probe.html"), "w", encoding="utf-8") as f:
             f.write(PROBE % {"start": start, "steps": repr(steps).replace("'", '"')})
         r = subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-first-run", f"--user-data-dir={self.tmp}/chrome",
                             "--allow-file-access-from-files", "--virtual-time-budget=6000", "--dump-dom",
-                            "file://" + os.path.join(self.repo, "command-center", "probe.html")], capture_output=True, text=True, timeout=60)
+                            "file://" + os.path.join(self.repo, "dashboard", "probe.html")], capture_output=True, text=True, timeout=60)
         m = re.search(r'<pre id="result">([^<]*)', r.stdout)
         self.assertIsNotNone(m, "the probe page didn't finish")
         return m.group(1).replace("&amp;", "&").split("|")

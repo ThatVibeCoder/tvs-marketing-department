@@ -41,7 +41,7 @@ class PaymentsCopy(unittest.TestCase):
         self.tmp = tempfile.mkdtemp()
         self.repo = os.path.join(self.tmp, "repo")
         shutil.copytree(ROOT, self.repo, ignore=shutil.ignore_patterns(".git", "__pycache__", ".env", "settings.json"))
-        self.data = os.path.join(self.repo, "command-center", "data")
+        self.data = os.path.join(self.repo, "dashboard", "data")
         for name in ("payments.json", "payments.js", "web.json", "web.js"):  # this computer's own numbers stay out of the test
             if os.path.exists(os.path.join(self.data, name)):
                 os.remove(os.path.join(self.data, name))
@@ -97,8 +97,8 @@ class KeysAndPrivacy(unittest.TestCase):
     def test_payments_never_get_saved_to_github(self):
         with open(os.path.join(ROOT, ".gitignore"), encoding="utf-8") as f:
             text = f.read()
-        self.assertIn("command-center/data/payments.json", text)
-        self.assertIn("command-center/data/payments.js", text)
+        self.assertIn("dashboard/data/payments.json", text)
+        self.assertIn("dashboard/data/payments.js", text)
 
     def test_stripe_secret_key_is_refused(self):
         with self.assertRaisesRegex(ValueError, "restricted key"):
@@ -115,7 +115,7 @@ class KeysAndPrivacy(unittest.TestCase):
             self.assertIn(k, serve.ALL_KEYS)
 
     def test_nothing_calls_a_provider(self):
-        for d in ("tools", os.path.join("command-center", "assets")):
+        for d in ("tools", os.path.join("dashboard", "assets")):
             for name in os.listdir(os.path.join(ROOT, d)):
                 if not os.path.isfile(os.path.join(ROOT, d, name)):
                     continue
@@ -128,7 +128,7 @@ class KeysAndPrivacy(unittest.TestCase):
 @unittest.skipUnless(CHROME, "Google Chrome isn't installed (only this test needs it)")
 class DashboardDraws(PaymentsCopy):
     def dom(self):
-        url = "file://" + os.path.join(self.repo, "command-center", "index.html") + "#/dashboard"
+        url = "file://" + os.path.join(self.repo, "dashboard", "index.html") + "#/dashboard"
         r = subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-first-run", f"--user-data-dir={self.tmp}/chrome",
                             "--virtual-time-budget=4000", "--dump-dom", url], capture_output=True, text=True, timeout=60)
         return r.stdout
@@ -177,7 +177,7 @@ class DashboardDraws(PaymentsCopy):
             f.write(text)
         self.sync()
         self.assertEqual(self.axis(self.dom())[-1], "$40k")                 # past the target, the scale grows
-        with open(os.path.join(self.repo, "command-center", "settings.json"), "w", encoding="utf-8") as f:
+        with open(os.path.join(self.repo, "dashboard", "settings.json"), "w", encoding="utf-8") as f:
             json.dump({"workspace": {"revenueTarget": 50000}}, f)
         self.sync()
         html = self.dom()

@@ -77,7 +77,7 @@ class F3StaleSaves(ServerCase):
         self.assertIn("The AI's better words.", self.text(rel))
 
     def test_the_page_sends_the_hash(self):
-        with open(os.path.join(ROOT, "command-center", "assets", "editor.js"), encoding="utf-8") as f:
+        with open(os.path.join(ROOT, "dashboard", "assets", "editor.js"), encoding="utf-8") as f:
             self.assertIn("hash:", f.read())
 
 

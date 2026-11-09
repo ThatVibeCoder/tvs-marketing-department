@@ -40,7 +40,7 @@ class Registry(unittest.TestCase):
 
     def sync(self):
         r = subprocess.run([sys.executable, "tools/sync.py"], cwd=self.repo, capture_output=True, text=True)
-        with open(os.path.join(self.repo, "command-center", "data", "data.js"), encoding="utf-8") as f:
+        with open(os.path.join(self.repo, "dashboard", "data", "data.js"), encoding="utf-8") as f:
             blob = json.loads(f.read().split("window.CC_DATA = ", 1)[1].rstrip(";\n"))
         return r.stdout, blob["landingPages"]
 
@@ -82,7 +82,7 @@ class Registry(unittest.TestCase):
     @unittest.skipUnless(CHROME, "Google Chrome isn't installed (only this test needs it)")
     def test_page_draws_groups_and_toggles(self):
         def dom():
-            url = "file://" + os.path.join(self.repo, "command-center", "index.html") + "#/web/landing"
+            url = "file://" + os.path.join(self.repo, "dashboard", "index.html") + "#/web/landing"
             return subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-first-run", f"--user-data-dir={self.tmp}/chrome",
                                    "--virtual-time-budget=4000", "--dump-dom", url], capture_output=True, text=True, timeout=60).stdout
         self.sync()

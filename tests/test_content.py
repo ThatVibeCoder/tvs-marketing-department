@@ -49,7 +49,7 @@ class RepoCopy(unittest.TestCase):
         return r.returncode, r.stdout + r.stderr
 
     def content(self):
-        return json.loads(self.read("command-center/data/content.json"))
+        return json.loads(self.read("dashboard/data/content.json"))
 
 
 class ContentTest(RepoCopy):
@@ -68,7 +68,7 @@ class ContentTest(RepoCopy):
         post = self.content()["posts"][0]
         self.assertEqual((post["id"], post["platform"], post["status"], post["time"]), ("2026-11-07-threads-first", "threads", "draft", "09:30"))
         self.assertEqual(post["body"], "The post.\n---\nIts reply.")
-        self.assertIn('"content":', self.read("command-center/data/data.js"))
+        self.assertIn('"content":', self.read("dashboard/data/data.js"))
         code, out = self.sync("--check")
         self.assertEqual(code, 0, out)
 
@@ -161,7 +161,7 @@ class ServeTest(RepoCopy):
     def test_settings_save_but_refuse_keys(self):
         code, res = self.call("POST", "/api/settings", {"poster": "blotato", "cadence": [{"platform": "instagram", "weekday": 1, "time": "09:30"}]})
         self.assertEqual(code, 200, res)
-        saved = json.loads(self.read("command-center/settings.json"))
+        saved = json.loads(self.read("dashboard/settings.json"))
         self.assertEqual(saved["poster"], "blotato")
         code, _ = self.call("POST", "/api/settings", {"account": {"name": "BLOTATO_API_KEY=abc"}})
         self.assertEqual(code, 400)

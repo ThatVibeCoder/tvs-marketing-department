@@ -6,7 +6,7 @@ This is your company, built as files instead of headcount. Open your AI (Claude 
 
 1. Open your AI in this folder: Claude Code, Codex, Gemini CLI, Cursor or Grok Build all work (the Command Center's Settings → AI Agents shows how for each).
 2. Say "set up my code base." Your Dev Team (the one team that ships in your folder) connects GitHub, your keys and your hosting. From then on, say "save my work" whenever something changed.
-3. Open `command-center/index.html` in your browser to see your whole company: your agent teams, and your content on every platform as those teams arrive.
+3. Open `dashboard/index.html` in your browser to see your whole company: your agent teams, and your content on every platform as those teams arrive.
 4. When you want to approve and edit posts from there, run `python3 tools/serve.py` (Windows: `py tools/serve.py`) and open the link it prints.
 
 Works on Mac, Windows and Linux. On Windows, your AI may give you one command to install Python once (two minutes), because that's what keeps your skills and your Command Center in sync. On a Mac it's already there.
@@ -28,7 +28,7 @@ departments/              the company itself
       <team-member>/<name>.md  a team member: its job, status, memory
         skills/<skill>/        one thing that team member knows how to do
 routines/                 work that runs on a schedule
-command-center/index.html  the picture of all of it (python3 tools/serve.py turns editing on)
+dashboard/index.html  the picture of all of it (python3 tools/serve.py turns editing on)
 AGENTS.md                 the rules every AI follows in this repo (CLAUDE.md, GEMINI.md and .cursor/rules point here)
 docs/REFERENCE.md         the long reference AGENTS.md points to: every home, the file formats, the Command Center
 CHANGELOG.md              what's new since your copy was made

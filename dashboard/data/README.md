@@ -1,4 +1,4 @@
-# command-center/data
+# dashboard/data
 
 What the Command Center reads. Most of it is rebuilt by `python3 tools/sync.py`, so don't edit those files by hand.
 

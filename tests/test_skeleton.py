@@ -65,7 +65,7 @@ class SkeletonTest(unittest.TestCase):
         self.assertFalse(os.path.exists(os.path.join(ROOT, "library")))
         self.assertFalse(os.path.exists(os.path.join(ROOT, "tools", "add_team.py")))
         self.assertFalse(os.path.exists(os.path.join(ROOT, "departments", "example")))
-        for p in glob.glob(os.path.join(ROOT, "tools", "*.py")) + glob.glob(os.path.join(ROOT, "command-center", "assets", "*.js")):
+        for p in glob.glob(os.path.join(ROOT, "tools", "*.py")) + glob.glob(os.path.join(ROOT, "dashboard", "assets", "*.js")):
             text = read(p)
             self.assertNotIn("add_team", text, p)
             self.assertNotIn("library/teams", text, p)
@@ -78,15 +78,15 @@ class SkeletonTest(unittest.TestCase):
             for team in REMOVED:
                 self.assertNotIn(team, text, f"{os.path.relpath(p, ROOT)} names {team}")
         # and every shortcut is one the Dev Team really has
-        data = json.loads(read(os.path.join(ROOT, "command-center/data/teams.json")))
+        data = json.loads(read(os.path.join(ROOT, "dashboard/data/teams.json")))
         commands = {s["name"] for t in data for s in t["skills"]} | {t["id"] for t in data}
         for d in (".claude/skills", ".agents/skills"):
             self.assertEqual(set(os.listdir(os.path.join(ROOT, d))), commands, d)
 
     def test_command_center_data_has_only_the_dev_team(self):
-        teams = json.loads(read(os.path.join(ROOT, "command-center/data/teams.json")))
+        teams = json.loads(read(os.path.join(ROOT, "dashboard/data/teams.json")))
         self.assertEqual([t["id"] for t in teams], ["dev-team"])
-        js = read(os.path.join(ROOT, "command-center/data/data.js"))
+        js = read(os.path.join(ROOT, "dashboard/data/data.js"))
         data = json.loads(re.search(r"window\.CC_DATA = (.*);\s*$", js, re.S).group(1))
         self.assertEqual([t["id"] for t in data["teams"]], ["dev-team"])
         self.assertNotIn("library", data)
@@ -109,7 +109,7 @@ class DashboardTest(unittest.TestCase):
         shutil.rmtree(self.tmp, ignore_errors=True)
 
     def open(self, route):
-        url = "file://" + os.path.join(ROOT, "command-center", "index.html") + route
+        url = "file://" + os.path.join(ROOT, "dashboard", "index.html") + route
         r = subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-first-run", f"--user-data-dir={self.tmp}/chrome",
                             "--enable-logging=stderr", "--v=0", "--virtual-time-budget=4000", "--dump-dom", url],
                            capture_output=True, text=True, timeout=60)

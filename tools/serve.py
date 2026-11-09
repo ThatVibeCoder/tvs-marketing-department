@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Open the Command Center with editing turned on.
 
-The Command Center opens straight from the folder (command-center/index.html) and shows everything,
+The Command Center opens straight from the folder (dashboard/index.html) and shows everything,
 read-only. Run this when you want its buttons to work: Save changes in the post editor, Approve and
 Reject on the review pages, and the Settings pages. It serves the page on your own computer only, and
 every change lands in a file in this repo:
 
   - a post edit        -> departments/marketing/content-team/social-manager/posts/<id>.md
-  - a setting          -> command-center/settings.json (nothing secret ever goes here)
+  - a setting          -> dashboard/settings.json (nothing secret ever goes here)
   - an API key         -> .env at the top of the repo (skipped by every save; never sent back to the page)
 
 After each change it runs tools/sync.py, so the folder view catches up too.
@@ -45,7 +45,7 @@ import sync  # noqa: E402  (the same readers the folder view uses)
 import pull_web  # noqa: E402  (the Web pages' Google pull)
 import files  # noqa: E402  (every write: inside the repo, no links, all at once)
 
-CC = os.path.join(ROOT, "command-center")
+CC = os.path.join(ROOT, "dashboard")
 ENV_FILE = os.path.join(ROOT, ".env")
 LOCK = threading.Lock()
 MEDIA_EXT = (".png", ".jpg", ".jpeg", ".webp", ".gif", ".mp4", ".mov", ".webm", ".m4v")
@@ -462,7 +462,7 @@ class Handler(BaseHTTPRequestHandler):
                 elif path == "/api/web/pull":
                     files.writable(os.path.join(sync.CC_DATA, "web.json"))
                     pull_web.write(pulled)
-                    result, what = {}, "pulled the website numbers into command-center/data/web.json"
+                    result, what = {}, "pulled the website numbers into dashboard/data/web.json"
                 else:
                     return self.send_json(404, {"error": "Not found"})
                 synced = resync()

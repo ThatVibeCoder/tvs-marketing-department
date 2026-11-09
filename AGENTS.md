@@ -70,7 +70,7 @@ When the owner says "always" or "remember", or makes the same correction twice, 
 
 ## The Command Center
 
-`command-center/index.html` is the picture of the company, rebuilt by sync; open it from the folder (or run `python3 tools/serve.py` for its buttons). **Never open `command-center/data/` or `command-center/assets/` for an install or a skill run.** They're big generated files sync writes. For dashboard work, search them for the one thing you need instead of reading them whole.
+`dashboard/index.html` is the picture of the company, rebuilt by sync; open it from the folder (or run `python3 tools/serve.py` for its buttons). **Never open `dashboard/data/` or `dashboard/assets/` for an install or a skill run.** They're big generated files sync writes. For dashboard work, search them for the one thing you need instead of reading them whole.
 
 ## Standing security rules (every session, every build)
 

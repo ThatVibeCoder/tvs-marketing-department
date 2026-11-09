@@ -1,6 +1,6 @@
 // Dashboard: the Command Center's home page.
 // Dashboard = the business at a glance: Revenue · MRR · Website Visitors · Open invoices, the Total Revenue
-// dot-matrix, revenue by customer and the recent payments. The money comes from command-center/data/payments.json
+// dot-matrix, revenue by customer and the recent payments. The money comes from dashboard/data/payments.json
 // (the Payments Agent fills it; it never leaves this computer), the visitors from the Web pull. With nothing
 // there yet, every tile says how to connect it. Never a made-up number.
 
@@ -416,8 +416,8 @@ function renderDashboard() {
             "p",
             { class: "kpi-note mt2" },
             r
-              ? `Paid payments in command-center/data/payments.json${stamp ? ` (${stamp})` : ""}. Refunds and failed payments don't count.`
-              : "Read from command-center/data/payments.json, which the Payments Agent fills. It stays on this computer.",
+              ? `Paid payments in dashboard/data/payments.json${stamp ? ` (${stamp})` : ""}. Refunds and failed payments don't count.`
+              : "Read from dashboard/data/payments.json, which the Payments Agent fills. It stays on this computer.",
           ),
         ]),
       ]),

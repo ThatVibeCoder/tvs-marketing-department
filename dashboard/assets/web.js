@@ -1,5 +1,5 @@
 // Web & Analytics: Overview · Traffic · Geography · Pages · Search · Settings.
-// Drawn from command-center/data/web.json, which tools/pull_web.py writes from Google Analytics 4 and
+// Drawn from dashboard/data/web.json, which tools/pull_web.py writes from Google Analytics 4 and
 // Search Console (read-only). No file yet = empty states that point at Web → Settings. Never a made-up number.
 
 const WEB_RANGES = ["7d", "30d", "90d"];
@@ -772,7 +772,7 @@ function webGoogleSetup() {
           h(
             "p",
             { class: "set-hint" },
-            "What the Web pages show at the top. Not secret, so it's saved in command-center/settings.json.",
+            "What the Web pages show at the top. Not secret, so it's saved in dashboard/settings.json.",
           ),
           h("div", { class: "form-grid two mt2" }, [
             domainIn,
@@ -783,7 +783,7 @@ function webGoogleSetup() {
           h(
             "p",
             { class: "set-hint" },
-            'Test checks each piece and tells you which one is wrong. Pull reads the last 90 days, read-only, and saves them to command-center/data/web.json on this computer (it\'s skipped by every save). Pull again whenever you want fresh numbers, or say "pull my website numbers" to your AI.',
+            'Test checks each piece and tells you which one is wrong. Pull reads the last 90 days, read-only, and saves them to dashboard/data/web.json on this computer (it\'s skipped by every save). Pull again whenever you want fresh numbers, or say "pull my website numbers" to your AI.',
           ),
           h("div", { class: "row gap2 mt2 wrap" }, [
             h(

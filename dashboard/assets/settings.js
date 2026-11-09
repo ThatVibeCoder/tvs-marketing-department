@@ -1,5 +1,5 @@
 // Settings: Account, Workspace, Brands, Connected Accounts, Payments, Web connections, Posting Cadence, AI Agents, Developer.
-// Plain settings save to command-center/settings.json. API keys save to the .env file at the top of
+// Plain settings save to dashboard/settings.json. API keys save to the .env file at the top of
 // the repo (skipped by every save) and never come back to this page: it only ever learns set / not set.
 
 const SETTINGS_SECTIONS = [
@@ -166,7 +166,7 @@ const PROVIDERS = [
   },
 ];
 // Payments: where each provider keeps a key that can only READ. Nothing in this repo calls a provider: the key
-// waits in .env for the Payments Agent (Dev Team), which makes the connection and fills command-center/data/payments.json.
+// waits in .env for the Payments Agent (Dev Team), which makes the connection and fills dashboard/data/payments.json.
 const PAYMENT_PROVIDERS = [
   {
     id: "stripe",
@@ -328,7 +328,7 @@ async function saveSettings(patch, msg) {
     _base: Object.fromEntries(Object.keys(patch).map((k) => [k, settings()[k] === undefined ? null : settings()[k]])),
   });
   if (r) {
-    toast(msg || "Saved to command-center/settings.json.");
+    toast(msg || "Saved to dashboard/settings.json.");
     render();
   }
 }
@@ -405,7 +405,7 @@ function renderAccountSettings() {
         ),
         settingRow(
           "Where this is saved",
-          h("code", {}, "command-center/settings.json"),
+          h("code", {}, "dashboard/settings.json"),
           "This file is saved to GitHub with the rest of your repo, so keep anything private out of it.",
         ),
       ]),
@@ -977,13 +977,13 @@ function renderDeveloperSettings() {
               (srv && srv.version) || "see VERSION",
               "The VERSION file at the top of the repo; CHANGELOG.md says what's newer.",
             ),
-            fact("Data", "command-center/data/", "Rebuilt by tools/sync.py from your folders. Never edited by hand."),
+            fact("Data", "dashboard/data/", "Rebuilt by tools/sync.py from your folders. Never edited by hand."),
           ]),
           group("Where things live", [
             fact("Posts", h("code", {}, POSTS_HOME + "/"), "One file per post; the README there shows the shape."),
             fact(
               "Settings",
-              h("code", {}, "command-center/settings.json"),
+              h("code", {}, "dashboard/settings.json"),
               "Saved to GitHub with your repo. Nothing secret.",
             ),
             fact(
@@ -1010,12 +1010,12 @@ function renderDeveloperSettings() {
             fact(
               "Pull website numbers",
               h("code", {}, "python3 tools/pull_web.py"),
-              "Google Analytics and Search Console, read-only. --test only checks the connection. Saved to command-center/data/web.json, which never leaves this computer.",
+              "Google Analytics and Search Console, read-only. --test only checks the connection. Saved to dashboard/data/web.json, which never leaves this computer.",
             ),
             fact(
               "Payments",
-              h("code", {}, "command-center/data/payments.json"),
-              "Filled by the Payments Agent from the key in Settings → Payments; nothing in the repo calls a provider. sync copies it to payments.js. Shape: command-center/data/README.md. Never leaves this computer.",
+              h("code", {}, "dashboard/data/payments.json"),
+              "Filled by the Payments Agent from the key in Settings → Payments; nothing in the repo calls a provider. sync copies it to payments.js. Shape: dashboard/data/README.md. Never leaves this computer.",
             ),
             fact(
               "Run the tests",
@@ -1251,7 +1251,7 @@ function renderPaymentSettings() {
           "Nothing on this page talks to your provider. The ",
           h("b", {}, "Payments Agent"),
           " on the Dev Team does: it reads your key from .env, pulls your payments and writes them to ",
-          h("code", {}, "command-center/data/payments.json"),
+          h("code", {}, "dashboard/data/payments.json"),
           ". That file stays on this computer, and the Dashboard reads it.",
         ]),
         h("div", { class: "mt3" }, [
@@ -1269,12 +1269,12 @@ function renderPaymentSettings() {
               : "Not there yet",
             data && data.capturedAt
               ? `Last filled ${new Date(data.capturedAt).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZone: tzName() })}.`
-              : "Its shape is in command-center/data/README.md.",
+              : "Its shape is in dashboard/data/README.md.",
           ),
           settingRow(
             "Provider",
             chosen ? chosen.name : "None picked",
-            "Saved in command-center/settings.json (no key ever goes there).",
+            "Saved in dashboard/settings.json (no key ever goes there).",
           ),
         ]),
       ]),

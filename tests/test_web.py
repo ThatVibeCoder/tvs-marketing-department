@@ -129,8 +129,8 @@ class PullTest(unittest.TestCase):
     def test_web_numbers_never_get_saved_to_github(self):
         with open(os.path.join(ROOT, ".gitignore"), encoding="utf-8") as f:
             text = f.read()
-        self.assertIn("command-center/data/web.json", text)
-        self.assertIn("command-center/data/web.js", text)
+        self.assertIn("dashboard/data/web.json", text)
+        self.assertIn("dashboard/data/web.js", text)
 
 
 class WebConnections(unittest.TestCase):
@@ -152,9 +152,9 @@ class WebConnections(unittest.TestCase):
             self.serve.clean_key("CLARITY_PROJECT_ID", "not an id!")
 
     def test_one_place_to_connect(self):
-        with open(os.path.join(ROOT, "command-center", "assets", "web.js"), encoding="utf-8") as f:
+        with open(os.path.join(ROOT, "dashboard", "assets", "web.js"), encoding="utf-8") as f:
             web = f.read()
-        with open(os.path.join(ROOT, "command-center", "assets", "settings.js"), encoding="utf-8") as f:
+        with open(os.path.join(ROOT, "dashboard", "assets", "settings.js"), encoding="utf-8") as f:
             st = f.read()
         self.assertIn('href: "#/settings/web"', web)          # Web → Settings points at Settings → Web connections
         self.assertIn('slug: "web", label: "Web connections"', st)
