@@ -1,8 +1,8 @@
-// The Content section: Overview, Calendar, Research, and one page per platform (Overview · Review · Calendar).
+// The Content section: Overview, Calendar, and one page per platform (Overview · Review · Calendar).
 // Everything here is drawn from the post files in the repo (see the posts/README.md next to them).
 // Numbers only ever come from those files; with no files, the pages say so.
 
-const POSTS_HOME = "departments/marketing/content-team/social-manager/posts";
+const POSTS_HOME = "posts";
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const MONTH_NAMES = [
   "January",
@@ -115,12 +115,6 @@ function svgIcon(name, c = "") {
 }
 function markIcon(platform, c = "") {
   return h("span", { class: cls("ic-wrap", c), html: platformMark(platform) });
-}
-function contentTeamNote() {
-  if ((state.teams || []).some((t) => t.id === "content-team")) return null;
-  return h("p", { class: "ro-note" }, [
-    "Your posts come from the Content Team, and it isn't in your folder yet: the Content Team lesson builds it. Until then these pages stay empty.",
-  ]);
 }
 function readOnlyNote() {
   return state.server
@@ -531,7 +525,7 @@ function renderContentOverview() {
       caption: `Posts that went out each day, ${account ? `${handleFor(account)} on ${PLATFORM_LABEL[account]}` : "every platform"}. The dashed line is the ${range} days before. Counted from posts marked posted in ${POSTS_HOME}/.`,
       empty: all.length
         ? null
-        : `No posts yet. When your Content Team writes one, it lands in ${POSTS_HOME}/ and shows up here.`,
+        : `No posts yet. When a post file lands in ${POSTS_HOME}/, it shows up here.`,
     },
     {
       name: "Waiting on you",
@@ -540,7 +534,7 @@ function renderContentOverview() {
       labels,
       series: [{ name: "Arrived", values: waitingDaily }],
       caption: `Drafts waiting for your review, by the day they were written.${olderWaiting > 0 ? ` ${olderWaiting} more arrived before this range.` : ""}`,
-      empty: all.length ? null : "Nothing waiting. Drafts land here when your Content Team writes them.",
+      empty: all.length ? null : "Nothing waiting. Drafts land here when a draft post file is saved in posts/.",
     },
     {
       name: "Booked",
@@ -558,7 +552,7 @@ function renderContentOverview() {
       labels: [],
       series: [],
       empty:
-        "Follower counts aren't kept in your files yet. Once the Content Team lesson builds your Content Team, its weekly stats read saves your numbers to knowledge/reports/.",
+        "Follower counts aren't kept in this repo yet.",
     },
   ];
   const profiles = PLATFORM_ORDER.filter(
@@ -691,7 +685,7 @@ function renderContentOverview() {
         ),
       ]),
     ]),
-    contentTeamNote() || readOnlyNote(),
+    readOnlyNote(),
     h("div", { class: "ov-stack" }, [
       h("div", { class: "ov-grid-top" }, [
         kpiSegments(kpis),
@@ -921,7 +915,7 @@ function renderPlatform(platform, tab) {
         : renderPlatformOverview(platform);
   return h("div", { class: "dash-container content-page" }, [
     platformHeader(platform, tab || "overview"),
-    contentTeamNote() || readOnlyNote(),
+    readOnlyNote(),
     body,
   ]);
 }
@@ -1047,7 +1041,7 @@ function renderPlatformOverview(platform) {
           : h(
               "p",
               { class: "dashed-note" },
-              `Nothing on ${PLATFORM_LABEL[platform]} is marked posted yet. Your Content Team marks each one when it goes out, once its lesson builds the team.`,
+              `Nothing on ${PLATFORM_LABEL[platform]} is marked posted yet. Mark each one posted when it goes out.`,
             ),
       ]),
     ]),
@@ -1315,7 +1309,7 @@ function renderReview(platform) {
             emptyState(
               "inbox",
               "Nothing waiting on you",
-              `Drafts land here when your Content Team writes ${PLATFORM_LABEL[platform]} posts into <code>${POSTS_HOME}/</code>. Approve books the next open slot from your posting cadence.`,
+              `Drafts land here when ${PLATFORM_LABEL[platform]} post files are saved in <code>${POSTS_HOME}/</code>. Approve books the next open slot from your posting cadence.`,
             ),
           ),
     ),
@@ -1363,7 +1357,7 @@ function renderReview(platform) {
           svgIcon("archiveX"),
           `Rejected (${rejected.length})`,
           h("span", { class: "chev-rot", html: lineIcon("chevronRight") }),
-          h("span", { class: "tiny-sub ml-auto" }, "sent back to your Content Team"),
+          h("span", { class: "tiny-sub ml-auto" }, "sent back for a rewrite"),
         ]),
         rejected.length
           ? h(
@@ -1392,7 +1386,7 @@ function renderReview(platform) {
           : h(
               "p",
               { class: "rej-empty" },
-              "Nothing rejected. Passed-on drafts collect here so your Content Team can write a fresh take.",
+              "Nothing rejected. Passed-on drafts collect here so a fresh take can be written.",
             ),
       ]),
     ),
@@ -1707,145 +1701,7 @@ function renderContentCalendar() {
         "Every platform's posts on their days, and your open posting times. Click a day to write one, drag a post to move it.",
       ),
     ]),
-    h("div", { class: "dash-container" }, [contentTeamNote() || readOnlyNote(), renderCalendar(null)]),
-  ]);
-}
-
-// ─── Research (what the Researcher and the Content Team keep in knowledge/) ──
-function mdToHtml(md) {
-  const lines = String(md || "")
-      .replace(/\r\n?/g, "\n")
-      .split("\n"),
-    out = [];
-  let list = null,
-    code = null,
-    para = [];
-  const inline = (s) =>
-    esc(s)
-      .replace(/`([^`]+)`/g, "<code>$1</code>")
-      .replace(/\*\*(.+?)\*\*/g, "<b>$1</b>")
-      .replace(/(^|\W)_(.+?)_(?=\W|$)/g, "$1<i>$2</i>")
-      .replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer">$1</a>');
-  const flush = () => {
-    if (para.length) {
-      out.push(`<p>${inline(para.join(" "))}</p>`);
-      para = [];
-    }
-    if (list) {
-      out.push(`<${list.t}>${list.items.map((i) => `<li>${inline(i)}</li>`).join("")}</${list.t}>`);
-      list = null;
-    }
-  };
-  for (const ln of lines) {
-    if (code !== null) {
-      if (/^```/.test(ln)) {
-        out.push(`<pre>${esc(code.join("\n"))}</pre>`);
-        code = null;
-      } else code.push(ln);
-      continue;
-    }
-    if (/^```/.test(ln)) {
-      flush();
-      code = [];
-      continue;
-    }
-    const hm = /^(#{1,4})\s+(.*)$/.exec(ln);
-    if (hm) {
-      flush();
-      out.push(`<h${hm[1].length + 1}>${inline(hm[2])}</h${hm[1].length + 1}>`);
-      continue;
-    }
-    const li = /^\s*(?:[-*]|(\d+)\.)\s+(.*)$/.exec(ln);
-    if (li) {
-      if (para.length) flush();
-      const t = li[1] ? "ol" : "ul";
-      if (!list || list.t !== t) {
-        flush();
-        list = { t, items: [] };
-      }
-      list.items.push(li[2]);
-      continue;
-    }
-    if (!ln.trim()) {
-      flush();
-      continue;
-    }
-    if (list) flush();
-    para.push(ln.trim());
-  }
-  flush();
-  return out.join("");
-}
-const isEmptyDoc = (text) => !text || /_None yet\._/.test(text);
-function renderResearch() {
-  const r = (state.content && state.content.research) || {},
-    tab = state.route.parts[2] || "outliers";
-  const tabs = [
-    ["outliers", "Outliers"],
-    ["topics", "Topics"],
-    ["openers", "Openers"],
-    ["competitors", "Competitors"],
-    ["swipes", "Swipes"],
-  ];
-  const docCard = (doc, emptyTitle, emptyDesc) =>
-    !doc
-      ? h("div", { class: "glass rounded-xl" }, emptyState("search", emptyTitle, emptyDesc))
-      : h("div", { class: "glass rounded-xl doc" }, [
-          h("div", { class: "doc-path" }, [svgIcon("folderOpen"), h("code", {}, doc.path)]),
-          h("div", { class: "md", html: mdToHtml(doc.text.replace(/^# .*\n/, "")) }),
-        ]);
-  let body;
-  if (tab === "topics")
-    body = docCard(r.topics, "No topics file", "The Pick Your Platforms lesson fills <code>knowledge/topics.md</code>.");
-  else if (tab === "openers")
-    body = docCard(r.hooks, "No openers file", "The Content Team keeps <code>knowledge/hooks.md</code>, once the Content Team lesson builds it.");
-  else if (tab === "competitors" || tab === "swipes") {
-    const list = r[tab] || [];
-    body = list.length
-      ? h(
-          "div",
-          { class: "space-y-6" },
-          list.map((d) => docCard(d)),
-        )
-      : h(
-          "div",
-          { class: "glass rounded-xl" },
-          emptyState(
-            "search",
-            tab === "competitors" ? "No competitors saved yet" : "No swipes saved yet",
-            tab === "competitors"
-              ? "The Researcher saves one file per competitor in <code>knowledge/competitors/</code>, once the Research Team lesson builds its team."
-              : "Posts and pages worth stealing the shape of go in <code>knowledge/swipes/</code>, one file each.",
-          ),
-        );
-  } else
-    body =
-      r.outliers && !isEmptyDoc(r.outliers.text)
-        ? docCard(r.outliers)
-        : h(
-            "div",
-            { class: "glass rounded-xl" },
-            emptyState(
-              "trend",
-              "No outliers yet",
-              "Once the Research Team lesson builds its team, the Researcher adds the top posts in your space to <code>knowledge/outliers.md</code> each month: posts doing far better than their channel's size, and the shape that made them work.",
-            ),
-          );
-  return h("div", {}, [
-    h("div", { class: "dash-gutter pt8" }, [
-      h("h1", { class: "h1-2xl" }, "Research"),
-      h(
-        "p",
-        { class: "lede" },
-        "Other creators' posts that beat their own normal, your topics, and the openers that won. Kept in knowledge/ by the Researcher and the Content Team.",
-      ),
-      h(
-        "nav",
-        { class: "lg-tabs mt5", "aria-label": "Research sections" },
-        tabs.map(([k, l]) => h("a", { href: `#/content/research/${k}`, "aria-current": tab === k ? "page" : null }, l)),
-      ),
-    ]),
-    h("div", { class: "dash-container" }, body),
+    h("div", { class: "dash-container" }, [readOnlyNote(), renderCalendar(null)]),
   ]);
 }
 
@@ -1853,7 +1709,6 @@ function renderContent(parts) {
   const p = parts[1];
   if (!p) return renderContentOverview();
   if (p === "calendar") return renderContentCalendar();
-  if (p === "research") return renderResearch();
   if (PLATFORM_ORDER.includes(p)) return renderPlatform(p, parts[2]);
   return notFound("That content page doesn't exist");
 }

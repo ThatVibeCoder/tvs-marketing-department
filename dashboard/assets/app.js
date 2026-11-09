@@ -12,19 +12,6 @@ const AREA_LABEL = {
   sales: "Sales",
   routines: "Routines",
 };
-const DEPARTMENT_LABEL = {
-  sales: "Sales",
-  marketing: "Marketing",
-  operations: "Operations",
-  engineering: "IT / Systems",
-  finance: "Finance",
-  customer_support: "Customer Support",
-  it_systems: "IT / Systems",
-  legal: "Legal",
-  people_hr: "People / HR",
-  product: "Product",
-};
-const BUILD_STATUS_LABEL = { planning: "Planning", building: "Building", active: "Active", archived: "Archived" };
 const ICONS = {
   waypoints:
     '<path d="M12 2v6"/><path d="M12 16v6"/><circle cx="12" cy="12" r="3"/><path d="m5 8 3 3"/><path d="m16 13 3 3"/>',
@@ -67,7 +54,6 @@ const icon = (name, cls = "") =>
 
 const state = {
   automations: [],
-  teams: [],
   executions: [],
   content: null,
   web: null,
@@ -96,12 +82,6 @@ function h(tag, attrs = {}, children = []) {
   return n;
 }
 const labelArea = (x) => AREA_LABEL[x] || titleCase(x || "");
-const labelDept = (x) => {
-  const t = (state.teams || []).find((s) => s.department === x && s.departmentName);
-  return (
-    (t && t.departmentName) || DEPARTMENT_LABEL[x] || titleCase((x || "").replaceAll("_", " ").replaceAll("-", " "))
-  );
-};
 const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
 const titleCase = (s) =>
   String(s || "")
@@ -151,16 +131,15 @@ function moduleShell(active, child) {
         h("div", { class: "module-head-inner" }, [
           h("div", {}, [
             h("p", { class: "eyebrow" }, "Command Center"),
-            h("h1", {}, "Your Company"),
+            h("h1", {}, "Automations"),
             h(
               "p",
               { class: "lede" },
-              "Every agent team you can summon, its workflows and team members, and every routine your department runs. Rebuilt from your repo by python3 tools/sync.py.",
+              "Every routine that runs on its own, and a record of each run. Rebuilt from routines/ by python3 tools/sync.py.",
             ),
           ]),
         ]),
         h("nav", { class: "tabs", "aria-label": "Automations sections" }, [
-          tab("/agent-teams", "Agent Teams", active === "agent-teams"),
           tab("/automations", "Automations", active === "automations"),
           tab("/executions", "Executions", active === "executions"),
         ]),
@@ -180,15 +159,6 @@ function statusChip(active) {
     h("span", { class: "status-dot" }),
     active ? "Active" : "Paused",
   ]);
-}
-function buildStatusChip(status) {
-  return h("span", { class: `chip status-chip ${status === "active" ? "active" : ""}` }, [
-    h("span", { class: "status-dot" }),
-    BUILD_STATUS_LABEL[status] || titleCase(status),
-  ]);
-}
-function commandPill(command) {
-  return chip(command || "no command yet", `mono ${command ? "" : "dashed"}`);
 }
 function statTile(iconName, label, value, sub, warn = false) {
   return h("div", { class: "stat-tile glass rounded-xl" }, [
@@ -317,111 +287,6 @@ function automationRow(a) {
   );
 }
 
-function renderTeams() {
-  const dept = state.route.query.get("department");
-  const list = state.teams;
-  if (!list.length)
-    return moduleShell(
-      "agent-teams",
-      h(
-        "div",
-        { class: "dash-container" },
-        emptyState(
-          "users",
-          "No agent teams registered",
-          "Run <code>python3 tools/sync.py</code> from the top of your repo and every team shows up here.",
-        ),
-      ),
-    );
-  const depts = [...new Set(list.map((t) => t.department).filter(Boolean))];
-  const shown = dept ? list.filter((t) => t.department === dept) : list;
-  const seats = list.reduce((s, t) => s + (t.seats || []).length, 0);
-  const skills = list.reduce((s, t) => s + (t.skills || []).length, 0);
-  const groups = new Map();
-  for (const t of shown) groups.set(t.department, [...(groups.get(t.department) || []), t]);
-  return moduleShell(
-    "agent-teams",
-    h("div", { class: "dash-container space-y-6" }, [
-      h("div", { class: "stat-grid" }, [
-        statTile("users", "Agent teams", list.length, "Registered here"),
-        statTile(
-          "terminal",
-          "With a command",
-          list.filter((t) => t.command).length,
-          `${list.filter((t) => !t.command).length} without one`,
-        ),
-        statTile("user", "Team members", seats, "Across all teams"),
-        statTile("sparkle", "Skills", skills, "Skills and workflows you can run"),
-      ]),
-      h("div", {}, [
-        h("div", { class: "list-head" }, [
-          h("p", { class: "overline" }, dept ? `${labelDept(dept)} teams` : "All agent teams"),
-          h("div", { class: "filters" }, [
-            filterChip("/agent-teams", `All · ${list.length}`, !dept),
-            ...depts.map((d) =>
-              filterChip(
-                `/agent-teams?department=${encodeURIComponent(d)}`,
-                `${labelDept(d)} · ${list.filter((t) => t.department === d).length}`,
-                dept === d,
-              ),
-            ),
-          ]),
-        ]),
-        h(
-          "div",
-          {},
-          [...groups.entries()].map(([d, teams]) =>
-            h("section", { class: "dept-section" }, [
-              h("p", { class: "dept-label" }, labelDept(d)),
-              h("div", { class: "list-block glass" }, teams.map(teamRow)),
-            ]),
-          ),
-        ),
-        addTeamCard(),
-      ]),
-    ]),
-  );
-}
-// The department ships with the Dev Team only; every other team is built by its classroom lesson.
-function addTeamCard() {
-  return h("section", { class: "dept-section" }, [
-    h("p", { class: "dept-label" }, "More teams"),
-    h("div", { class: "list-block glass add-team" }, [
-      h("div", { class: "add-team-head" }, [
-        h("p", { class: "item-name" }, "Your teams come from the classroom lessons"),
-        h(
-          "p",
-          { class: "item-desc wrap-desc" },
-          "Each lesson's skill builds one team in your folder from your own answers, and it shows up here as soon as it's built. The Dev Team is already here: it saves your work, keeps your keys and ships your pages.",
-        ),
-      ]),
-    ]),
-  ]);
-}
-function teamRow(t) {
-  return h("a", { class: "item-link", href: `#/agent-teams/${encodeURIComponent(t.id)}` }, [
-    h("div", { class: "item-main" }, [
-      h("div", { class: "item-title" }, [
-        h("span", { class: "item-name" }, t.name),
-        commandPill(t.command),
-        chip(labelDept(t.department)),
-        buildStatusChip(t.buildStatus),
-      ]),
-      h("p", { class: "item-desc" }, t.purpose || ""),
-      h("div", { class: "meta" }, [
-        h("span", {}, t.teamType || "Team"),
-        h("span", { class: "sep" }, "·"),
-        h("span", {}, `${(t.seats || []).length} team member${(t.seats || []).length === 1 ? "" : "s"}`),
-        h("span", { class: "sep" }, "·"),
-        h("span", {}, `${(t.skills || []).length} skill${(t.skills || []).length === 1 ? "" : "s"}`),
-        h("span", { class: "sep" }, "·"),
-        h("span", {}, hasFlow(t.flow) ? `flow as of ${t.flowAsOf || "unknown"}` : "no flow drawn yet"),
-      ]),
-    ]),
-    arrow(),
-  ]);
-}
-
 function renderExecutions(rows = state.executions, hideAutomation = false, emptyTitle = "No run history yet") {
   if (!rows.length)
     return h(
@@ -507,50 +372,23 @@ function renderExecutionsPage() {
 }
 
 function detailHead(kind, item, tabKey) {
-  const isTeam = kind === "team";
-  const base = isTeam ? `/agent-teams/${item.id}` : `/automations/${item.id}`;
+  const base = `/automations/${item.id}`;
   return h("div", {}, [
     h("nav", { class: "crumb", "aria-label": "Breadcrumb" }, [
-      h("a", { href: isTeam ? "#/agent-teams" : "#/automations" }, isTeam ? "Agent Teams" : "Automations"),
+      h("a", { href: "#/automations" }, "Automations"),
       h("span", { html: icon("chevron") }),
       h("span", {}, item.name || item.id),
     ]),
-    h(
-      "div",
-      { class: "detail-title-row" },
-      isTeam
-        ? [
-            h("h1", {}, item.name),
-            commandPill(item.command),
-            chip(labelDept(item.department)),
-            buildStatusChip(item.buildStatus),
-          ]
-        : [h("h1", {}, item.name || item.id), chip(labelArea(item.area)), statusChip(!!item.active)],
-    ),
-    h(
-      "p",
-      { class: "trigger-line" },
-      isTeam
-        ? [
-            h("span", {}, item.teamType || "Team"),
-            h("span", { class: "sep" }, "·"),
-            h("span", {}, plural((item.seats || []).length, "team member")),
-            h("span", { class: "sep" }, "·"),
-            h("span", {}, plural((item.skills || []).length, "skill")),
-            h("span", { class: "sep" }, "·"),
-            h("span", {}, `flow as of ${item.flowAsOf || "unknown"}`),
-            item.lastUsed ? h("span", { class: "sep" }, "·") : null,
-            item.lastUsed ? h("span", {}, `last used ${rel(item.lastUsed) || item.lastUsed}`) : null,
-          ].filter(Boolean)
-        : triggerSummary(item.trigger),
-    ),
-    h(
-      "nav",
-      { class: "subtabs detail-subtabs", "aria-label": `${item.name} sections` },
-      isTeam
-        ? [tab(base, "Flow", tabKey === "flow"), tab(`${base}/members`, "Team members & skills", tabKey === "seats")]
-        : [tab(base, "Editor", tabKey === "editor"), tab(`${base}/executions`, "Executions", tabKey === "executions")],
-    ),
+    h("div", { class: "detail-title-row" }, [
+      h("h1", {}, item.name || item.id),
+      chip(labelArea(item.area)),
+      statusChip(!!item.active),
+    ]),
+    h("p", { class: "trigger-line" }, triggerSummary(item.trigger)),
+    h("nav", { class: "subtabs detail-subtabs", "aria-label": `${item.name} sections` }, [
+      tab(base, "Editor", tabKey === "editor"),
+      tab(`${base}/executions`, "Executions", tabKey === "executions"),
+    ]),
   ]);
 }
 function renderAutomationDetail(id, sub = "editor") {
@@ -574,85 +412,6 @@ function renderAutomationDetail(id, sub = "editor") {
     h("div", { class: "flow-body" }, renderFlow(a.flow, a.name || a.id)),
   ]);
 }
-function renderTeamDetail(id, sub = "flow", memberSlug = null) {
-  const t = state.teams.find((x) => x.id === id);
-  if (!t) return notFound("Agent team not found");
-  if (memberSlug)
-    return h("div", { class: "dash-container" }, [
-      h("div", { class: "detail-normal" }, detailHead("team", t, "seats")),
-      h("div", { style: "margin-top:1.5rem" }, renderMemberDetail(t, memberSlug)),
-    ]);
-  if (sub === "seats")
-    return h("div", { class: "dash-container" }, [
-      h("div", { class: "detail-normal" }, detailHead("team", t, "seats")),
-      h("div", { style: "margin-top:1.5rem" }, renderSeats(t)),
-    ]);
-  return h("div", { class: "dash-flow-shell" }, [
-    h("div", { class: "flow-head" }, h("div", { class: "dash-gutter" }, detailHead("team", t, "flow"))),
-    h("div", { class: "flow-body" }, renderFlow(t.flow, t.name, "team")),
-  ]);
-}
-function renderSeats(t) {
-  return h("div", { class: "seats-grid" }, [
-    h("section", {}, [
-      h("p", { class: "overline", style: "padding:0 .25rem .5rem" }, "Team members"),
-      h(
-        "div",
-        { class: "glass rounded-xl list-block" },
-        (t.seats || []).map((s) =>
-          h("a", { class: "seat-row", href: `#/agent-teams/${t.id}/members/${slug(s.name)}` }, [
-            h("span", {}, s.name),
-            chip(s.type),
-          ]),
-        ),
-      ),
-    ]),
-    h("section", {}, [
-      h("p", { class: "overline", style: "padding:0 .25rem .5rem" }, "Skills"),
-      h(
-        "div",
-        { class: "glass rounded-xl list-block" },
-        (t.skills || []).map((s) =>
-          h("div", { class: "skill-row" }, [
-            h("div", { class: "item-title" }, [h("span", { class: "item-name" }, s.name), commandPill(s.command)]),
-            h("p", {}, s.owns || ""),
-          ]),
-        ),
-      ),
-    ]),
-    h(
-      "p",
-      { class: "meta", style: "padding:0 .25rem" },
-      `Procedure lives in ${t.sourceOfTruth || "the team's source of truth"}; this flow was checked on ${t.flowAsOf || "unknown"}.`,
-    ),
-  ]);
-}
-function renderMemberDetail(t, memberSlug) {
-  const seat = (t.seats || []).find((s) => slug(s.name) === memberSlug);
-  if (!seat) return notFound("Team member not found");
-  const skills = (t.skills || []).filter((s) => s.seat && slug(s.seat) === memberSlug);
-  return h("div", { class: "glass rounded-xl", style: "padding:1.25rem" }, [
-    h("p", { class: "overline" }, "Team member"),
-    h("h1", { style: "margin-top:.25rem" }, seat.name),
-    h("p", { class: "lede" }, seat.type),
-    h("div", { style: "margin-top:1.25rem" }, [
-      h("p", { class: "overline" }, "Mapped skills"),
-      skills.length
-        ? h(
-            "div",
-            { class: "list-block", style: "margin-top:.5rem" },
-            skills.map((s) =>
-              h("div", { class: "skill-row" }, [
-                h("div", { class: "item-title" }, [h("span", { class: "item-name" }, s.name), commandPill(s.command)]),
-                h("p", {}, s.owns || ""),
-              ]),
-            ),
-          )
-        : h("p", { class: "lede" }, "No skills installed for this team member yet."),
-    ]),
-  ]);
-}
-
 // ---- The flow canvas, drawn the Command Center way: colour-coded section frames (a large coloured title, a
 // one-line subtitle, a coloured top edge), wide cards with an icon tile, title, stat and detail lines and a pill,
 // labelled connectors with beads on the live ones, a dot grid, zoom controls bottom-left and a map bottom-right.
@@ -685,21 +444,15 @@ function flowBadge(p) {
   const tone = p.tone === "accent" ? "accent" : p.tone === "warn" ? "warn" : "";
   return h("span", { class: `node-badge ${tone}` }, p.label || p);
 }
-function renderFlow(flow, title, kind = "automation") {
+function renderFlow(flow, title) {
   const wrap = h("div", { class: "dash-flow-canvas", "aria-label": `${title} flow diagram` });
   if (!hasFlow(flow)) {
     wrap.append(
-      kind === "team"
-        ? emptyState(
-            "waypoints",
-            "No system mapped yet",
-            "When this team gets a workflow in its <code>team.md</code>, run <code>python3 tools/sync.py</code> and it gets drawn here.",
-          )
-        : emptyState(
-            "waypoints",
-            "No diagram yet",
-            "Write this routine's steps in its <code>README.md</code>, run <code>python3 tools/sync.py</code>, and they get drawn here.",
-          ),
+      emptyState(
+        "waypoints",
+        "No diagram yet",
+        "Write this routine's steps in its <code>README.md</code>, run <code>python3 tools/sync.py</code>, and they get drawn here.",
+      ),
     );
     return wrap;
   }
@@ -973,7 +726,7 @@ function notFound(title) {
   );
 }
 function parseRoute() {
-  const raw = (location.hash || "#/agent-teams").slice(1);
+  const raw = (location.hash || "#/dashboard").slice(1);
   const [pathRaw, queryRaw = ""] = raw.split("?");
   const parts = pathRaw.split("/").filter(Boolean).map(decodeURIComponent);
   state.route = { parts, query: new URLSearchParams(queryRaw) };
@@ -1015,7 +768,6 @@ const MODULES = [
     children: [
       ["/content", "Overview", "layoutGrid", null, true],
       ["/content/calendar", "Calendar", "calendarDays"],
-      ["/content/research", "Research", "search"],
       ...["tiktok", "instagram", "twitter", "threads", "youtube", "skool", "linkedin"].map((p) => [
         `/content/${p}`,
         PLATFORM_LABEL[p],
@@ -1043,12 +795,11 @@ const MODULES = [
   {
     key: "automations",
     label: "Automations",
-    href: "/agent-teams",
+    href: "/automations",
     icon: "waypoints",
-    description: "Your agent teams, their workflows, and every routine your department runs.",
-    match: ["/agent-teams", "/automations", "/executions"],
+    description: "Every routine that runs on its own, and a record of each run.",
+    match: ["/automations", "/executions"],
     children: [
-      ["/agent-teams", "Agent Teams"],
       ["/automations", "Automations"],
       ["/executions", "Executions"],
     ],
@@ -1253,10 +1004,7 @@ function render() {
   parseRoute();
   const p = state.route.parts;
   let view;
-  if (p[0] === "agent-teams" && p[1] && p[2] === "members") view = renderTeamDetail(p[1], "seats", p[3]);
-  else if (p[0] === "agent-teams" && p[1]) view = renderTeamDetail(p[1], p[2] === "members" ? "seats" : "flow");
-  else if (p[0] === "agent-teams") view = renderTeams();
-  else if (p[0] === "executions") view = renderExecutionsPage();
+  if (p[0] === "executions") view = renderExecutionsPage();
   else if (p[0] === "automations" && p[1])
     view = renderAutomationDetail(p[1], p[2] === "executions" ? "executions" : "editor");
   else if (p[0] === "content") view = renderContent(p);
@@ -1289,9 +1037,8 @@ async function boot() {
   if (window.CC_DATA) {
     // tools/sync.py writes data/data.js, so this page opens straight from the folder (no server needed)
     state.automations = window.CC_DATA.automations || [];
-    state.teams = window.CC_DATA.teams || [];
     state.executions = window.CC_DATA.executions || [];
-    state.content = window.CC_DATA.content || { posts: [], research: {} };
+    state.content = window.CC_DATA.content || { posts: [] };
     state.settings = window.CC_DATA.settings || {};
     state.landingPages = window.CC_DATA.landingPages || null;
   }

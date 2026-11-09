@@ -1,7 +1,7 @@
 // Dashboard: the Command Center's home page.
 // Dashboard = the business at a glance: Revenue · MRR · Website Visitors · Open invoices, the Total Revenue
 // dot-matrix, revenue by customer and the recent payments. The money comes from dashboard/data/payments.json
-// (the Payments Agent fills it; it never leaves this computer), the visitors from the Web pull. With nothing
+// (filled from your payment provider; it never leaves this computer), the visitors from the Web pull. With nothing
 // there yet, every tile says how to connect it. Never a made-up number.
 
 const TREND_PERIODS = [
@@ -19,7 +19,7 @@ const longToday = () =>
   new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", timeZone: tzName() });
 const firstName = () => ((settings().account || {}).name || "").trim().split(/\s+/)[0];
 
-// A KPI card: the label, the big number, then the change, its caption and where it came from. No sparkline (Brian, 11/07).
+// A KPI card: the label, the big number, then the change, its caption and where it came from. No sparkline.
 function kpiCard({ label, value, delta, caption, footnote }) {
   const up = delta !== null && delta >= 0;
   return h("div", { class: "glass kpi-card" }, [
@@ -417,7 +417,7 @@ function renderDashboard() {
             { class: "kpi-note mt2" },
             r
               ? `Paid payments in dashboard/data/payments.json${stamp ? ` (${stamp})` : ""}. Refunds and failed payments don't count.`
-              : "Read from dashboard/data/payments.json, which the Payments Agent fills. It stays on this computer.",
+              : "Read from dashboard/data/payments.json, filled from your payment provider. It stays on this computer.",
           ),
         ]),
       ]),

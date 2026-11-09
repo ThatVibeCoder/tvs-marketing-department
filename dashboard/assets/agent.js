@@ -41,7 +41,7 @@ function renderAgent() {
         }),
         h("div", { class: "agent-bar" }, [
           h("button", { type: "button", class: "agent-icon-btn", disabled: "", "aria-label": "Attach a file", html: lineIcon("paperclip") }),
-          h("span", { class: "agent-model" }, [h("span", { class: "agent-dot" }), "Your AI · set in Settings → AI Agents"]),
+          h("span", { class: "agent-model" }, [h("span", { class: "agent-dot" }), "Your AI"]),
           h("button", { type: "button", class: "agent-send", disabled: "", "aria-label": "Send", html: lineIcon("arrowUp") }),
         ]),
       ]),

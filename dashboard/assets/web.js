@@ -896,7 +896,7 @@ function renderWebSettings() {
     ),
   ]);
 }
-// ---------- Landing Pages: every page the Website Team built, the pages under each one, grouped by offer ----------
+// ---------- Landing Pages: every page you shipped, the pages under each one, grouped by offer ----------
 const PAGE_KIND_LABEL = {
   landing: "Landing page",
   product: "Product page",
@@ -918,10 +918,8 @@ function pageVisits(p, snap) {
 }
 function offerLabel(path) {
   if (!path) return "No offer named";
-  return path
-    .replace(/^brand\/offers\//, "")
-    .replace(/\.md$/, "")
-    .replace(/^brand\/offer$/, "Main offer");
+  const name = String(path).replace(/^.*\//, "").replace(/\.md$/, "");
+  return name === "offer" ? "Main offer" : name;
 }
 function renderLandingPages() {
   const reg = (window.CC_DATA && window.CC_DATA.landingPages) || { pages: [] },
@@ -936,12 +934,8 @@ function renderLandingPages() {
         h("p", { class: "empty-title" }, "No landing pages yet"),
         h("p", {
           class: "empty-desc",
-          html: "Your Website Team lists every page it builds here, with the pages under it: forms, thank-you pages, upsells and product pages, on any domain. The Website Team lesson builds that team; then ask it to <b>build my landing page</b>. The list lives in <code>knowledge/landing-pages.json</code>.",
+          html: "Every landing page you ship shows up here, with the pages under it: forms, thank-you pages, upsells and product pages, on any domain. The list lives in <code>dashboard/landing-pages.json</code>: add a page there when it ships, then run <code>python3 tools/sync.py</code>.",
         }),
-        h("a", { href: "#/agent-teams", class: "btn-accent-outline mt2" }, [
-          svgIcon("users", "accent"),
-          "See your teams",
-        ]),
       ]),
     );
   const kids = (id) => all.filter((p) => p.parent === id);
@@ -1045,8 +1039,8 @@ function renderLandingPages() {
     ),
     h("p", { class: "tiny-sub" }, [
       "From ",
-      h("code", {}, "knowledge/landing-pages.json"),
-      ", which the Website Team's build-a-page (once its lesson builds the team) and the Dev Team's ship-a-page keep up to date. ",
+      h("code", {}, "dashboard/landing-pages.json"),
+      ", kept up to date each time a page ships. ",
       snap
         ? "Views are from your last Google Analytics pull, matched by each page's route."
         : "Connect Google Analytics in Settings → Web connections to see views.",

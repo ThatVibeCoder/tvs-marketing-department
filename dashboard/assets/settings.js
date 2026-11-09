@@ -1,4 +1,4 @@
-// Settings: Account, Workspace, Brands, Connected Accounts, Payments, Web connections, Posting Cadence, AI Agents, Developer.
+// Settings: Account, Workspace, Brands, Connected Accounts, Payments, Web connections, Posting Cadence, Developer.
 // Plain settings save to dashboard/settings.json. API keys save to the .env file at the top of
 // the repo (skipped by every save) and never come back to this page: it only ever learns set / not set.
 
@@ -10,7 +10,6 @@ const SETTINGS_SECTIONS = [
   { slug: "payments", label: "Payments", icon: "card" },
   { slug: "web", label: "Web connections", icon: "globe" },
   { slug: "cadence", label: "Posting Cadence", icon: "calendarClock" },
-  { slug: "agents", label: "AI Agents", icon: "sparkle" },
   { slug: "developer", label: "Developer", icon: "terminal" },
 ];
 const POSTERS = [
@@ -166,7 +165,7 @@ const PROVIDERS = [
   },
 ];
 // Payments: where each provider keeps a key that can only READ. Nothing in this repo calls a provider: the key
-// waits in .env for the Payments Agent (Dev Team), which makes the connection and fills dashboard/data/payments.json.
+// waits in .env for whatever you connect (your AI or a routine), which fills dashboard/data/payments.json.
 const PAYMENT_PROVIDERS = [
   {
     id: "stripe",
@@ -188,7 +187,7 @@ const PAYMENT_PROVIDERS = [
     steps: [
       "Sign in to the Square Developer Console with your Square account and create an application.",
       "Switch the app to Production and open Credentials.",
-      "Copy the Production access token and paste it below. Square's personal token isn't read-only, so it stays in .env and the Payments Agent only ever reads with it.",
+      "Copy the Production access token and paste it below. Square's personal token isn't read-only, so it stays in .env and is only ever used to read.",
     ],
     keys: [["SQUARE_ACCESS_TOKEN", "Production access token"]],
   },
@@ -200,7 +199,7 @@ const PAYMENT_PROVIDERS = [
     steps: [
       "Sign in to the PayPal Developer Dashboard with your business account and switch to Live.",
       "Create an app (type: Merchant) and turn on Transaction Search under its features.",
-      "Copy the client id and the secret below. PayPal has no read-only key, so the Payments Agent only reads with it.",
+      "Copy the client id and the secret below. PayPal has no read-only key, so it is only ever used to read.",
     ],
     keys: [
       ["PAYPAL_CLIENT_ID", "Client id"],
@@ -242,8 +241,8 @@ const PAYMENT_PROVIDERS = [
     urlLabel: "",
     steps: [
       "Find your provider's API settings and make the most limited key it offers (read only, if it has one).",
-      "Paste it below. The Payments Agent on your Dev Team uses it once its skills are ready.",
-      "No key at all? The Payments Agent can also fill payments.json from an export (a CSV of your payments).",
+      "Paste it below. It waits in .env until you connect something that reads it.",
+      "No key at all? payments.json can also be filled from an export (a CSV of your payments).",
     ],
     keys: [["PAYMENTS_API_KEY", "API key"]],
   },
@@ -257,7 +256,7 @@ const WEB_PROVIDERS = [
     urlLabel: "clarity.microsoft.com",
     steps: [
       "Sign in to Microsoft Clarity (free) and press New project. Name it after your site and type its address.",
-      "Clarity gives you a tracking code. Once the Website Team lesson builds your Website Team, its Page Builder adds it to your pages when you ask: \"add Clarity to my site\". Or follow Clarity's steps to paste it yourself.",
+      "Clarity gives you a tracking code. Ask your AI to add it to the pages in site/, or follow Clarity's steps to paste it yourself.",
       'In the project, open Settings, then Overview: copy the Project ID. Then Settings, Data Export: press Generate new API token, name it "Command Center", and copy it. Paste both below.',
     ],
     keys: [
@@ -471,7 +470,6 @@ function renderWorkspaceSettings() {
           }),
         ),
         h("div", { class: "mt4" }, [
-          settingRow("Agent teams", `${state.teams.length}`, "Rebuilt from departments/ by tools/sync.py."),
           settingRow("Posts", `${posts().length} files`, POSTS_HOME + "/"),
         ]),
       ]),
@@ -693,7 +691,7 @@ function renderConnectedAccounts() {
   const handleInputs = {};
   return settingsPane(
     "Connected Accounts",
-    "Your accounts on each platform, and how approved posts get out the door. Posting runs through the Content Team's post-content skill once its lesson builds that team; nothing here posts on its own.",
+    "Your accounts on each platform, and how approved posts get out the door. Nothing here posts on its own: posting stays with you or a routine you set up.",
     [
       settingsSection("poster", "How your posts go out", "Pick one. You can change it any time.", [
         h(
@@ -930,7 +928,7 @@ function renderCadenceSettings() {
         h(
           "p",
           { class: "set-hint mt3" },
-          "Start with what you'll really keep up: the hours in Where You Show Up in brand/channels.md. One post per platform per day is plenty.",
+          "Start with what you'll really keep up. One post per platform per day is plenty.",
         ),
         h("div", { class: "set-row mt4 col" }, [
           h("div", { class: "row gap2" }, [
@@ -1015,7 +1013,7 @@ function renderDeveloperSettings() {
             fact(
               "Payments",
               h("code", {}, "dashboard/data/payments.json"),
-              "Filled by the Payments Agent from the key in Settings → Payments; nothing in the repo calls a provider. sync copies it to payments.js. Shape: dashboard/data/README.md. Never leaves this computer.",
+              "Filled from the key in Settings → Payments by whatever you connect (your AI or a routine); nothing in the repo calls a provider. sync copies it to payments.js. Shape: dashboard/data/README.md. Never leaves this computer.",
             ),
             fact(
               "Run the tests",
@@ -1026,7 +1024,7 @@ function renderDeveloperSettings() {
           group(
             "Endpoints (tools/serve.py)",
             [
-              ["GET", "/api/state", "posts, research, settings, key presence"],
+              ["GET", "/api/state", "posts, settings, key presence"],
               ["POST", "/api/posts", "create a post file"],
               ["POST", "/api/posts/<id>", "save fields of one post"],
               ["POST", "/api/posts/<id>/duplicate", "copy a post as a new draft"],
@@ -1074,124 +1072,10 @@ function renderDeveloperSettings() {
 }
 // The coding agents this department runs on. AGENTS.md is the one rules file; tools/sync.py writes each
 // agent's pointer and command folder from it. Every one of these signs in with its own account: no key here.
-const AI_AGENTS = [
-  {
-    id: "claude",
-    name: "Claude Code",
-    by: "Anthropic",
-    install: "https://docs.anthropic.com/en/docs/claude-code/overview",
-    open: "claude",
-    summon: "/dev-team",
-    files: ["CLAUDE.md (points at AGENTS.md)", ".claude/skills/ (every team, workflow and skill)"],
-    note: "Also in the Claude desktop app and VS Code: open this folder there.",
-  },
-  {
-    id: "codex",
-    name: "Codex",
-    by: "OpenAI",
-    install: "https://developers.openai.com/codex/cli",
-    open: "codex",
-    summon: "$dev-team",
-    files: ["AGENTS.md (read directly)", ".agents/skills/ (every team, workflow and skill)"],
-    note: "Or pick a skill from Codex's /skills menu.",
-  },
-  {
-    id: "gemini",
-    name: "Gemini CLI",
-    by: "Google",
-    install: "https://geminicli.com/docs/",
-    open: "gemini",
-    summon: "/dev-team",
-    files: ["GEMINI.md (imports AGENTS.md)", ".gemini/commands/ (every team, workflow and skill as a / command)"],
-    note: "Signing in with a Google account is enough; an API key is optional and goes in your terminal, not here.",
-  },
-  {
-    id: "cursor",
-    name: "Cursor",
-    by: "Anysphere",
-    install: "https://cursor.com/downloads",
-    open: "cursor .",
-    summon: "/dev-team",
-    files: [
-      "AGENTS.md (read directly)",
-      ".cursor/rules/agents.mdc (always on, points at AGENTS.md)",
-      ".cursor/commands/ (every team, workflow and skill as a / command)",
-    ],
-    note: "Or open the folder from Cursor's File menu, then use the chat in Agent mode.",
-  },
-  {
-    id: "grok",
-    name: "Grok Build",
-    by: "xAI",
-    install: "https://x.ai/",
-    open: "grok",
-    summon: 'say "run my dev team"',
-    files: ["AGENTS.md (read directly)"],
-    note: "Early beta. It reads AGENTS.md and loads the shortcuts in .agents/skills once you trust this folder, so /dev-team works. Install: curl -fsSL https://x.ai/cli/install.sh | bash (Mac, Linux) or irm https://x.ai/cli/install.ps1 | iex (Windows PowerShell). Run grok inspect to see what it picked up.",
-  },
-];
-function renderAgentSettings() {
-  const found = (state.settings && window.CC_DATA && window.CC_DATA.agents) || state.agents || {};
-  return settingsPane(
-    "AI Agents",
-    "Your agent teams run on whichever AI you like. AGENTS.md holds the rules once, and tools/sync.py sets up each agent below from it. Open this folder in one, sign in with your own account, and summon a team.",
-    [
-      ...AI_AGENTS.map((a) =>
-        settingsSection(`agent-${a.id}`, null, null, [
-          h("div", { class: "row gap2 wrap" }, [
-            h("span", { class: "set-value b" }, a.name),
-            h("span", { class: "tiny-sub" }, a.by),
-            found[a.id]
-              ? h("span", { class: "status-pill ok" }, "set up in this folder")
-              : h("span", { class: "status-pill warn" }, "run sync to set it up"),
-            h("a", { class: "accent-link row gap15 ml-auto", href: a.install, target: "_blank", rel: "noreferrer" }, [
-              svgIcon("external"),
-              "Install",
-            ]),
-          ]),
-          h("div", { class: "agent-grid mt3" }, [
-            h("div", {}, [
-              h("p", { class: "overline mb15" }, "Open your department"),
-              h("p", { class: "set-hint" }, "In a terminal, inside this folder:"),
-              h("code", { class: "agent-cmd" }, a.open),
-            ]),
-            h("div", {}, [
-              h("p", { class: "overline mb15" }, "Summon a team"),
-              h("p", { class: "set-hint" }, "For example the Dev Team (every team a lesson builds works the same way):"),
-              h("code", { class: "agent-cmd" }, a.summon),
-            ]),
-          ]),
-          h("p", { class: "overline mt4 mb15" }, "What's in this folder for it"),
-          h(
-            "ul",
-            { class: "agent-files" },
-            a.files.map((f) => h("li", {}, h("code", {}, f))),
-          ),
-          h("p", { class: "set-hint mt2" }, a.note),
-          h(
-            "p",
-            { class: "set-hint" },
-            "No key to paste here: it signs in with your own account the first time it opens.",
-          ),
-        ]),
-      ),
-      settingsSection("agent-other", "Any other agent", null, [
-        h(
-          "p",
-          { class: "set-hint" },
-          'Point it at AGENTS.md (most agents read it on their own) and ask for a team by name, like "run my dev team". Every team\'s steps live in its team.md, so any agent that reads files can follow them.',
-        ),
-      ]),
-    ],
-  );
-}
 function renderPaymentSettings() {
   const pay = settings().payments || {},
     chosen = PAYMENT_PROVIDERS.find((p) => p.id === pay.provider),
     data = state.payments;
-  const devTeam = state.teams.some((t) => t.id === "dev-team"),
-    seat = devTeam && (state.teams.find((t) => t.id === "dev-team").seats || []).find((m) => /payments/i.test(m.name || "")),
-    agent = seat && /live/i.test(seat.type || "");
   const asProvider = (p) => ({
     ...p,
     url: p.url || "#/settings/payments",
@@ -1199,7 +1083,7 @@ function renderPaymentSettings() {
   });
   return settingsPane(
     "Payments",
-    "Where your money comes from, so the Dashboard can show your revenue. You pick the provider and save a read-only key; the Payments Agent makes the connection.",
+    "Where your money comes from, so the Dashboard can show your revenue. You pick the provider and save a read-only key; whatever fills payments.json (your AI or a routine) makes the connection.",
     [
       settingsSection(
         "pay-provider",
@@ -1248,20 +1132,11 @@ function renderPaymentSettings() {
           ]),
       settingsSection("pay-agent", "Who connects it", null, [
         h("p", { class: "set-hint" }, [
-          "Nothing on this page talks to your provider. The ",
-          h("b", {}, "Payments Agent"),
-          " on the Dev Team does: it reads your key from .env, pulls your payments and writes them to ",
+          "Nothing on this page talks to your provider. Whatever you ask to connect it (your AI, or a routine) reads your key from .env, pulls your payments and writes them to ",
           h("code", {}, "dashboard/data/payments.json"),
           ". That file stays on this computer, and the Dashboard reads it.",
         ]),
         h("div", { class: "mt3" }, [
-          settingRow(
-            "Payments Agent",
-            agent ? "Ready" : seat ? "On the Dev Team, not ready yet" : "Comes with the Dev Team",
-            agent
-              ? "Ask your AI: connect my payments."
-              : "Its skills aren't built yet, so nothing fills payments.json for now. Your key waits safely in .env until they are.",
-          ),
           settingRow(
             "payments.json",
             data
@@ -1339,8 +1214,6 @@ function renderSettings(parts) {
       return renderCadenceSettings();
     case "developer":
       return renderDeveloperSettings();
-    case "agents":
-      return renderAgentSettings();
     default:
       return notFound("That settings page doesn't exist");
   }
